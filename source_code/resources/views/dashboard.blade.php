@@ -10,6 +10,12 @@
                 <div class="card-body">
                     You are a Admin User.
                 </div>
+
+                <div>
+                    <a href="{{ route('admin.masterdata.kategori.index') }}">kategori</a>
+                </div>
+
+                
             </div>
         </div>
     </div>

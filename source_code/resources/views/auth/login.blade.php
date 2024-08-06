@@ -62,6 +62,10 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
+
+
+                                <a href="{{ route('socialite.redirect','google') }}">Login With Google</a>
+
                             </div>
                         </div>
                     </form>

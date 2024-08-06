@@ -51,7 +51,7 @@ class LoginController extends Controller
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
             if (auth()->user()->role == 'admin') {
-                return redirect()->route('admin.home');
+                return redirect()->route('dashboard');
             }else if (auth()->user()->role == 'costumer') {
                 return redirect()->route('home');
             }

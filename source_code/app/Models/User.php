@@ -24,6 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+
+        
     ];
 
     /**
@@ -50,5 +52,9 @@ class User extends Authenticatable
         return new Attribute(
             get: fn ($value) =>  ["costumer", "admin"][$value],
         );
+    }
+
+    public function socialite(){
+        return $this->hasMany(Socialite::class);
     }
 }

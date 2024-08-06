@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\MasterData\KategoriController;
 use Illuminate\Support\Facades\Auth; 
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +36,17 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
-    Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
+        Route::resource('kategori', KategoriController::class);
+    });
+    
 });
-   
+
+
+//akun sosial login
+Route::get('/auth/{provider}redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+
 
