@@ -12,4 +12,9 @@ class Kategori extends Model
     protected $table = 'kategori';
 
     protected $fillable = ['nama', 'flag'];
+    
+    public function subkategoris()
+    {
+        return $this->hasMany(SubKategori::class);
+    }
 }
