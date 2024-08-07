@@ -17,8 +17,9 @@
                 <div>
                     <a href="{{ route('admin.masterdata.subkategori.index') }}">subkategori</a>
                 </div>
-
-                
+                <div>
+                    <a href="{{ route('admin.masterdata.komoditas.index') }}">komoditas</a>
+                </div>
             </div>
         </div>
     </div>

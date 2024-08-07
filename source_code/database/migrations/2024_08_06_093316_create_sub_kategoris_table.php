@@ -23,4 +23,3 @@ class CreateSubKategorisTable extends Migration
         Schema::dropIfExists('sub_kategoris');
     }
 }
-

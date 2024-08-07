@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container">
-        <h1>Sub Kategori</h1>
-        <a href="{{ route('admin.masterdata.subkategori.create') }}" class="btn btn-primary">Buat Sub Kategori</a>
+        <h1>Komoditas</h1>
+        <a href="{{ route('admin.masterdata.komoditas.create') }}" class="btn btn-primary">Buat Komoditas</a>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -16,19 +16,17 @@
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Kategori</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($subkategoris as $index => $subkategori)
+                @foreach ($komoditas as $index => $komoditas)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $subkategori->nama }}</td>
-                    <td>{{ $subkategori->kategori->nama }}</td>
+                    <td>{{ $komoditas->nama }}</td>
                     <td>
-                        <a href="{{ route('admin.masterdata.subkategori.edit', $subkategori->id) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('admin.masterdata.subkategori.destroy', $subkategori->id) }}" method="POST" style="display:inline-block;">
+                        <a href="{{ route('admin.masterdata.komoditas.edit', $komoditas->id) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ route('admin.masterdata.komoditas.destroy', $komoditas->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Hapus</button>

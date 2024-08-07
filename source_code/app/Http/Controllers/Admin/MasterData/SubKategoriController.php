@@ -4,20 +4,20 @@ namespace App\Http\Controllers\Admin\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\SubKategori; // Make sure to import your model
+use App\Models\SubKategori;
 use App\Models\Kategori;
 
 class SubKategoriController extends Controller
 {
     public function index()
     {
-        $subkategoris = SubKategori::with('kategori')->get();
+        $subkategoris = SubKategori::with('kategori')->where('flag', 'yes')->get(); // Filter berdasarkan flag
         return view('admin.masterdata.subkategori.index', compact('subkategoris'));
     }
 
     public function create()
     {
-        $kategori = Kategori::all();
+        $kategori = Kategori::where('flag', 'yes')->get(); // Hanya kategori aktif
         return view('admin.masterdata.subkategori.create', compact('kategori'));
     }
 
@@ -35,7 +35,7 @@ class SubKategoriController extends Controller
 
     public function edit(SubKategori $subkategori)
     {
-        $kategori = Kategori::all();
+        $kategori = Kategori::where('flag', 'yes')->get(); // Hanya kategori aktif
         return view('admin.masterdata.subkategori.edit', compact('subkategori', 'kategori'));
     }
 
@@ -53,7 +53,7 @@ class SubKategoriController extends Controller
 
     public function destroy(SubKategori $subkategori)
     {
-        $subkategori->delete();
+        $subkategori->update(['flag' => 'no']); // Set flag menjadi 'no' bukannya dihapus
 
         return redirect()->route('admin.masterdata.subkategori.index')->with('success', 'Sub Kategori berhasil dihapus.');
     }
