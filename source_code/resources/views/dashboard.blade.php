@@ -15,10 +15,13 @@
                     <a href="{{ route('admin.masterdata.kategori.index') }}">kategori</a>
                 </div>
                 <div>
-                    <a href="{{ route('admin.masterdata.subkategori.index') }}">subkategori</a>
-                </div>
+                    <a href="{{ route('admin.masterdata.subkategori.index') }}">Subkategori</a>
+                </div>                
                 <div>
                     <a href="{{ route('admin.masterdata.komoditas.index') }}">komoditas</a>
+                </div>
+                <div>
+                    <a href="{{ route('produk.index') }}">Produk</a>
                 </div>
             </div>
         </div>

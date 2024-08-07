@@ -8,11 +8,13 @@ class CreateSubKategorisTable extends Migration
 {
     public function up()
     {
-        if (!Schema::hasTable('sub_kategoris')) {
-            Schema::create('sub_kategoris', function (Blueprint $table) {
+        if (!Schema::hasTable('sub_kategori')) {
+            Schema::create('sub_kategori', function (Blueprint $table) {
                 $table->id();
                 $table->string('nama');
-                $table->foreignId('kategori_id')->constrained()->onDelete('cascade');
+                $table->enum('flag', ['yes', 'no'])->default('yes');
+
+                $table->foreignId('kategori_id')->constrained('kategori');
                 $table->timestamps();
             });
         }
@@ -20,6 +22,6 @@ class CreateSubKategorisTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('sub_kategoris');
+        Schema::dropIfExists('sub_kategori');
     }
 }

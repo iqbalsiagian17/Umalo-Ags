@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\MasterData\KategoriController;
 use App\Http\Controllers\Admin\MasterData\SubKategoriController;
 use App\Http\Controllers\Admin\MasterData\KomoditasController;
+use App\Http\Controllers\Admin\Produk\ProdukController;
 use Illuminate\Support\Facades\Auth; 
 use Laravel\Socialite\Facades\Socialite;
 
@@ -40,11 +41,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
+    Route::resource('produk', ProdukController::class);
+
+
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);
         Route::resource('subkategori', SubKategoriController::class);
-        Route::resource('komoditas', KomoditasController::class)
-        ->parameters(['komoditas' => 'komoditas']);
+        Route::resource('komoditas', KomoditasController::class)->parameters(['komoditas' => 'komoditas']);
+
     });
     
 });

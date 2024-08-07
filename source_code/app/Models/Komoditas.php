@@ -12,4 +12,10 @@ class Komoditas extends Model
     protected $table = 'komoditas';
 
     protected $fillable = ['nama', 'flag'];
+
+    public function produk()
+    {
+        return $this->hasMany(Produk::class);
+    }
+
 }

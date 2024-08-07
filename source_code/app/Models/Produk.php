@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Produk extends Model
+{
+    use HasFactory;
+    protected $table = 'produk';
+
+    protected $fillable = [
+        'nama',
+        'tipe_barang',
+        'stok',
+        'masa_berlaku_produk',
+        'merk',
+        'no_produk_penyedia',
+        'unit_pengukuran',
+        'jenis_produk',
+        'kode_kbli',
+        'nilai_tkdn',
+        'no_sni',
+        'asal_negara',
+        'garansi_produk',
+        'sni',
+        'uji_fungsi',
+        'memiliki_svlk',
+        'jenis_alat',
+        'fungsi',
+        'spesifikasi_produk',
+        'ramah_lingkungan',
+        'komoditas_id',
+        'sub_kategori_id',
+        'kategori_id',
+        'harga_diskon',
+        'harga_tayang',
+    ];
+
+    public function komoditas()
+    {
+        return $this->belongsTo(Komoditas::class);
+    }
+
+    public function subKategori()
+    {
+        return $this->belongsTo(SubKategori::class);
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProdukImage::class, 'produk_id');
+    }
+
+    public function produkList()
+    {
+        return $this->hasMany(ProdukList::class);
+    }
+
+}

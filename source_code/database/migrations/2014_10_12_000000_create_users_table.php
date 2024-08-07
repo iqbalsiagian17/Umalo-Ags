@@ -20,16 +20,6 @@ return new class extends Migration
             $table->boolean('role')->default(false); //Users: 0=>Costumer, 1=>Admin 
             $table->string('foto_profile')->nullable();
             $table->string('no_telepon', 12)->nullable();
-
-            //Google
-            $table->string('google_id')->nullable();
-            $table->string('google_token')->nullable();
-            $table->string('google_refresh_token')->nullable();
-
-            //Facebook
-            $table->string('facebook_id')->nullable();
-
-
             $table->rememberToken();
             $table->timestamps();
         });
