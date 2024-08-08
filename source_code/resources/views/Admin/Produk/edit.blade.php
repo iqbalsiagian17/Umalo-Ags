@@ -105,18 +105,18 @@
         </div>
         <div class="form-group">
             <label for="kategori_id">Kategori:</label>
-            <select name="kategori_id" class="form-control" required>
-                @foreach($kategoris as $k)
-                    <option value="{{ $k->id }}" {{ $produk->kategori_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
+            <select name="kategori_id" id="kategori_id" class="form-control" required>
+                <option value="">Pilih Kategori</option>
+                @foreach($kategoris as $kategori)
+                    <option value="{{ $kategori->id }}" {{ $produk->kategori_id == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
                 @endforeach
             </select>
         </div>
         <div class="form-group">
             <label for="sub_kategori_id">Sub Kategori:</label>
-            <select name="sub_kategori_id" class="form-control" required>
-                @foreach($subKategoris as $s)
-                    <option value="{{ $s->id }}" {{ $produk->sub_kategori_id == $s->id ? 'selected' : '' }}>{{ $s->nama }}</option>
-                @endforeach
+            <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
+                <option value="">Pilih Sub Kategori</option>
+                <!-- Sub kategori akan dimuat melalui AJAX -->
             </select>
         </div>
         <div class="form-group">
@@ -178,4 +178,40 @@ document.getElementById('add-detail').addEventListener('click', function() {
     detailListContainer.appendChild(detailList);
 });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var kategoriSelect = document.getElementById('kategori_id');
+        var subKategoriSelect = document.getElementById('sub_kategori_id');
+    
+        // Function to load sub categories
+        function loadSubKategoris(kategoriId, selectedSubKategoriId = null) {
+            subKategoriSelect.innerHTML = '<option value="">Memuat...</option>';
+    
+            fetch(`/admin/produk/getSubKategori/${kategoriId}`)
+                .then(response => response.json())
+                .then(data => {
+                    subKategoriSelect.innerHTML = '<option value="">Pilih Sub Kategori</option>';
+                    data.forEach(function(subKategori) {
+                        var option = document.createElement('option');
+                        option.value = subKategori.id;
+                        option.textContent = subKategori.nama;
+                        if (subKategori.id == selectedSubKategoriId) {
+                            option.selected = true;
+                        }
+                        subKategoriSelect.appendChild(option);
+                    });
+                });
+        }
+    
+        // Initial load of sub categories based on the selected kategori
+        if (kategoriSelect.value) {
+            loadSubKategoris(kategoriSelect.value, '{{ $produk->sub_kategori_id }}');
+        }
+    
+        // Event listener for kategori change
+        kategoriSelect.addEventListener('change', function() {
+            loadSubKategoris(this.value);
+        });
+    });
+    </script>
 @endsection

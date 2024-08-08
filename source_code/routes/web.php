@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\MasterData\KategoriController;
 use App\Http\Controllers\Admin\MasterData\SubKategoriController;
 use App\Http\Controllers\Admin\MasterData\KomoditasController;
 use App\Http\Controllers\Admin\Produk\ProdukController;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 /*
@@ -32,30 +32,30 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 //Normal Users Routes List
 Route::middleware(['auth', 'user-access:costumer'])->group(function () {
-   
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('produk_customer', [ProdukController::class, 'userIndex'])->name('produk_customer.user.index');
+    Route::get('produk_customer/{id}', [ProdukController::class, 'userShow'])->name('produk_customer.user.show');
 });
-   
+
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
-   
+
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::resource('produk', ProdukController::class);
 
+    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); //mengambil sub kategori berdasarkan kategori yang dipilih
+    
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);
         Route::resource('subkategori', SubKategoriController::class);
         Route::resource('komoditas', KomoditasController::class)->parameters(['komoditas' => 'komoditas']);
-
     });
-    
 });
 
 
 //akun sosial login
 Route::get('/auth/{provider}redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
-
-

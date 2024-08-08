@@ -104,18 +104,18 @@
         </div>
         <div class="form-group">
             <label for="kategori_id">Kategori:</label>
-            <select name="kategori_id" class="form-control" required>
-                @foreach($kategoris as $k)
-                    <option value="{{ $k->id }}">{{ $k->nama }}</option>
+            <select name="kategori_id" id="kategori_id" class="form-control" required>
+                <option value="">Pilih Kategori</option>
+                @foreach($kategoris as $kategori)
+                    <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
                 @endforeach
             </select>
         </div>
         <div class="form-group">
             <label for="sub_kategori_id">Sub Kategori:</label>
-            <select name="sub_kategori_id" class="form-control" required>
-                @foreach($subKategoris as $s)
-                    <option value="{{ $s->id }}">{{ $s->nama }}</option>
-                @endforeach
+            <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
+                <option value="">Pilih Sub Kategori</option>
+                <!-- Sub kategori akan dimuat melalui AJAX -->
             </select>
         </div>
         <div class="form-group">
@@ -172,4 +172,24 @@ document.getElementById('add-detail').addEventListener('click', function() {
     detailListContainer.appendChild(detailList);
 });
 </script>
+<script>
+    document.getElementById('kategori_id').addEventListener('change', function() {
+        var kategoriId = this.value;
+        var subKategoriSelect = document.getElementById('sub_kategori_id');
+    
+        subKategoriSelect.innerHTML = '<option value="">Memuat...</option>';
+    
+        fetch(`/admin/produk/getSubKategori/${kategoriId}`)
+            .then(response => response.json())
+            .then(data => {
+                subKategoriSelect.innerHTML = '<option value="">Pilih Sub Kategori</option>';
+                data.forEach(function(subKategori) {
+                    var option = document.createElement('option');
+                    option.value = subKategori.id;
+                    option.textContent = subKategori.nama;
+                    subKategoriSelect.appendChild(option);
+                });
+            });
+    });
+    </script>
 @endsection

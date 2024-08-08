@@ -24,6 +24,20 @@ class ProdukController extends Controller
         return view('admin.produk.index', compact('produks','images'));
     }
 
+
+    public function userIndex()
+    {
+        $produks = Produk::with('images')->get(); // Fetch produk data with images
+        return view('customers.produk.index', compact('produks')); // Pass produk data to view
+    }
+
+    public function userShow($id)
+    {
+        $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas'])->findOrFail($id);
+        $images = $produk->images;
+        return view('customers.produk.show', compact('produk', 'images'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -224,5 +238,10 @@ class ProdukController extends Controller
     {
         Produk::find($id)->delete();
         return redirect()->route('produk.index')->with('success', 'Produk deleted successfully.');
+    }
+    public function getSubKategori($kategoriId)
+    {
+        $subKategoris = SubKategori::where('kategori_id', $kategoriId)->get();
+        return response()->json($subKategoris);
     }
 }
