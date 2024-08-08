@@ -62,5 +62,9 @@ class Produk extends Model
     {
         return $this->hasMany(ProdukList::class);
     }
+    public function bigSales()
+    {
+        return $this->belongsToMany(BigSale::class)->withPivot('harga_diskon');
+    }
 
 }

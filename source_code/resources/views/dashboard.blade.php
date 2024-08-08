@@ -23,6 +23,12 @@
                 <div>
                     <a href="{{ route('produk.index') }}">Produk</a>
                 </div>
+                <div>
+                    <a href="{{ route('slider.index') }}">Slider</a>
+                </div>
+                <div>
+                    <a href="{{ route('bigsale.index') }}">Bigsale</a>
+                </div>
             </div>
         </div>
     </div>
