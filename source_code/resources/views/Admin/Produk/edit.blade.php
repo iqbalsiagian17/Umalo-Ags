@@ -145,6 +145,7 @@
                 <input type="text" name="detail[satuan][]" class="form-control" value="{{ $detail->satuan }}">
                 <label for="harga_satuan">Harga Satuan:</label>
                 <input type="number" step="0.01" name="detail[harga_satuan][]" class="form-control" value="{{ $detail->harga_satuan }}">
+                <hr>
             </div>
             @endforeach
         </div>
@@ -174,6 +175,7 @@ document.getElementById('add-detail').addEventListener('click', function() {
         <input type="text" name="detail[satuan][]" class="form-control">
         <label for="harga_satuan">Harga Satuan:</label>
         <input type="number" step="0.01" name="detail[harga_satuan][]" class="form-control">
+        <hr>
     `;
     detailListContainer.appendChild(detailList);
 });

@@ -57,4 +57,9 @@ class User extends Authenticatable
     public function socialite(){
         return $this->hasMany(Socialite::class);
     }
+
+    public function userDetail()
+{
+    return $this->hasOne(UserDetail::class);
+}
 }

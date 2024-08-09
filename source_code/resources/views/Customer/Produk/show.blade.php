@@ -38,7 +38,7 @@
                 <p><strong>Kategori:</strong> {{ $produk->kategori->nama }}</p>
                 <p><strong>Sub Kategori:</strong> {{ $produk->subKategori->nama }}</p>
                 <p><strong>Komoditas:</strong> {{ $produk->komoditas->nama }}</p>
-                <a href="{{ route('produk_customer.user.index') }}" class="btn btn-primary mt-3">Kembali</a> <!-- Menggunakan nama route baru -->
+                <a href="{{ route('home') }}" class="btn btn-primary mt-3">Kembali</a> <!-- Menggunakan nama route baru -->
             </div>
         </div>
     </div>

@@ -25,19 +25,6 @@ class ProdukController extends Controller
     }
 
 
-    public function userIndex()
-    {
-        $produks = Produk::with('images')->get(); // Fetch produk data with images
-        return view('customers.produk.index', compact('produks')); // Pass produk data to view
-    }
-
-    public function userShow($id)
-    {
-        $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas'])->findOrFail($id);
-        $images = $produk->images;
-        return view('customers.produk.show', compact('produk', 'images'));
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -64,12 +51,12 @@ class ProdukController extends Controller
             'no_produk_penyedia' => 'required',
             'unit_pengukuran' => 'required',
             'jenis_produk' => 'required',
-            'kode_kbli' => 'required|integer',
+            'kode_kbli' => 'required|integer|max:12',
             'asal_negara' => 'required',
-            'nilai_tkdn' => 'required|numeric',
-            'no_sni' => 'required',
+            'nilai_tkdn' => 'nullable|numeric',
+            'no_sni' => 'nullable',
             'garansi_produk' => 'required',
-            'uji_fungsi' => 'required',
+            'uji_fungsi' => 'nullable',
             'sni' => 'required',
             'memiliki_svlk' => 'required',
             'jenis_alat' => 'required',
@@ -124,12 +111,8 @@ class ProdukController extends Controller
      */
     public function show(string $id)
     {
-        $produk = Produk::find($id);
-        $komoditas = Komoditas::find($id);
-        $kategori = Kategori::find($id);
-        $subkategori = Produk::find($id);
-        $images = ProdukImage::where('produk_id', $id)->get(); 
-        return view('admin.produk.show', compact('produk','images','kategori','subkategori','komoditas'));
+        $produk = Produk::with('produkList', 'komoditas', 'kategori', 'subkategori', 'images')->findOrFail($id);
+        return view('admin.produk.show', compact('produk'));
     }
 
     /**
@@ -234,11 +217,31 @@ class ProdukController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        Produk::find($id)->delete();
+        // Find the product by its ID
+        $produk = Produk::findOrFail($id);
+    
+        // Delete associated images
+        $images = ProdukImage::where('produk_id', $produk->id)->get();
+        foreach ($images as $image) {
+            if (file_exists(public_path($image->gambar))) {
+                unlink(public_path($image->gambar));
+            }
+            $image->delete();
+        }
+    
+        // Delete associated details
+        ProdukList::where('produk_id', $produk->id)->delete();
+    
+        // Delete the product
+        $produk->delete();
+    
+        // Redirect back with a success message
         return redirect()->route('produk.index')->with('success', 'Produk deleted successfully.');
     }
+    
+
     public function getSubKategori($kategoriId)
     {
         $subKategoris = SubKategori::where('kategori_id', $kategoriId)->get();

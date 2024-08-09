@@ -25,7 +25,7 @@
                                     </div>
                                 @endif
                                 <p><strong>Stok:</strong> {{ $item->stok }}</p>
-                                <a href="{{ route('produk_customer.user.show', $item->id) }}" class="btn btn-primary">Lihat Detail</a> <!-- Menggunakan nama route baru -->
+                                <a href="{{ route('produk_customer.user.show', $item->id) }}" class="btn btn-primary">Lihat Detail</a>
                             </div>
                         @endforeach
                     </div>

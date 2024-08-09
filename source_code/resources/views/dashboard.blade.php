@@ -29,6 +29,9 @@
                 <div>
                     <a href="{{ route('bigsale.index') }}">Bigsale</a>
                 </div>
+                <div>
+                    <a href="{{ route('qas.index') }}">QnA</a>
+                </div>
             </div>
         </div>
     </div>

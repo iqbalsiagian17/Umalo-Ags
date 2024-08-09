@@ -30,7 +30,7 @@
             <p class="card-text"><strong>Sub Kategori:</strong> {{ $produk->subkategori->nama }}</p>
 
             <h5 class="mt-4">Gambar Produk:</h5>
-            @if($produk->images->isNotEmpty())
+            @if($produk->images && $produk->images->isNotEmpty())
                 @foreach ($produk->images as $image)
                     <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid mb-2" style="max-width: 500px; height: auto;">
                 @endforeach
@@ -39,7 +39,7 @@
             @endif
 
             <h5 class="mt-4">Detail Produk List:</h5>
-            @if($produk->produkList->isNotEmpty())
+            @if($produk->produkList && $produk->produkList->isNotEmpty())
                 @foreach ($produk->produkList as $detail)
                     <div class="border p-3 mb-3">
                         <p class="card-text"><strong>Nama:</strong> {{ $detail->nama }}</p>

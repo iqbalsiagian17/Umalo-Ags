@@ -57,10 +57,10 @@ class Produk extends Model
     {
         return $this->hasMany(ProdukImage::class, 'produk_id');
     }
-
+    
     public function produkList()
     {
-        return $this->hasMany(ProdukList::class);
+        return $this->hasMany(ProdukList::class, 'produk_id', 'id');
     }
     public function bigSales()
     {

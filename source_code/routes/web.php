@@ -8,12 +8,12 @@ use App\Http\Controllers\Admin\MasterData\KategoriController;
 use App\Http\Controllers\Admin\MasterData\SubKategoriController;
 use App\Http\Controllers\Admin\MasterData\KomoditasController;
 use App\Http\Controllers\Admin\Produk\ProdukController;
-<<<<<<< Updated upstream
 use Illuminate\Support\Facades\Auth;
-=======
 use App\Http\Controllers\Admin\Slider\SliderController;
-use Illuminate\Support\Facades\Auth; 
->>>>>>> Stashed changes
+use App\Http\Controllers\Costumer\User\UserDetailController;
+use App\Http\Controllers\Costumer\Produk\ProdukCostumerController;
+use App\Http\Controllers\Admin\BigSale;
+use App\Http\Controllers\Admin\QnA\QaController;
 use Laravel\Socialite\Facades\Socialite;
 
 /*
@@ -40,13 +40,30 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('produk_customer', [ProdukController::class, 'userIndex'])->name('produk_customer.user.index');
-    Route::get('produk_customer/{id}', [ProdukController::class, 'userShow'])->name('produk_customer.user.show');
+    Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
+
+
+
+
+    //Detail Account
+    Route::get('/personal', [UserDetailController::class, 'show'])->name('user.show');
+    Route::get('/personal/create', [UserDetailController::class, 'create'])->name('user.create');
+    Route::post('/personal', [UserDetailController::class, 'store'])->name('user.store');
+    Route::get('/personal/edit', [UserDetailController::class, 'edit'])->name('user.edit');
+    Route::put('/personal', [UserDetailController::class, 'update'])->name('user.update');
+
+    Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
+    Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.update');
+
+
+
+
 });
+
+
 
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
-
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::group(['middleware' => ['check.big.sale']], function () {
@@ -55,11 +72,10 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     });
 
     Route::resource('bigsale', BigsaleController::class);
-
     Route::resource('slider', SliderController::class);
+    Route::resource('qas', QaController::class);
 
     Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); //mengambil sub kategori berdasarkan kategori yang dipilih
-    
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);
@@ -67,6 +83,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::resource('komoditas', KomoditasController::class)->parameters(['komoditas' => 'komoditas']);
     });
 });
+
 
 
 //akun sosial login
