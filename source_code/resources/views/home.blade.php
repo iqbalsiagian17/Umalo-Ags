@@ -74,6 +74,18 @@
                                             </div>
                                         @endif
                                         <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
+                                         <!-- Add to Cart Button -->
+                                         <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary mt-2">Masukkan Keranjang</button>
+                                        </form>
+
+                                        <!-- View Cart Button -->
+                                        <a href="{{ route('cart.view') }}" class="btn btn-warning mt-2">View Cart</a>
+
+                                        <!-- View Detail Button -->
+                                        <a href="{{ route('produk_customer.user.show', $product->id) }}"
+                                            class="btn btn-secondary mt-2">Lihat Detail</a>
                                     </div>
                                 </li>
                             @endforeach
