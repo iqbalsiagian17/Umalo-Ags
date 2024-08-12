@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BigSale;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,17 @@ class HomeController extends Controller
     public function index()
     {
         $produk = Produk::with('images')->get();
-        return view('home', compact('produk'));
+        
+        $bigSale = BigSale::with('produk')
+        ->where('status', true)
+        ->whereDate('mulai', '<=', now())
+        ->whereDate('berakhir', '>=', now())
+        ->first();
+
+
+
+
+        return view('home', compact('produk','bigSale'));
     }
 
     public function dashboard()

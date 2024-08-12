@@ -56,7 +56,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::put('/personal', [UserDetailController::class, 'update'])->name('user.update');
 
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
-    Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.update');
+    Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
+    
 
     // Cart
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
