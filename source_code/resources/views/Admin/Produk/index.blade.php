@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.master')
 
 @section('content')
 <div class="container">
@@ -7,52 +7,22 @@
     <table class="table table-striped">
         <thead class="thead-dark">
             <tr>
+                <th>No</th>
                 <th>Nama</th>
                 <th>Tipe Barang</th>
                 <th>Stok</th>
-                <th>Masa Berlaku Produk</th>
-                <th>Merk</th>
-                <th>No Produk Penyedia</th>
-                <th>Unit Pengukuran</th>
-                <th>Jenis Produk</th>
-                <th>Kode KBLI</th>
-                <th>Asal Negara</th>
-                <th>Nilai TKDN</th>
-                <th>No SNI</th>
-                <th>Garansi Produk</th>
-                <th>Uji Fungsi</th>
-                <th>SNI</th>
-                <th>Memiliki SVLK</th>
-                <th>Jenis Alat</th>
-                <th>Fungsi</th>
-                <th>Spesifikasi Produk</th>
                 <th>Harga Tayang</th>
                 <th style="width: 200px">Gambar</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($produks as $produk)
+            @foreach($produks as $index => $produk)
             <tr>
+                <td>{{ $index + 1 }}</td>
                 <td>{{ $produk->nama }}</td>
                 <td>{{ $produk->tipe_barang }}</td>
                 <td>{{ $produk->stok }}</td>
-                <td>{{ $produk->masa_berlaku_produk }}</td>
-                <td>{{ $produk->merk }}</td>
-                <td>{{ $produk->no_produk_penyedia }}</td>
-                <td>{{ $produk->unit_pengukuran }}</td>
-                <td>{{ $produk->jenis_produk }}</td>
-                <td>{{ $produk->kode_kbli }}</td>
-                <td>{{ $produk->asal_negara }}</td>
-                <td>{{ $produk->nilai_tkdn }}</td>
-                <td>{{ $produk->no_sni }}</td>
-                <td>{{ $produk->garansi_produk }}</td>
-                <td>{{ $produk->uji_fungsi }}</td>
-                <td>{{ $produk->sni }}</td>
-                <td>{{ $produk->memiliki_svlk }}</td>
-                <td>{{ $produk->jenis_alat }}</td>
-                <td>{{ $produk->fungsi }}</td>
-                <td>{{ $produk->spesifikasi_produk }}</td>
                 <td>{{ $produk->harga_tayang }}</td>
                 <td style="max-width: 200px;">
                     @if ($produk->images->isNotEmpty())
