@@ -15,6 +15,9 @@ use App\Http\Controllers\Costumer\Produk\ProdukCostumerController;
 use App\Http\Controllers\Admin\BigSale;
 use App\Http\Controllers\Admin\QnA\QaController;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Costumer\Cart\CartController;
+use App\Http\Controllers\Costumer\Order\OrderController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -55,8 +58,18 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.update');
 
+    // Cart
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
+    //checkout
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
 
+    //contract
+    Route::get('/order/{id}/contract', [OrderController::class, 'contract'])->name('order.contract');
 
 });
 
