@@ -48,36 +48,47 @@ class CartController extends Controller
     }
     public function add(Request $request, $id)
     {
-        $product = Produk::find($id);
-
+        $product = Produk::with('bigSales')->find($id);
+    
         if (!$product) {
             return redirect()->back()->with('error', 'Produk tidak ditemukan!');
         }
-
-        // Pastikan harga tayang ada
-        if (!$product->harga_tayang) {
-            return redirect()->back()->with('error', 'Harga Tayang tidak tersedia untuk produk ini!');
+    
+        // Cek apakah produk tersebut tergolong ke Big Sale
+        $bigSale = $product->bigSales()
+                            ->where('status', 1)
+                            ->whereDate('mulai', '<=', now())
+                            ->whereDate('berakhir', '>=', now())
+                            ->first();
+    
+        // Tentukan harga yang akan digunakan di keranjang
+        $harga = $product->harga_tayang;
+        if ($bigSale) {
+            // Jika produk ada di Big Sale dan ada harga_diskon, gunakan harga_diskon
+            $harga = $bigSale->pivot->harga_diskon;
         }
-
+    
         $quantity = $request->input('quantity', 1); // default quantity to 1 if not provided
-
+    
         $cart = session()->get('cart', []);
-
+    
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $quantity;
         } else {
             $cart[$id] = [
                 "name" => $product->nama,
                 "quantity" => $quantity,
-                "harga_tayang" => $product->harga_tayang,
+                "harga_tayang" => $harga, // Menggunakan harga yang sudah ditentukan
                 "image" => $product->images->first()->gambar ?? 'default.png' // handle missing image
             ];
         }
-
+    
         session()->put('cart', $cart);
-
+    
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
+    
+    
 
     public function viewCart()
     {

@@ -64,7 +64,9 @@ class Produk extends Model
     }
     public function bigSales()
     {
-        return $this->belongsToMany(BigSale::class)->withPivot('harga_diskon');
+        return $this->belongsToMany(BigSale::class, 'big_sale_produk', 'produk_id', 'big_sale_id')
+                    ->withPivot('harga_diskon')
+                    ->withTimestamps();
     }
 
 }
