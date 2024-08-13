@@ -102,7 +102,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('transaksi', TransaksiController::class);
 
 
-    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); //mengambil sub kategori berdasarkan kategori yang dipilih
+    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); 
+    Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.updateStatus');
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);

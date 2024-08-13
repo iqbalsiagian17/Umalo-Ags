@@ -51,7 +51,7 @@ class ProdukController extends Controller
             'no_produk_penyedia' => 'required',
             'unit_pengukuran' => 'required',
             'jenis_produk' => 'required',
-            'kode_kbli' => 'required|integer|max:12',
+            'kode_kbli' => 'required|integer',
             'asal_negara' => 'required',
             'nilai_tkdn' => 'nullable|numeric',
             'no_sni' => 'nullable',
@@ -247,4 +247,14 @@ class ProdukController extends Controller
         $subKategoris = SubKategori::where('kategori_id', $kategoriId)->get();
         return response()->json($subKategoris);
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $produk = Produk::find($id);
+        $produk->status = $request->status;
+        $produk->save();
+
+        return response()->json(['success' => true]);
+    }
+
 }

@@ -1,62 +1,234 @@
 @extends('layouts.admin.master')
 
 @section('content')
-<div class="container mt-5">
-    <h1 class="mb-4">Detail Produk</h1>
-    <div class="card">
-        <div class="card-body">
-            <p class="card-text"><strong>Nama:</strong> {{ $produk->nama }}</p>
-            <p class="card-text"><strong>Tipe Barang:</strong> {{ $produk->tipe_barang }}</p>
-            <p class="card-text"><strong>Stok:</strong> {{ $produk->stok }}</p>
-            <p class="card-text"><strong>Masa Berlaku Produk:</strong> {{ $produk->masa_berlaku_produk }}</p>
-            <p class="card-text"><strong>Merk:</strong> {{ $produk->merk }}</p>
-            <p class="card-text"><strong>No Produk Penyedia:</strong> {{ $produk->no_produk_penyedia }}</p>
-            <p class="card-text"><strong>Unit Pengukuran:</strong> {{ $produk->unit_pengukuran }}</p>
-            <p class="card-text"><strong>Jenis Produk:</strong> {{ $produk->jenis_produk }}</p>
-            <p class="card-text"><strong>Kode KBLI:</strong> {{ $produk->kode_kbli }}</p>
-            <p class="card-text"><strong>Asal Negara:</strong> {{ $produk->asal_negara }}</p>
-            <p class="card-text"><strong>Nilai TKDN:</strong> {{ $produk->nilai_tkdn }}</p>
-            <p class="card-text"><strong>No SNI:</strong> {{ $produk->no_sni }}</p>
-            <p class="card-text"><strong>Garansi Produk:</strong> {{ $produk->garansi_produk }}</p>
-            <p class="card-text"><strong>Uji Fungsi:</strong> {{ $produk->uji_fungsi }}</p>
-            <p class="card-text"><strong>SNI:</strong> {{ $produk->sni }}</p>
-            <p class="card-text"><strong>Memiliki SVLK:</strong> {{ $produk->memiliki_svlk }}</p>
-            <p class="card-text"><strong>Jenis Alat:</strong> {{ $produk->jenis_alat }}</p>
-            <p class="card-text"><strong>Fungsi:</strong> {{ $produk->fungsi }}</p>
-            <p class="card-text"><strong>Spesifikasi Produk:</strong> {{ $produk->spesifikasi_produk }}</p>
-            <p class="card-text"><strong>Harga Tayang:</strong> {{ $produk->harga_tayang }}</p>
-            <p class="card-text"><strong>Komoditas:</strong> {{ $produk->komoditas->nama }}</p>
-            <p class="card-text"><strong>Kategori:</strong> {{ $produk->kategori->nama }}</p>
-            <p class="card-text"><strong>Sub Kategori:</strong> {{ $produk->subkategori->nama }}</p>
-
-            <h5 class="mt-4">Gambar Produk:</h5>
-            @if($produk->images && $produk->images->isNotEmpty())
-                @foreach ($produk->images as $image)
-                    <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid mb-2" style="max-width: 500px; height: auto;">
-                @endforeach
-            @else
-                <p>No Image</p>
-            @endif
-
-            <h5 class="mt-4">Detail Produk List:</h5>
-            @if($produk->produkList && $produk->produkList->isNotEmpty())
-                @foreach ($produk->produkList as $detail)
-                    <div class="border p-3 mb-3">
-                        <p class="card-text"><strong>Nama:</strong> {{ $detail->nama }}</p>
-                        <p class="card-text"><strong>Spesifikasi:</strong> {{ $detail->spesifikasi }}</p>
-                        <p class="card-text"><strong>Merk:</strong> {{ $detail->merk }}</p>
-                        <p class="card-text"><strong>Tipe:</strong> {{ $detail->tipe }}</p>
-                        <p class="card-text"><strong>Jumlah:</strong> {{ $detail->jumlah }}</p>
-                        <p class="card-text"><strong>Satuan:</strong> {{ $detail->satuan }}</p>
-                        <p class="card-text"><strong>Harga Satuan:</strong> {{ $detail->harga_satuan }}</p>
+<div class="row">
+    <div class="col-md-6">
+        <!-- First Card: Product Information -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-title"><h2>Spesifikasi Produk</h2></div>
+                <div class="form-group">
+                    <label class="form-label">Status:</label>
+                    <div class="selectgroup w-100">
+                        <label class="selectgroup-item">
+                            <input type="radio" name="status" value="arsip" class="selectgroup-input" {{ $produk->status == 'arsip' ? 'checked' : '' }} />
+                            <span class="selectgroup-button">Arsip</span>
+                        </label>
+                        <label class="selectgroup-item">
+                            <input type="radio" name="status" value="publish" class="selectgroup-input" {{ $produk->status == 'publish' ? 'checked' : '' }} />
+                            <span class="selectgroup-button">Publish</span>
+                        </label>
                     </div>
-                @endforeach
-            @else
-                <p>No Detail Produk List</p>
-            @endif
-
-            <a href="{{ route('produk.index') }}" class="btn btn-primary mt-3">Kembali</a>
+                    @if ($errors->has('status'))
+                        <small class="text-danger">{{ $errors->first('status') }}</small>
+                    @endif
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Bagian</th>
+                            <th scope="col">Informasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nama</td>
+                            <td>{{ $produk->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tipe Barang</td>
+                            <td>{{ $produk->tipe_barang }}</td>
+                        </tr>
+                        <tr>
+                            <td>Stok</td>
+                            <td>{{ $produk->stok }}</td>
+                        </tr>
+                        <tr>
+                            <td>Masa Berlaku Produk</td>
+                            <td>{{ $produk->masa_berlaku_produk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Merk</td>
+                            <td>{{ $produk->merk }}</td>
+                        </tr>
+                        <tr>
+                            <td>No Produk Penyedia</td>
+                            <td>{{ $produk->no_produk_penyedia }}</td>
+                        </tr>
+                        <tr>
+                            <td>Unit Pengukuran</td>
+                            <td>{{ $produk->unit_pengukuran }}</td>
+                        </tr>
+                        <tr>
+                            <td>Jenis Produk</td>
+                            <td>{{ $produk->jenis_produk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Kode KBLI</td>
+                            <td>{{ $produk->kode_kbli }}</td>
+                        </tr>
+                        <tr>
+                            <td>Asal Negara</td>
+                            <td>{{ $produk->asal_negara }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nilai TKDN</td>
+                            <td>{{ $produk->nilai_tkdn }}</td>
+                        </tr>
+                        <tr>
+                            <td>No SNI</td>
+                            <td>{{ $produk->no_sni }}</td>
+                        </tr>
+                        <tr>
+                            <td>Garansi Produk</td>
+                            <td>{{ $produk->garansi_produk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Uji Fungsi</td>
+                            <td>{{ $produk->uji_fungsi }}</td>
+                        </tr>
+                        <tr>
+                            <td>SNI</td>
+                            <td>{{ $produk->sni }}</td>
+                        </tr>
+                        <tr>
+                            <td>Memiliki SVLK</td>
+                            <td>{{ $produk->memiliki_svlk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Jenis Alat</td>
+                            <td>{{ $produk->jenis_alat }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fungsi</td>
+                            <td>{{ $produk->fungsi }}</td>
+                        </tr>
+                        <tr>
+                            <td>Spesifikasi Produk</td>
+                            <td>{{ $produk->spesifikasi_produk }}</td>
+                        </tr>
+                        <tr>
+                            <td>Harga Tayang</td>
+                            <td>{{ 'Rp ' . number_format($produk->harga_tayang, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Komoditas</td>
+                            <td>{{ $produk->komoditas->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>Kategori</td>
+                            <td>{{ $produk->kategori->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sub Kategori</td>
+                            <td>{{ $produk->subkategori->nama }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <div class="col-md-6">
+        <!-- Second Card: Product Images -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-title"><h2>Gambar Produk</h2></div>
+            </div>
+            <div class="card-body">
+                @if($produk->images && $produk->images->isNotEmpty())
+                    <div class="row">
+                        @foreach ($produk->images as $image)
+                            <div class="col-md-6 mb-3">
+                                <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid rounded shadow-sm">
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p>No Image Available</p>
+                @endif
+            </div>
+        </div>
+
+        <!-- Third Card: Detail Produk List -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-title"><h2>Detail Produk List</h2></div>
+            </div>
+            <div class="card-body">
+                @if($produk->produkList && $produk->produkList->isNotEmpty())
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Spesifikasi</th>
+                                <th>Merk</th>
+                                <th>Tipe</th>
+                                <th>Jumlah</th>
+                                <th>Satuan</th>
+                                <th>Harga Satuan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($produk->produkList as $detail)
+                                <tr>
+                                    <td>{{ $detail->nama }}</td>
+                                    <td>{{ $detail->spesifikasi }}</td>
+                                    <td>{{ $detail->merk }}</td>
+                                    <td>{{ $detail->tipe }}</td>
+                                    <td>{{ $detail->jumlah }}</td>
+                                    <td>{{ $detail->satuan }}</td>
+                                    <td>{{ 'Rp ' . number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <p>No Detail Produk List Available</p>
+                @endif
+            </div>
+            
+        </div>
+        
+    </div>
+
+
+    </div>
+    <a href="{{ route('produk.index') }}" class="btn btn-primary">Kembali</a>
+
 </div>
+
+
+<script>
+    document.querySelectorAll('input[name="status"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var status = this.value;
+            var productId = "{{ $produk->id }}";  // Pass the product ID to use in the request
+
+            fetch(`/produk/update-status/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({status: status})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Status berhasil diperbarui');
+                } else {
+                    alert('Gagal memperbarui status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memperbarui status');
+            });
+        });
+    });
+</script>
+
 @endsection

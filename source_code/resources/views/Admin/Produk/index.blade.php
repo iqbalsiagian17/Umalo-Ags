@@ -1,17 +1,30 @@
 @extends('layouts.admin.master')
 
 @section('content')
-<div class="container">
-    <h1 class="mt-4">Daftar Produk</h1>
-    <a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Tambah Produk</a>
-    <table class="table table-striped">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-title"><h1>Produk</h1></div>
+                <a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Tambah Produk</a>
+            </div>
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+                <div class="card-body">
+                    <div class="row">
+    <table class="table table-striped table-responsive table-hover">
         <thead class="thead-dark">
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Tipe Barang</th>
                 <th>Stok</th>
                 <th>Harga Tayang</th>
+                <th>Status</th>
                 <th style="width: 200px">Gambar</th>
                 <th>Aksi</th>
             </tr>
@@ -21,18 +34,16 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $produk->nama }}</td>
-                <td>{{ $produk->tipe_barang }}</td>
                 <td>{{ $produk->stok }}</td>
-                <td>{{ $produk->harga_tayang }}</td>
+                <td>{{ formatRupiah($produk->harga_tayang) }}</td>
+                <td>{{ $produk->status }}</td>
                 <td style="max-width: 200px;">
                     @if ($produk->images->isNotEmpty())
-                        @foreach($produk->images as $image)
-                            <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid" style="border-radius: initial; width: 100%; height: auto; max-width: 100%; margin-bottom: 10px;">
-                        @endforeach
+                        <img src="{{ asset($produk->images->first()->gambar) }}" alt="Gambar Produk" class="img-fluid" style="border-radius: initial; width: 100%; height: auto; max-width: 100%; margin-bottom: 10px;">
                     @else
                         <p>No Image</p>
                     @endif
-                </td>
+                </td>                
                 <td>
                     <a href="{{ route('produk.show', $produk->id) }}" class="btn btn-info btn-sm">Lihat</a>
                     <a href="{{ route('produk.edit', $produk->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -46,5 +57,14 @@
             @endforeach
         </tbody>
     </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
 @endsection

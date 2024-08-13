@@ -34,6 +34,7 @@ class Produk extends Model
         'komoditas_id',
         'sub_kategori_id',
         'kategori_id',
+        'status',
         'harga_diskon',
         'harga_tayang',
     ];
