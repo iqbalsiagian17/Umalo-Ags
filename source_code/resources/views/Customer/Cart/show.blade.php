@@ -32,14 +32,9 @@
                             </td>
                             <td>{{ $details['harga_tayang'] ?? 'Harga Tidak Tersedia' }}</td>
                             <td>
-                                <form action="{{ route('cart.update', $id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control" min="1">
-                                    <button type="submit" class="btn btn-primary mt-2">Update</button>
-                                </form>
+                                <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1">
                             </td>
-                            <td>{{ $subtotal = ($details['harga_tayang'] ?? 0) * $details['quantity'] }}</td>
+                            <td class="subtotal" data-id="{{ $id }}">{{ $subtotal = ($details['harga_tayang'] ?? 0) * $details['quantity'] }}</td>
                             <td>
                                 <form action="{{ route('cart.remove', $id) }}" method="POST">
                                     @csrf
@@ -54,7 +49,7 @@
             </table>
 
             <div class="text-right">
-                <h3>Total: {{ $total }}</h3>
+                <h3>Total: <span id="total">{{ $total }}</span></h3>
                 <form action="{{ route('cart.checkout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-success">Checkout</button>
@@ -67,4 +62,40 @@
             <div class="alert alert-warning">Keranjang belanja kosong.</div>
         @endif
     </div>
+
+    <script>
+        document.querySelectorAll('.quantity').forEach(function(input) {
+            input.addEventListener('input', function() {
+                var id = this.dataset.id;
+                var quantity = parseInt(this.value);
+
+                // Kirim data ke server menggunakan AJAX
+                fetch('/cart/update-quantity/' + id, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ quantity: quantity })
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          var harga = parseFloat(this.closest('tr').querySelector('td:nth-child(3)').innerText);
+                          var subtotalElement = this.closest('tr').querySelector('.subtotal');
+                          var subtotal = quantity * harga;
+                          subtotalElement.innerText = subtotal;
+                          updateTotal();
+                      }
+                  });
+            });
+        });
+
+        function updateTotal() {
+            var total = 0;
+            document.querySelectorAll('.subtotal').forEach(function(subtotalElement) {
+                total += parseFloat(subtotalElement.innerText);
+            });
+            document.getElementById('total').innerText = total;
+        }
+    </script>
 @endsection

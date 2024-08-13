@@ -11,82 +11,83 @@ use App\Models\OrderItem;
 class CartController extends Controller
 {
     public function checkout()
-    {
-        $cart = session()->get('cart');
+{
+    // Pastikan session cart terbaru diambil
+    $cart = session()->get('cart');
 
-        if (!$cart || count($cart) == 0) {
-            return redirect()->route('cart.view')->with('error', 'Keranjang belanja Anda kosong.');
-        }
+    if (!$cart || count($cart) == 0) {
+        return redirect()->route('cart.view')->with('error', 'Keranjang belanja Anda kosong.');
+    }
 
-        // Hitung total harga
-        $totalHarga = 0;
-        foreach ($cart as $id => $details) {
-            $totalHarga += $details['harga_tayang'] * $details['quantity'];
-        }
+    // Lanjutkan dengan proses checkout seperti biasa
+    $totalHarga = 0;
+    foreach ($cart as $id => $details) {
+        $totalHarga += $details['harga_tayang'] * $details['quantity'];
+    }
 
-        // Buat order
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'harga_total' => $totalHarga,
-            'status' => 'pending',
+    // Buat order dan simpan item
+    $order = Order::create([
+        'user_id' => auth()->id(),
+        'harga_total' => $totalHarga,
+        'status' => 'pending',
+    ]);
+
+    foreach ($cart as $id => $details) {
+        OrderItem::create([
+            'order_id' => $order->id,
+            'produk_id' => $id,
+            'jumlah' => $details['quantity'],
+            'harga' => $details['harga_tayang'],
         ]);
-
-        // Simpan item dalam order
-        foreach ($cart as $id => $details) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'produk_id' => $id,
-                'jumlah' => $details['quantity'],
-                'harga' => $details['harga_tayang'],
-            ]);
-        }
-
-        // Kosongkan keranjang setelah checkout
-        session()->forget('cart');
-
-        return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat!');
     }
-    public function add(Request $request, $id)
-    {
-        $product = Produk::with('bigSales')->find($id);
-    
-        if (!$product) {
-            return redirect()->back()->with('error', 'Produk tidak ditemukan!');
-        }
-    
-        // Cek apakah produk tersebut tergolong ke Big Sale
-        $bigSale = $product->bigSales()
-                            ->where('status', 1)
-                            ->whereDate('mulai', '<=', now())
-                            ->whereDate('berakhir', '>=', now())
-                            ->first();
-    
-        // Tentukan harga yang akan digunakan di keranjang
-        $harga = $product->harga_tayang;
-        if ($bigSale) {
-            // Jika produk ada di Big Sale dan ada harga_diskon, gunakan harga_diskon
-            $harga = $bigSale->pivot->harga_diskon;
-        }
-    
-        $quantity = $request->input('quantity', 1); // default quantity to 1 if not provided
-    
-        $cart = session()->get('cart', []);
-    
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $quantity;
-        } else {
-            $cart[$id] = [
-                "name" => $product->nama,
-                "quantity" => $quantity,
-                "harga_tayang" => $harga, // Menggunakan harga yang sudah ditentukan
-                "image" => $product->images->first()->gambar ?? 'default.png' // handle missing image
-            ];
-        }
-    
-        session()->put('cart', $cart);
-    
-        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
+
+    // Kosongkan keranjang setelah checkout
+    session()->forget('cart');
+
+    return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat!');
+}
+
+public function add(Request $request, $id)
+{
+    $product = Produk::with('bigSales')->find($id);
+
+    if (!$product) {
+        return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
     }
+
+    $bigSale = $product->bigSales()
+                        ->where('status', 1)
+                        ->whereDate('mulai', '<=', now())
+                        ->whereDate('berakhir', '>=', now())
+                        ->first();
+
+    $harga = $product->harga_tayang;
+    if ($bigSale) {
+        $harga = $bigSale->pivot->harga_diskon;
+    }
+
+    $quantity = $request->input('quantity', 1);
+
+    $cart = session()->get('cart', []);
+
+    if (isset($cart[$id])) {
+        $cart[$id]['quantity'] += $quantity;
+    } else {
+        $cart[$id] = [
+            "name" => $product->nama,
+            "quantity" => $quantity,
+            "harga_tayang" => $harga,
+            "image" => $product->images->first()->gambar ?? 'default.png'
+        ];
+    }
+
+    session()->put('cart', $cart);
+
+    return response()->json(['success' => true]);
+}
+
+
+
     
     
 
@@ -97,16 +98,19 @@ class CartController extends Controller
         return view('customer.cart.show', compact('cart'));
     }
 
-    public function update(Request $request, $id)
-    {
-        if ($request->has('quantity')) {
-            $cart = session()->get('cart');
-            $cart[$id]['quantity'] = $request->quantity;
-            session()->put('cart', $cart);
+    public function updateQuantity(Request $request, $id)
+{
+    $cart = session()->get('cart');
+    if (isset($cart[$id])) {
+        $cart[$id]['quantity'] = $request->input('quantity');
+        session()->put('cart', $cart);
 
-            return redirect()->route('cart.view')->with('success', 'Keranjang berhasil diperbarui!');
-        }
+        return response()->json(['success' => true]);
     }
+
+    return response()->json(['success' => false]);
+}
+
 
     public function remove($id)
     {

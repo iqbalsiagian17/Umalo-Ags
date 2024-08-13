@@ -69,6 +69,9 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     //checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::patch('/cart/update-quantity/{id}', [CartController::class, 'updateQuantity']);
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+
 
     //contract
     Route::get('/order/{id}/contract', [OrderController::class, 'contract'])->name('order.contract');
