@@ -14,6 +14,7 @@ use App\Http\Controllers\Costumer\User\UserDetailController;
 use App\Http\Controllers\Costumer\Produk\ProdukCostumerController;
 use App\Http\Controllers\Admin\BigSale;
 use App\Http\Controllers\Admin\QnA\QaController;
+use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
@@ -88,6 +89,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('bigsale', BigsaleController::class);
     Route::resource('slider', SliderController::class);
     Route::resource('qas', QaController::class);
+    Route::resource('transaksi', TransaksiController::class);
+
 
     Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); //mengambil sub kategori berdasarkan kategori yang dipilih
 
