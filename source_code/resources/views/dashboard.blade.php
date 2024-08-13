@@ -3,6 +3,12 @@
 @section('content')
 
 
+
+
+
+
+
+
 <div class="row">
     <div class="col-sm-6 col-md-3">
       <div class="card card-stats card-round">
@@ -15,8 +21,8 @@
             </div>
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
-                <p class="card-category">Visitors</p>
-                <h4 class="card-title">1,294</h4>
+                <p class="card-category">Customer</p>
+                <h4 class="card-title">{{ $customerCount }}</h4> <!-- Display the customer count -->
               </div>
             </div>
           </div>

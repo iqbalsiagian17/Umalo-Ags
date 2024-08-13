@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BigSale;
 use App\Models\Produk;
+use App\Models\Slider;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,21 +28,20 @@ class HomeController extends Controller
     public function index()
     {
         $produk = Produk::with('images')->get();
-        
+        $slider = Slider::all();
         $bigSale = BigSale::with('produk')
         ->where('status', true)
         ->whereDate('mulai', '<=', now())
         ->whereDate('berakhir', '>=', now())
         ->first();
 
-
-
-
-        return view('home', compact('produk','bigSale'));
+        return view('home', compact('produk','bigSale','slider'));
     }
 
     public function dashboard()
     {
-        return view('dashboard');
+        $customerCount = User::where('role', 'customer')->count();
+
+        return view('dashboard',compact('customerCount'));
     }
 }
