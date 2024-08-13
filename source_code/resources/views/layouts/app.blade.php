@@ -58,6 +58,9 @@
                                 <a class="dropdown-item" href="{{ route('user.show') }}">
                                     {{ __('Settings') }}
                                 </a>
+                                <a class="dropdown-item" href="{{ route('order.history') }}">
+                                    {{ __('Pesanan') }}
+                                </a>
 
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();

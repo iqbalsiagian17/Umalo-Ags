@@ -58,7 +58,7 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
-    
+
 
     // Cart
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
@@ -68,14 +68,21 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 
     //checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::patch('/cart/update-quantity/{id}', [CartController::class, 'updateQuantity']);
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+
+    //order
+    Route::get('/riwayat-pesanan', [OrderController::class, 'history'])->name('order.history');
+    Route::get('/order/detail/{id}', [OrderController::class, 'detail'])->name('order.detail');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::patch('/order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+
+
+
 
 
     //contract
     Route::get('/order/{id}/contract', [OrderController::class, 'contract'])->name('order.contract');
-
 });
 
 

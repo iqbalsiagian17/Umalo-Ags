@@ -4,12 +4,6 @@
     <div class="container">
         <h1>Detail Pesanan</h1>
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <h3>Pesanan ID: {{ $order->id }}</h3>
         <p>Status: {{ $order->status }}</p>
         <p>Total Harga: {{ $order->harga_total }}</p>
@@ -37,8 +31,14 @@
         </table>
 
         <div class="mt-4">
-            <a href="{{ route('cart.view') }}" class="btn btn-secondary">Back</a>
+            <a href="{{ route('order.history') }}" class="btn btn-secondary">Back to History</a>
+            @if($order->status != 'cancelled')
+                <form action="{{ route('order.cancel', $order->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-danger">Batalkan Pesanan</button>
+                </form>
+            @endif
         </div>
-        
     </div>
 @endsection

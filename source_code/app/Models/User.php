@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Casts\Attribute; 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 
 class User extends Authenticatable
@@ -25,7 +25,7 @@ class User extends Authenticatable
         'password',
         'role',
 
-        
+
     ];
 
     /**
@@ -50,16 +50,21 @@ class User extends Authenticatable
     protected function role(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ["costumer", "admin"][$value],
+            get: fn($value) =>  ["costumer", "admin"][$value],
         );
     }
 
-    public function socialite(){
+    public function socialite()
+    {
         return $this->hasMany(Socialite::class);
     }
 
     public function userDetail()
-{
-    return $this->hasOne(UserDetail::class);
-}
+    {
+        return $this->hasOne(UserDetail::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
