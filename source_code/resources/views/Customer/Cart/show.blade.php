@@ -9,6 +9,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
         @if(isset($cart) && count($cart) > 0)
             <table class="table table-bordered">
@@ -54,13 +59,15 @@
                     @csrf
                     <button type="submit" class="btn btn-success">Checkout</button>
                 </form>
-                <a href="{{ url('') }}" class="btn btn-secondary">Back</a> <!-- Tombol Back ke halaman home -->
 
             </div>
             
         @else
             <div class="alert alert-warning">Keranjang belanja kosong.</div>
         @endif
+        <div class="text-right">
+            <a href="{{ url('home') }}" class="btn btn-secondary">Back</a>
+        </div>
     </div>
 
     <script>
@@ -69,7 +76,6 @@
                 var id = this.dataset.id;
                 var quantity = parseInt(this.value);
 
-                // Kirim data ke server menggunakan AJAX
                 fetch('/cart/update-quantity/' + id, {
                     method: 'PATCH',
                     headers: {
@@ -85,11 +91,14 @@
                           var subtotal = quantity * harga;
                           subtotalElement.innerText = subtotal;
                           updateTotal();
+                      } else {
+                          alert('Kuantitas melebihi stok yang tersedia!');
+                          this.value = this.getAttribute('max');  // Reset kuantitas ke stok maksimum
                       }
                   });
             });
         });
-//umalojaya
+
         function updateTotal() {
             var total = 0;
             document.querySelectorAll('.subtotal').forEach(function(subtotalElement) {

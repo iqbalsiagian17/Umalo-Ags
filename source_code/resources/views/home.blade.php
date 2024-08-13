@@ -223,7 +223,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menambahkan produk ke keranjang.');
+                alert('Kuantitas total dalam keranjang melebihi stok yang tersedia!');
             });
         });
     });
