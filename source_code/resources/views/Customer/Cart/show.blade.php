@@ -89,7 +89,7 @@
                   });
             });
         });
-
+//umalojaya
         function updateTotal() {
             var total = 0;
             document.querySelectorAll('.subtotal').forEach(function(subtotalElement) {
@@ -99,3 +99,5 @@
         }
     </script>
 @endsection
+
+
