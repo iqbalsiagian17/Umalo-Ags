@@ -44,13 +44,14 @@
                     <div class="form-group mb-3">
                         <label for="status">Status</label>
                         <select class="form-control" id="status" name="status">
-                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Aktif</option>
-                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                            <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="tidak aktif" {{ old('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
                         @if ($errors->has('status'))
                             <small class="text-danger">{{ $errors->first('status') }}</small>
                         @endif
                     </div>
+                    
                     <div class="form-group mb-3">
                         <label for="products">Produk</label>
                         @foreach($products as $product)

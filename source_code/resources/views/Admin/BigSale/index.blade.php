@@ -25,7 +25,7 @@
                             <td>{{ $bigSale->judul }}</td>
                             <td>{{ $bigSale->mulai }}</td>
                             <td>{{ $bigSale->berakhir }}</td>
-                            <td>{{ $bigSale->status ? 'Aktif' : 'Tidak Aktif' }}</td>
+                            <td>{{ $bigSale->status}}</td>
                             <td>
                                 <a href="{{ route('bigsale.show', $bigSale->id) }}" class="btn btn-info btn-sm">View</a>
                                 <a href="{{ route('bigsale.edit', $bigSale->id) }}" class="btn btn-warning btn-sm">Edit</a>

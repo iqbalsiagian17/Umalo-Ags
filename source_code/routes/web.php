@@ -37,7 +37,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('track.visit');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 //Normal Users Routes List
@@ -79,6 +79,7 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 
     //Bigsale
     Route::get('/bigsale/now', [BigSaleCustomerController::class, 'index'])->name('bigsale.now.index');
+    Route::post('/bigsale/{id}/update-status', [BigSaleCustomerController::class, 'updateStatus'])->name('bigsale.updateStatus');
 
 
 

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('judul');
             $table->dateTime('mulai');
             $table->dateTime('berakhir');
-            $table->boolean('status')->default(false);
+            $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');
             $table->timestamps();
         });
     }

@@ -97,8 +97,8 @@
                         <p><strong>Stok:</strong> {{ $item->stok }}</p>
 
                         @if($item->nego === 'yes')
-            <span class="badge badge-success">Bisa Nego</span>
-        @endif
+                    <span class="badge badge-success">Bisa Nego</span>
+                @endif
 
                         <!-- Quantity Input -->
                         <div class="form-group">
@@ -109,9 +109,6 @@
 
                         <!-- Add to Cart Button -->
                         <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $item->id }}">Masukkan Keranjang</button>
-
-                        <!-- View Cart Button -->
-                        <a href="{{ route('cart.view') }}" class="btn btn-warning mt-2">View Cart</a>
 
                         <a href="{{ route('produk_customer.user.show', $item->id) }}"
                             class="btn btn-secondary mt-2">Lihat Detail</a>
@@ -141,9 +138,6 @@
                                 <!-- Add to Cart Button -->
                                 <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
             
-                                <!-- View Cart Button -->
-                                <a href="{{ route('cart.view') }}" class="btn btn-warning mt-2">View Cart</a>
-            
                                 <!-- View Detail Button -->
                                 <a href="{{ route('produk_customer.user.show', $product->id) }}"
                                    class="btn btn-secondary mt-2">Lihat Detail</a>
@@ -172,6 +166,8 @@
                             if (distance < 0) {
                                 clearInterval(countdownInterval);
                                 document.getElementById('countdown-timer').textContent = "EXPIRED";
+
+                                updateBigSaleStatus();
                             }
                         }
             
@@ -183,10 +179,32 @@
                     }
             
                     // Get the end time from the server (convert it to a Date object)
-                    const bigSaleEndTime = new Date("{{ $bigSale->berakhir }}").getTime();
-            
-                    // Start the countdown
-                    startCountdown(bigSaleEndTime);
+                    function updateBigSaleStatus() {
+    // Send an AJAX request to update the BigSale status
+    fetch('{{ route("bigsale.updateStatus", $bigSale->id) }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+        body: JSON.stringify({
+            status: 'tidak aktif'
+        })
+    }).then(response => {
+        if (response.ok) {
+            console.log('Big Sale status updated to tidak aktif.');
+            location.reload(); // Reload the page to reflect the changes
+        } else {
+            console.error('Failed to update Big Sale status.');
+        }
+    });
+}
+
+// Get the end time from the server (convert it to a Date object)
+const bigSaleEndTime = new Date("{{ $bigSale->berakhir }}").getTime();
+
+// Start the countdown
+startCountdown(bigSaleEndTime);
                 </script>
             @else
                 <p>Tidak ada Big Sale yang sedang berlangsung.</p>

@@ -32,6 +32,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Update the status of expired Big Sales
+        $this->updateBigSaleStatus();
+    
         $produk = Produk::with('images')
             ->where('status', 'publish')
             ->get();
@@ -39,7 +42,7 @@ class HomeController extends Controller
         $slider = Slider::all();
     
         $bigSale = BigSale::with('produk')
-            ->where('status', true)
+            ->where('status', 'aktif')
             ->whereDate('mulai', '<=', now())
             ->whereDate('berakhir', '>=', now())
             ->first();
@@ -48,6 +51,21 @@ class HomeController extends Controller
     
         return view('home', compact('produk', 'bigSale', 'slider', 'kategori'));
     }
+    
+
+
+private function updateBigSaleStatus()
+{
+    $currentDateTime = now(); // Get the current date and time
+
+    // Update all active Big Sales that have passed their end time
+    BigSale::where('status', 'aktif')
+        ->where('berakhir', '<=', $currentDateTime)
+        ->update(['status' => 'tidak aktif']);
+}
+
+
+
     
 
     public function dashboard()

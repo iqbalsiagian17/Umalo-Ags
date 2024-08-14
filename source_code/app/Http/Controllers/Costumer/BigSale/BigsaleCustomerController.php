@@ -20,4 +20,13 @@ class BigSaleCustomerController extends Controller
     $products = $bigSale ? $bigSale->produk : collect(); // Use collect() for an empty collection if no BigSale is active
 
     return view('customer.bigsale.index', compact('products'));    }
+
+    public function updateStatus($id)
+{
+    $bigSale = BigSale::findOrFail($id);
+    $bigSale->update(['status' => 'tidak aktif']);
+    
+    return response()->json(['message' => 'Status updated successfully']);
+}
+
 }
