@@ -21,4 +21,3 @@ class TrackVisit
         return $next($request);
     }
 }
-
