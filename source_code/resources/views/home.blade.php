@@ -9,22 +9,15 @@
                     <div class="hero__categories">
                         <div class="hero__categories__all">
                             <i class="fa fa-bars"></i>
-                            <span>All departments</span>
+                            <span>Kategori</span>
                         </div>
                         <ul>
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit & Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter & Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya & Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
-                            <li><a href="#">Fresh Bananas</a></li>
+                            @foreach($kategori as $kategoris)
+                                <li><a href="#">{{ $kategoris->nama }}</a></li>
+                            @endforeach
                         </ul>
                     </div>
+                    
                 </div>
                 <div class="col-lg-9">
                     <div class="hero__search">
@@ -48,14 +41,33 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero__item set-bg" data-setbg="{{ $slider->first()->image }}">
-                        <div class="hero__text">
-                            <span>FRUIT FRESH</span>
-                            <h2>Vegetable <br />100% Organic</h2>
-                            <p>Free Pickup and Delivery Available</p>
-                            <a href="#" class="primary-btn">SHOP NOW</a>
+                    <div id="heroCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            
+                            @foreach($slider as $index => $sliders)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <div class="hero__item set-bg" data-setbg="{{ asset($sliders->image) }}">
+                                        <div class="hero__text">
+                                            <span>FRUIT FRESH</span>
+                                            <h2>Vegetable 100% Organic</h2>
+                                            <p>Free Pickup and Delivery Available</p>
+                                            <a href="#" class="primary-btn">SHOP NOW</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
+                        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
+                    
+
                 </div>
             </div>
         </div>
@@ -66,12 +78,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card-body">
-                    @if (auth()->user()->is_admin == 1)
-                        <a href="{{ url('admin/routes') }}">Admin</a>
-                    @else
-                        <div class="panel-heading">Normal User</div>
-                    @endif
-
                     @foreach ($produk as $item)
                     <div class="product-item mb-4">
                         <h2>{{ $item->nama }}</h2>
@@ -112,7 +118,7 @@
                     <h2>{{ $bigSale->judul }}</h2>
                     <p>Mulai: {{ $bigSale->mulai }}</p>
                     <p>Berakhir: {{ $bigSale->berakhir }}</p>
-        
+                    <a href="{{ route('bigsale.now.index') }}" class="btn btn-primary">Shop</a>
                     <h3>Produk Diskon:</h3>
                     <ul>
                         @foreach($bigSale->produk as $product)
@@ -231,37 +237,40 @@
 
 
     <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-        var Tawk_API = Tawk_API || {},
-            Tawk_LoadStart = new Date();
-        (function() {
-            var s1 = document.createElement("script"),
-                s0 = document.getElementsByTagName("script")[0];
-            s1.async = true;
-            s1.src = 'https://embed.tawk.to/66b98f50146b7af4a4392fd9/1i52dfl1n';
-            s1.charset = 'UTF-8';
-            s1.setAttribute('crossorigin', '*');
-            s0.parentNode.insertBefore(s1, s0);
-        })();
+    @if(auth()->check())
+<script type="text/javascript">
+    var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+    (function() {
+        var s1 = document.createElement("script"),
+            s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/66b98f50146b7af4a4392fd9/1i52dfl1n';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
 
-        // Custom Tawk.to Configuration
-        Tawk_API.onLoad = function() {
-            Tawk_API.setAttributes({
-                'email': "{{ auth()->user()->email }}",
-            }, function(error) {});
-        };
+    // Custom Tawk.to Configuration
+    Tawk_API.onLoad = function() {
+        Tawk_API.setAttributes({
+            'email': "{{ auth()->user()->email }}",
+        }, function(error) {});
+    };
 
-        // Function to clear cookies on logout
-        function clearTawkCookies() {
-            Tawk_API.endChat(); // Ends the active chat session, if any
-            document.cookie = 'TawkConnectionTime=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            document.cookie = 'Tawk_66b98f50146b7af4a4392fd9=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        }
+    // Function to clear cookies on logout
+    function clearTawkCookies() {
+        Tawk_API.endChat(); // Ends the active chat session, if any
+        document.cookie = 'TawkConnectionTime=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'Tawk_66b98f50146b7af4a4392fd9=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    }
 
-        // Attach the clearTawkCookies function to the logout process
-        document.getElementById('logout-button').addEventListener('click', function() {
-            clearTawkCookies();
-        });
-    </script>
+    // Attach the clearTawkCookies function to the logout process
+    document.getElementById('logout-button').addEventListener('click', function() {
+        clearTawkCookies();
+    });
+</script>
+@endif
+
     <!--End of Tawk.to Script-->
 @endsection

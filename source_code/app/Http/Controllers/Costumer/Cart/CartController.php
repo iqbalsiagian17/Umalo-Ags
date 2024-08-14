@@ -147,4 +147,6 @@ class CartController extends Controller
 
         return redirect()->route('cart.view')->with('success', 'Produk berhasil dihapus dari keranjang!');
     }
+
+    
 }

@@ -1,22 +1,34 @@
 @extends('layouts.admin.master')
 
 @section('content')
-<div class="container mt-5">
-    <h1>Slider Details</h1>
-    <div class="mb-3">
-        <label class="form-label">Image:</label>
-        <div>
-            <img src="{{ asset($slider->image) }}" width="300">
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2>Slider Details</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Image</th>
+                            <td>
+                                <img src="{{ asset($slider->image) }}" class="img-fluid img-thumbnail" width="300">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ $slider->deskripsi }}</td>
+                        </tr>
+                        <tr>
+                            <th>URL</th>
+                            <td><a href="{{ $slider->url }}" target="_blank">{{ $slider->url }}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="{{ route('slider.index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
         </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Description:</label>
-        <p>{{ $slider->deskripsi }}</p>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">URL:</label>
-        <p>{{ $slider->url }}</p>
-    </div>
-    <a href="{{ route('slider.index') }}" class="btn btn-secondary">Back to List</a>
 </div>
 @endsection

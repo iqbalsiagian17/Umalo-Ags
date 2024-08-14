@@ -353,12 +353,7 @@
                       </div>
                       <div class="u-text">
                         <h4>{{ Auth::user()->name }}</h4>
-                        <p class="text-muted">hello@example.com</p>
-                        <a
-                          href="profile.html"
-                          class="btn btn-xs btn-secondary btn-sm"
-                          >View Profile</a
-                        >
+                        <p class="text-muted">{{ Auth::user()->email }}</p>
                       </div>
                     </div>
                   </li>

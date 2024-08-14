@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
-
+use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +43,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Normal Users Routes List
 Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
 
 
@@ -70,12 +69,16 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::patch('/cart/update-quantity/{id}', [CartController::class, 'updateQuantity']);
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart/totalPrice', [CartController::class, 'totalPrice'])->name('cart.totalPrice');
 
     //order
     Route::get('/riwayat-pesanan', [OrderController::class, 'history'])->name('order.history');
     Route::get('/order/detail/{id}', [OrderController::class, 'detail'])->name('order.detail');
     Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::patch('/order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+
+    //Bigsale
+    Route::get('/bigsale/now', [BigSaleCustomerController::class, 'index'])->name('bigsale.now.index');
 
 
 

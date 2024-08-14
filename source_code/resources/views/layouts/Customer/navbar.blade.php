@@ -9,7 +9,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="img/logo.png" alt=""></a>
+            <a href="#"><img src="{{asset('assets/images/ags.png')}}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -135,12 +135,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    <div class="header__logo text-center">
+                        <a href="./index.html"><img src="{{asset('assets/images/ags.png')}}" alt="" width="100px"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <nav class="header__menu">
+                    {{-- <nav class="header__menu">
                         <ul>
                             <li class="active"><a href="./index.html">Home</a></li>
                             <li><a href="./shop-grid.html">Shop</a></li>
@@ -155,17 +155,19 @@
                             <li><a href="./blog.html">Blog</a></li>
                             <li><a href="./contact.html">Contact</a></li>
                         </ul>
-                    </nav>
+                    </nav> --}}
                 </div>
                 <div class="col-lg-3">
+                    @if(Auth::check())
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="#"><i class="fa fa-heart"></i> {{-- <span>1</span> --}}</a></li>
+                            <li><a href="{{ route('cart.view') }}"><i class="fa fa-shopping-bag"></i> {{-- <span>3</span> --}}</a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
-                    </div>
+{{--                     <div class="header__cart__price">item: <span>$150.00</span></div> --}}
                 </div>
+                @endif
+
             </div>
             <div class="humberger__open">
                 <i class="fa fa-bars"></i>

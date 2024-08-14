@@ -15,8 +15,8 @@
             </div>
         @endif
         
-                <div class="card-body">
-                    <div class="row">
+        <div class="card-body">
+    <div class="row">
     <table class="table table-striped table-responsive table-hover">
         <thead class="thead-dark">
             <tr>

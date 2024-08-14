@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BigSale;
+use App\Models\Kategori;
 use App\Models\Produk;
 use App\Models\Slider;
 use App\Models\User;
@@ -17,7 +18,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->only('dashboard');
     }
 
     /**
@@ -28,19 +29,22 @@ class HomeController extends Controller
     public function index()
     {
         $produk = Produk::with('images')
-        ->where('status', 'publish')
-        ->get();
-        
+            ->where('status', 'publish')
+            ->get();
+    
         $slider = Slider::all();
-        
+    
         $bigSale = BigSale::with('produk')
-        ->where('status', true)
-        ->whereDate('mulai', '<=', now())
-        ->whereDate('berakhir', '>=', now())
-        ->first();
-
-        return view('home', compact('produk','bigSale','slider'));
+            ->where('status', true)
+            ->whereDate('mulai', '<=', now())
+            ->whereDate('berakhir', '>=', now())
+            ->first();
+    
+        $kategori = Kategori::take(10)->get(); // Retrieve all categories
+    
+        return view('home', compact('produk', 'bigSale', 'slider', 'kategori'));
     }
+    
 
     public function dashboard()
     {

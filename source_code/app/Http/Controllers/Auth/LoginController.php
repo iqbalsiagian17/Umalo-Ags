@@ -61,4 +61,25 @@ class LoginController extends Controller
         }
             
     }
+
+    public function logout(Request $request)
+    {
+        $role = auth()->user()->role;  // Capture the user's role before logging out
+    
+        auth()->logout();  // Log the user out
+        $request->session()->invalidate();  // Invalidate the session
+        $request->session()->regenerateToken();  // Regenerate the CSRF token
+    
+        // Redirect based on user role
+        if ($role == 'admin') {
+            return redirect('/login');  // Redirect admin users to the login page
+        } elseif ($role == 'costumer') {
+            return redirect('/home');  // Redirect customer users to the home page
+        }
+    
+        return redirect('/');  // Fallback to home for other roles
+    }
+    
+
+
 }
