@@ -27,8 +27,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $produk = Produk::with('images')->get();
+        $produk = Produk::with('images')
+        ->where('status', 'publish')
+        ->get();
+        
         $slider = Slider::all();
+        
         $bigSale = BigSale::with('produk')
         ->where('status', true)
         ->whereDate('mulai', '<=', now())
