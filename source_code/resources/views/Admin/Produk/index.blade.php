@@ -14,6 +14,7 @@
                 {{ session('success') }}
             </div>
         @endif
+
         
         <div class="card-body">
     <div class="row">
@@ -33,7 +34,14 @@
             @foreach($produks as $index => $produk)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $produk->nama }}</td>
+                <td>
+                    {{ $produk->nama }} 
+                    @if($produk->nego === 'yes')
+                        <span class="badge badge-success">Bisa Nego</span>
+                    @else
+                        <span class="badge badge-danger">Tidak Bisa Nego</span>
+                    @endif
+                </td>                
                 <td>{{ $produk->stok }}</td>
                 <td>{{ formatRupiah($produk->harga_tayang) }}</td>
                 <td>{{ $produk->status }}</td>

@@ -6,7 +6,12 @@
         <!-- First Card: Product Information -->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="card-title"><h2>Spesifikasi Produk</h2></div>
+                <div class="card-title">
+                    <h2>Spesifikasi Produk</h2>
+                    @if($produk->nego === 'yes')
+                        <span class="badge badge-success">Bisa Nego</span>
+                    @endif
+                </div>
                 <div class="form-group">
                     <label class="form-label">Status:</label>
                     <div class="selectgroup w-100">
@@ -23,7 +28,7 @@
                         <small class="text-danger">{{ $errors->first('status') }}</small>
                     @endif
                 </div>
-            </div>
+            </div>            
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead class="thead-light">

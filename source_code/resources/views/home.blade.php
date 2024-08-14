@@ -96,6 +96,10 @@
                         <!-- Display the Stock -->
                         <p><strong>Stok:</strong> {{ $item->stok }}</p>
 
+                        @if($item->nego === 'yes')
+            <span class="badge badge-success">Bisa Nego</span>
+        @endif
+
                         <!-- Quantity Input -->
                         <div class="form-group">
                             <label for="quantity-{{ $item->id }}">Kuantitas</label>
@@ -115,41 +119,80 @@
                 @endforeach
 
                 @if($bigSale)
-                    <h2>{{ $bigSale->judul }}</h2>
-                    <p>Mulai: {{ $bigSale->mulai }}</p>
-                    <p>Berakhir: {{ $bigSale->berakhir }}</p>
-                    <a href="{{ route('bigsale.now.index') }}" class="btn btn-primary">Shop</a>
-                    <h3>Produk Diskon:</h3>
-                    <ul>
-                        @foreach($bigSale->produk as $product)
-                            <li>
-                                <div class="product-item mb-4">
-                                    <h4>{{ $product->nama }}</h4>
-                                    @if ($product->images->isNotEmpty())
-                                        <div class="product-images mb-3">
-                                            @foreach ($product->images as $image)
-                                                <img src="{{ asset($image->gambar) }}" class="img-fluid"
-                                                    alt="{{ $product->nama }}" style="max-width: 100px; height: auto;">
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                    <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
-                                     <!-- Add to Cart Button -->
-                                     <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
+                <h2>{{ $bigSale->judul }}</h2>
+            
+                <!-- Countdown Timer -->
+                <p id="countdown-timer" class="text-center" style="font-size: 24px; font-weight: bold;">00:00:00:00</p>
+            
+                <a href="{{ route('bigsale.now.index') }}" class="btn btn-primary">Shop</a>
+                <h3>Produk Diskon:</h3>
+                <ul>
+                    @foreach($bigSale->produk as $product)
+                        <li>
+                            <div class="product-item mb-4">
+                                <h4>{{ $product->nama }}</h4>
+                                @if ($product->images->isNotEmpty())
+                                    <div class="product-images mb-3">
+                                        <img src="{{ asset($product->images->first()->gambar) }}" class="img-fluid"
+                                             alt="{{ $product->nama }}" style="max-width: 100px; height: auto;">
+                                    </div>
+                                @endif
+                                <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
+                                <!-- Add to Cart Button -->
+                                <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
+            
+                                <!-- View Cart Button -->
+                                <a href="{{ route('cart.view') }}" class="btn btn-warning mt-2">View Cart</a>
+            
+                                <!-- View Detail Button -->
+                                <a href="{{ route('produk_customer.user.show', $product->id) }}"
+                                   class="btn btn-secondary mt-2">Lihat Detail</a>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            
+                <script>
+                    function startCountdown(endTime) {
+                        function updateCountdown() {
+                            const now = new Date().getTime();
+                            const distance = endTime - now;
+            
+                            // Calculate days, hours, minutes, and seconds
+                            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+                            // Display the result in the element with id="countdown-timer"
+                            document.getElementById('countdown-timer').textContent =
+                                `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+                            // If the countdown is over, write some text
+                            if (distance < 0) {
+                                clearInterval(countdownInterval);
+                                document.getElementById('countdown-timer').textContent = "EXPIRED";
+                            }
+                        }
+            
+                        // Update the countdown every 1 second
+                        const countdownInterval = setInterval(updateCountdown, 1000);
+            
+                        // Run the first update immediately
+                        updateCountdown();
+                    }
+            
+                    // Get the end time from the server (convert it to a Date object)
+                    const bigSaleEndTime = new Date("{{ $bigSale->berakhir }}").getTime();
+            
+                    // Start the countdown
+                    startCountdown(bigSaleEndTime);
+                </script>
+            @else
+                <p>Tidak ada Big Sale yang sedang berlangsung.</p>
+            @endif
+            
 
-                                    <!-- View Cart Button -->
-                                    <a href="{{ route('cart.view') }}" class="btn btn-warning mt-2">View Cart</a>
-
-                                    <!-- View Detail Button -->
-                                    <a href="{{ route('produk_customer.user.show', $product->id) }}"
-                                        class="btn btn-secondary mt-2">Lihat Detail</a>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p>Tidak ada Big Sale yang sedang berlangsung.</p>
-                @endif
                 </div>
             </div>
         </div>
@@ -271,6 +314,8 @@
     });
 </script>
 @endif
+
+
 
     <!--End of Tawk.to Script-->
 @endsection

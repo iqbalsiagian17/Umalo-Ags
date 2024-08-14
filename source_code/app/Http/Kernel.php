@@ -67,6 +67,5 @@ class Kernel extends HttpKernel
         'user-access' => \App\Http\Middleware\UserAccess::class,
         'check.big.sale' => \App\Http\Middleware\CheckBigSale::class,
         'track.visit' => \App\Http\Middleware\TrackVisit::class,
-
     ];
 }

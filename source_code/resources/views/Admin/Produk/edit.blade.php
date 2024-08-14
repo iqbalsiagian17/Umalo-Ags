@@ -50,6 +50,19 @@
                     @endif
                 </div>
             </div>
+
+            <!-- Nego Option -->
+            <div class="form-group">
+                <label for="nego">Bisa Nego:</label>
+                <select name="nego" class="form-control" required>
+                    <option value="no" {{ old('nego', $produk->nego) == 'no' ? 'selected' : '' }}>Tidak</option>
+                    <option value="yes" {{ old('nego', $produk->nego) == 'yes' ? 'selected' : '' }}>Ya</option>
+                </select>
+                @if ($errors->has('nego'))
+                    <small class="text-danger">{{ $errors->first('nego') }}</small>
+                @endif
+            </div>
+            
             <!-- Komoditas -->
             <div class="col-md-6">
                 <div class="form-group">

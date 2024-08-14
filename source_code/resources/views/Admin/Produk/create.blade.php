@@ -31,6 +31,18 @@
                         @endif
                     </div>
 
+                                        <!-- Nego Option -->
+                                        <div class="form-group">
+                                            <label for="nego">Bisa Nego:</label>
+                                            <select name="nego" class="form-control" required>
+                                                <option value="no" {{ old('nego') == 'no' ? 'selected' : '' }}>Tidak</option>
+                                                <option value="yes" {{ old('nego') == 'yes' ? 'selected' : '' }}>Ya</option>
+                                            </select>
+                                            @if ($errors->has('nego'))
+                                                <small class="text-danger">{{ $errors->first('nego') }}</small>
+                                            @endif
+                                        </div>
+
                     <!-- Product Categories -->
                     <div class="row">
                         <div class="col-md-4">
