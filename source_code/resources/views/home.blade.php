@@ -23,39 +23,40 @@
                     <div class="hero__search">
                         <div class="hero__search__form">
                             <form action="#">
-                                <div class="hero__search__categories">
-                                    All Categories
-                                    <span class="arrow_carrot-down"></span>
-                                </div>
-                                <input type="text" placeholder="What do you need?">
+                                <input type="text" placeholder="Search">
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
-                        </div>
-                        <div class="hero__search__phone">
-                            <div class="hero__search__phone__icon">
-                                <i class="fa fa-phone"></i>
-                            </div>
-                            <div class="hero__search__phone__text">
-                                <h5>+65 11.188.888</h5>
-                                <span>support 24/7 time</span>
-                            </div>
                         </div>
                     </div>
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             
-                            @foreach($slider as $index => $sliders)
-                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                    <div class="hero__item set-bg" data-setbg="{{ asset($sliders->image) }}">
+                            @if($slider->isEmpty())
+                                <!-- If no sliders are available, show a default image -->
+                                <div class="carousel-item active">
+                                    <div class="hero__item set-bg" data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
                                         <div class="hero__text">
-                                            <span>FRUIT FRESH</span>
-                                            <h2>Vegetable 100% Organic</h2>
-                                            <p>Free Pickup and Delivery Available</p>
-                                            <a href="#" class="primary-btn">SHOP NOW</a>
+                                            <span></span>
+                                            <h2 class="text-white">Welcome</h2>
+                                            <p></p>
+                                            <a href="/shop" class="primary-btn">SHOP NOW</a>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            @else
+                                @foreach($slider as $index => $sliders)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <div class="hero__item set-bg" data-setbg="{{ asset($sliders->image) }}">
+                                            <div class="hero__text">
+                                                <span>FRUIT FRESH</span>
+                                                <h2>Vegetable 100% Organic</h2>
+                                                <p>Free Pickup and Delivery Available</p>
+                                                <a href="#" class="primary-btn">SHOP NOW</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                         <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -67,157 +68,180 @@
                         </a>
                     </div>
                     
+                    
 
                 </div>
             </div>
         </div>
     </section>
     <!-- Hero Section End -->
-
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card-body">
-                    @foreach ($produk as $item)
-                    <div class="product-item mb-4">
-                        <h2>{{ $item->nama }}</h2>
-                        @if ($item->images->isNotEmpty())
-                            <div class="product-images mb-3">
-                                @foreach ($item->images as $image)
-                                    <img src="{{ asset($image->gambar) }}" class="img-fluid"
-                                        alt="{{ $item->nama }}" style="max-width: 100px; height: auto;">
-                                @endforeach
-                            </div>
-                        @endif
-
-                        <!-- Display the Price -->
-                        <p><strong>Harga Tayang:</strong> {{ $item->harga_tayang }}</p>
-
-                        <!-- Display the Stock -->
-                        <p><strong>Stok:</strong> {{ $item->stok }}</p>
-
-                        @if($item->nego === 'yes')
-                    <span class="badge badge-success">Bisa Nego</span>
-                @endif
-
-                        <!-- Quantity Input -->
-                        <div class="form-group">
-                            <label for="quantity-{{ $item->id }}">Kuantitas</label>
-                            <input type="number" name="quantity" id="quantity-{{ $item->id }}"
-                                class="form-control" value="1" min="1" max="{{ $item->stok }}">
-                        </div>
-
-                        <!-- Add to Cart Button -->
-                        <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $item->id }}">Masukkan Keranjang</button>
-
-                        <a href="{{ route('produk_customer.user.show', $item->id) }}"
-                            class="btn btn-secondary mt-2">Lihat Detail</a>
-                    </div>
-                @endforeach
-
-                @if($bigSale)
-                <h2>{{ $bigSale->judul }}</h2>
-            
-                <!-- Countdown Timer -->
-                <p id="countdown-timer" class="text-center" style="font-size: 24px; font-weight: bold;">00:00:00:00</p>
-            
-                <a href="{{ route('bigsale.now.index') }}" class="btn btn-primary">Shop</a>
-                <h3>Produk Diskon:</h3>
-                <ul>
-                    @foreach($bigSale->produk as $product)
-                        <li>
-                            <div class="product-item mb-4">
-                                <h4>{{ $product->nama }}</h4>
-                                @if ($product->images->isNotEmpty())
-                                    <div class="product-images mb-3">
-                                        <img src="{{ asset($product->images->first()->gambar) }}" class="img-fluid"
-                                             alt="{{ $product->nama }}" style="max-width: 100px; height: auto;">
+                    @if($bigSale)
+                        <!-- Exclusive deal start -->
+                        <section class="exclusive-deal-area">
+                            <div class="container-fluid">
+                                <div class="row justify-content-center align-items-center"
+                                    style="background: url('{{ asset('img/customer.jpg') }}') no-repeat center center/cover; position: relative;">
+                                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7);"></div>
+                                    <div class="col-lg-6 no-padding exclusive-left" style="position: relative; z-index: 1;">
+                                        <div class="row clock_sec clockdiv" id="clockdiv">
+                                            <div class="col-lg-12 text-center"><br><br>
+                                                <h2 style="color: white;">{{ $bigSale->judul }}</h2><br>
+                                            </div>
+                                            <div class="col-lg-12 text-center">
+                                                <div class="row clock-wrap" style="gap: 10px">
+                                                    <div class="col clockinner1 clockinner" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                        <h1 id="days" class="days" style="color: black;">00</h1>
+                                                        <span class="smalltext" style="color: black;">Days</span>
+                                                    </div>
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                        <h1 id="hours" class="hours" style="color: black;">00</h1>
+                                                        <span class="smalltext" style="color: black;">Hours</span>
+                                                    </div>
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                        <h1 id="minutes" class="minutes" style="color: black;">00</h1>
+                                                        <span class="smalltext" style="color: black;">Minutes</span>
+                                                    </div>
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                        <h1 id="seconds" class="seconds" style="color: black;">00</h1>
+                                                        <span class="smalltext" style="color: black;">Seconds</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br><br>
+                                        <a href="{{ route('bigsale.now.index') }}" class="primary-btn text-center" style="color: black; background-color: rgba(255, 255, 255); padding: 10px 20px; border-radius: 5px; display: block; width: fit-content; margin: 0 auto;">Shop Now</a><br><br>
                                     </div>
-                                @endif
-                                <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
-                                <!-- Add to Cart Button -->
-                                <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
-            
-                                <!-- View Detail Button -->
-                                <a href="{{ route('produk_customer.user.show', $product->id) }}"
-                                   class="btn btn-secondary mt-2">Lihat Detail</a>
+                                </div>
                             </div>
-                        </li>
-                    @endforeach
-                </ul>
-            
-                <script>
-                    function startCountdown(endTime) {
-                        function updateCountdown() {
-                            const now = new Date().getTime();
-                            const distance = endTime - now;
-            
-                            // Calculate days, hours, minutes, and seconds
-                            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-                            // Display the result in the element with id="countdown-timer"
-                            document.getElementById('countdown-timer').textContent =
-                                `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-                            // If the countdown is over, write some text
-                            if (distance < 0) {
-                                clearInterval(countdownInterval);
-                                document.getElementById('countdown-timer').textContent = "EXPIRED";
-
-                                updateBigSaleStatus();
+                        </section>
+                        <br><br>
+                        <!-- Exclusive deal end -->
+                    
+                        <!-- Product list start -->
+                        <h3>Produk Diskon:</h3>
+                        <ul>
+                            @foreach($bigSale->produk as $product)
+                                <li>
+                                    <div class="product-item mb-4">
+                                        <h4>{{ $product->nama }}</h4>
+                                        @if ($product->images->isNotEmpty())
+                                            <div class="product-images mb-3">
+                                                <img src="{{ asset($product->images->first()->gambar) }}" class="img-fluid" alt="{{ $product->nama }}" style="max-width: 100px; height: auto;">
+                                            </div>
+                                        @endif
+                                        <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
+                                        <!-- Add to Cart Button -->
+                                        <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
+                            
+                                        <!-- View Detail Button -->
+                                        <a href="{{ route('produk_customer.user.show', $product->id) }}" class="btn btn-secondary mt-2">Lihat Detail</a>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <!-- Product list end -->
+                    
+                        <script>
+                            function startCountdown(endTime) {
+                                function updateCountdown() {
+                                    const now = new Date().getTime();
+                                    const distance = endTime - now;
+    
+                                    if (distance < 0) {
+                                        clearInterval(countdownInterval);
+                                        document.getElementById('days').textContent = '00';
+                                        document.getElementById('hours').textContent = '00';
+                                        document.getElementById('minutes').textContent = '00';
+                                        document.getElementById('seconds').textContent = '00';
+                                        updateBigSaleStatus();
+                                        return;
+                                    }
+    
+                                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+                                    document.getElementById('days').textContent = String(days).padStart(2, '0');
+                                    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                                    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                                    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                                }
+    
+                                const countdownInterval = setInterval(updateCountdown, 1000);
+                                updateCountdown();
                             }
-                        }
-            
-                        // Update the countdown every 1 second
-                        const countdownInterval = setInterval(updateCountdown, 1000);
-            
-                        // Run the first update immediately
-                        updateCountdown();
-                    }
-            
-                    // Get the end time from the server (convert it to a Date object)
-                    function updateBigSaleStatus() {
-    // Send an AJAX request to update the BigSale status
-    fetch('{{ route("bigsale.updateStatus", $bigSale->id) }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-        body: JSON.stringify({
-            status: 'tidak aktif'
-        })
-    }).then(response => {
-        if (response.ok) {
-            console.log('Big Sale status updated to tidak aktif.');
-            location.reload(); // Reload the page to reflect the changes
-        } else {
-            console.error('Failed to update Big Sale status.');
-        }
-    });
-}
-
-// Get the end time from the server (convert it to a Date object)
-const bigSaleEndTime = new Date("{{ $bigSale->berakhir }}").getTime();
-
-// Start the countdown
-startCountdown(bigSaleEndTime);
-                </script>
-            @else
-                <p>Tidak ada Big Sale yang sedang berlangsung.</p>
-            @endif
-            
-
+    
+                            function updateBigSaleStatus() {
+                                fetch('{{ route("bigsale.updateStatus", $bigSale->id) }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    },
+                                    body: JSON.stringify({
+                                        status: 'tidak aktif'
+                                    })
+                                }).then(response => {
+                                    if (response.ok) {
+                                        console.log('Big Sale status updated to tidak aktif.');
+                                        location.reload();
+                                    } else {
+                                        console.error('Failed to update Big Sale status.');
+                                    }
+                                });
+                            }
+    
+                            const bigSaleEndTime = new Date("{{ date('Y-m-d\TH:i:s', strtotime($bigSale->berakhir)) }}").getTime();
+                            startCountdown(bigSaleEndTime);
+                        </script>
+                    @else
+                    @endif
                 </div>
             </div>
         </div>
+    
+        <section class="featured spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            <h2>Best Seller Products !!</h2>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row featured__filter" id="MixItUpD27635">
+                    @foreach ($produk as $item)
+                        @php
+                            $imagePath = $item->images->isNotEmpty() ? $item->images->first()->gambar : 'path/to/default/image.jpg';
+                        @endphp
+                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                            <div class="featured__item">
+                                <div class="featured__item__pic" style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center;">
+                                    <ul class="featured__item__pic__hover">
+                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="featured__item__text">
+                                    <h6><a href="#">{{ $item->nama }}</a></h6>
+                                    <h5>Rp{{ number_format($item->harga_tayang, 0, ',', '.') }} @if($item->nego === 'yes')
+                                        <span class="badge badge-success">Bisa Nego</span>
+                                    @endif</h5>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
     </div>
 
-    
-    =======
+                     
    <!-- Notifikasi (Hidden by Default) -->
 <div id="cart-notification" class="cart-notification" style="display: none;">
     <div class="notification-content">
@@ -252,12 +276,13 @@ startCountdown(bigSaleEndTime);
     }
 </style>
 
-   <!-- AJAX untuk Add to Cart -->
+<!-- AJAX for Add to Cart -->
 <script>
     document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default action
+
             var productId = this.dataset.id;
-            var quantity = document.getElementById('quantity-' + productId).value;
             var token = '{{ csrf_token() }}';
 
             fetch('{{ route('cart.add', '') }}/' + productId, {
@@ -267,7 +292,7 @@ startCountdown(bigSaleEndTime);
                     'X-CSRF-TOKEN': token
                 },
                 body: JSON.stringify({
-                    quantity: quantity
+                    quantity: 1 // Add exactly 1 quantity
                 })
             })
             .then(response => {
@@ -278,19 +303,19 @@ startCountdown(bigSaleEndTime);
             })
             .then(data => {
                 if (data.success) {
-                    // Tampilkan notifikasi
+                    // Display notification or update cart count
                     var notification = document.getElementById('cart-notification');
                     notification.style.display = 'flex';
                     setTimeout(() => {
                         notification.style.display = 'none';
-                    }, 3000);  // Notifikasi akan hilang setelah 3 detik
+                    }, 3000);  // Notification disappears after 3 seconds
                 } else {
-                    alert('Gagal menambahkan produk ke keranjang: ' + (data.message || 'Kesalahan tidak diketahui.'));
+                    alert('Failed to add product to cart: ' + (data.message || 'Unknown error.'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Kuantitas total dalam keranjang melebihi stok yang tersedia!');
+                alert('An error occurred while adding the product to the cart.');
             });
         });
     });

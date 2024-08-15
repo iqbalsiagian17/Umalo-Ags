@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BigSale;
 use App\Models\Kategori;
+use App\Models\Komoditas;
 use App\Models\Order;
 use App\Models\Produk;
 use App\Models\Slider;
@@ -51,6 +52,21 @@ class HomeController extends Controller
     
         return view('home', compact('produk', 'bigSale', 'slider', 'kategori'));
     }
+
+    public function shop()
+    {
+        // Update the status of expired Big Sales
+    
+        $produk = Produk::with('images')
+            ->where('status', 'publish')
+            ->get();
+    
+        $kategori = Kategori::get(); // Retrieve all categories
+
+        $komoditas = Komoditas::get();
+    
+        return view('customer.home.shop', compact('produk', 'kategori','komoditas'));
+    }    
     
 
 

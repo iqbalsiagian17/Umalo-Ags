@@ -130,6 +130,6 @@ class SliderController extends Controller
         $slider = Slider::findOrFail($id);
         $slider->delete();
 
-        return redirect()->route('admin.slider.index')->with('success', 'Slider deleted successfully.');
+        return redirect()->route('slider.index')->with('success', 'Slider deleted successfully.');
     }
 }

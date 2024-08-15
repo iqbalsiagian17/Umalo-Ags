@@ -20,7 +20,7 @@
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
-                <img src="img/language.png" alt="">
+                <img src="{{ asset('assets/img/flags/al.png') }}" alt="">
                 <div>English</div>
                 <span class="arrow_carrot-down"></span>
                 <ul>
@@ -58,7 +58,7 @@
         <div class="humberger__menu__contact">
             <ul>
                 <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                <li>Free Shipping for all Order of $99</li>
+                <li>Simplifying Industries</li>
             </ul>
         </div>
     </div>
@@ -73,7 +73,7 @@
                         <div class="header__top__left">
                             <ul>
                                 <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                <li>Free Shipping for all Order of $99</li>
+                                <li>Simplifying Industries</li>
                             </ul>
                         </div>
                     </div>
@@ -86,14 +86,14 @@
                                 <a href="#"><i class="fa fa-pinterest-p"></i></a>
                             </div>
                             <div class="header__top__right__language">
-                                <img src="img/language.png" alt="">
-                                <div>English</div>
+                                <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}" alt="" data-lang="id">
+                                <div id="language-text">Bahasa</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
+                                    <li><a href="#" data-lang="id">Bahasa</a></li>
+                                    <li><a href="#" data-lang="en">English</a></li>
                                 </ul>
-                            </div>
+                            </div>                            
                             <div class="header__top__right__auth">
                                 @guest
                                     @if (Route::has('login'))
@@ -175,3 +175,5 @@
         </div>
     </header>
     <!-- Header Section End -->
+
+
