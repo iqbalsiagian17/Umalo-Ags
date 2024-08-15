@@ -8,11 +8,20 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
+    public function negoisasi($id)
+    {
+        $order = Order::findOrFail($id);
+        
+        // Change the status to 'Negosiasi'
+        $order->status = 'Negosiasi';
+        $order->save();
+
+        return redirect()->route('order.show', $id)->with('success', 'Negosiasi telah dimulai. Silakan tunggu konfirmasi dari admin.');
+    }
     public function show($id)
     {
         $order = Order::with('orderItems.produk')->findOrFail($id);
-
-        return view('customer.order.show', compact('order'));
+        return view('customer.order.detail-pesanan', compact('order'));
     }
 
     public function contract($id)
@@ -41,4 +50,39 @@ class OrderController extends Controller
 
         return redirect()->route('order.detail', $order->id)->with('success', 'Pesanan telah dibatalkan.');
     }
+    public function updateStatus(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+    
+        // If the user clicks the "Terima Barang" button, set the status to "Selesai"
+        if ($order->status == 'Pengiriman') {
+            $order->status = 'Selesai';
+            $order->save();
+    
+            return redirect()->route('order.show', $order->id)->with('success', 'Pesanan telah selesai. Terima kasih telah berbelanja!');
+        }
+    
+        // Other status updates can be handled here if necessary
+        $order->update($request->all());
+    
+        return redirect()->route('order.show', $order->id)->with('success', 'Status pesanan berhasil diperbarui.');
+    }
+    
+
+    public function cancelOrder(Request $request, $id)
+{
+    $order = Order::findOrFail($id);
+
+    // Allow cancellation if the status is "Menunggu ACC Admin", "Menunggu ACC Admin untuk Negosiasi", "Negosiasi", or "Diterima"
+    if (in_array($order->status, ['Menunggu ACC Admin', 'Menunggu ACC Admin untuk Negosiasi', 'Negosiasi', 'Diterima'])) {
+        $order->status = 'Cancelled';
+        $order->save();
+
+        return redirect()->route('order.show', $order->id)->with('success', 'Pesanan berhasil dibatalkan.');
+    }
+
+    return redirect()->route('order.show', $order->id)->with('error', 'Pesanan tidak dapat dibatalkan pada tahap ini.');
+}
+                
+    
 }

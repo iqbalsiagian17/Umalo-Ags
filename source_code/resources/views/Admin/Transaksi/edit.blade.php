@@ -3,7 +3,6 @@
 @section('content')
 <div class="row">
     <div class="col-md-6">
-        <!-- First Card: Transaction Information -->
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Edit Transaksi ID: {{ $order->id }}</h2>
@@ -29,12 +28,26 @@
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select name="status" id="status" class="form-control">
-                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="Menunggu ACC Admin" {{ $order->status == 'Menunggu ACC Admin' ? 'selected' : '' }}>Menunggu ACC Admin</option>
+                            <option value="Menunggu ACC Admin untuk Negosiasi" {{ $order->status == 'Menunggu ACC Admin untuk Negosiasi' ? 'selected' : '' }}>Menunggu ACC Admin untuk Negosiasi</option>
+                            <option value="Negosiasi" {{ $order->status == 'Negosiasi' ? 'selected' : '' }}>Negosiasi</option>
+                            <option value="Diterima" {{ $order->status == 'Diterima' ? 'selected' : '' }}>Diterima</option>
+                            <option value="Packing" {{ $order->status == 'Packing' ? 'selected' : '' }}>Packing</option>
+                            <option value="Pengiriman" {{ $order->status == 'Pengiriman' ? 'selected' : '' }}>Pengiriman</option>
+                            <option value="Selesai" {{ $order->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                            <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                         @if ($errors->has('status'))
                             <small class="text-danger">{{ $errors->first('status') }}</small>
+                        @endif
+                    </div>
+
+                    <!-- Input WhatsApp Number -->
+                    <div class="form-group" id="whatsapp-number-group" style="display: none;">
+                        <label for="whatsapp_number">Nomor WhatsApp</label>
+                        <input type="text" name="whatsapp_number" id="whatsapp_number" class="form-control" value="{{ old('whatsapp_number', $order->whatsapp_number) }}">
+                        @if ($errors->has('whatsapp_number'))
+                            <small class="text-danger">{{ $errors->first('whatsapp_number') }}</small>
                         @endif
                     </div>
 
@@ -46,7 +59,6 @@
     </div>
 
     <div class="col-md-6">
-        <!-- Second Card: Transaction Items -->
         <div class="card mb-4">
             <div class="card-header">
                 <h2>Item Transaksi</h2>
@@ -82,4 +94,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusSelect = document.getElementById('status');
+        const whatsappNumberGroup = document.getElementById('whatsapp-number-group');
+
+        function toggleWhatsAppField() {
+            if (statusSelect.value === 'Negosiasi') {
+                whatsappNumberGroup.style.display = 'block';
+            } else {
+                whatsappNumberGroup.style.display = 'none';
+            }
+        }
+
+        // Initial check in case the status is already set to Negosiasi
+        toggleWhatsAppField();
+
+        // Listen for changes on the status select field
+        statusSelect.addEventListener('change', toggleWhatsAppField);
+    });
+</script>
 @endsection

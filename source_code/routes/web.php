@@ -76,6 +76,10 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/order/detail/{id}', [OrderController::class, 'detail'])->name('order.detail');
     Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::patch('/order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+    Route::patch('/order/{id}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
+    Route::patch('/order/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
+    Route::get('/negoisasi/{id}', [OrderController::class, 'negoisasi'])->name('negoisasi');
+
 
     //Bigsale
     Route::get('/bigsale/now', [BigSaleCustomerController::class, 'index'])->name('bigsale.now.index');
@@ -106,7 +110,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('transaksi', TransaksiController::class);
 
 
-    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']); 
+    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
     Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.updateStatus');
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
@@ -121,3 +125,4 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 //akun sosial login
 Route::get('/auth/{provider}redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+

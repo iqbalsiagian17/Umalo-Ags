@@ -27,13 +27,29 @@ class TransaksiController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
+{
+    $order = Order::findOrFail($id);
 
-        $order->update($request->all());
+    if ($request->ajax()) {
+        if ($request->status == 'Negosiasi' && $request->has('whatsapp_number')) {
+            $request->validate([
+                'whatsapp_number' => 'required|string',
+            ]);
+            $order->whatsapp_number = $request->whatsapp_number;
+        }
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['success' => true, 'message' => 'Status updated successfully!', 'whatsapp_number' => $order->whatsapp_number]);
     }
+
+    return redirect()->route('transaksi.index', $order->id)->with('success', 'Status pesanan berhasil diperbarui.');
+}
+
+    
+
+    
 
     public function destroy($id)
     {

@@ -13,6 +13,7 @@ class Order extends Model
         'user_id',
         'harga_total',
         'status',
+        'whatsapp_number'
     ];
 
     // Definisikan relasi dengan OrderItem

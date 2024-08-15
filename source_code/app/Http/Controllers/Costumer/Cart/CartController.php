@@ -11,55 +11,62 @@ use App\Models\OrderItem;
 class CartController extends Controller
 {
     public function checkout()
-    {
-        $cart = session()->get('cart');
+{
+    $cart = session()->get('cart');
     
-        if (!$cart || count($cart) == 0) {
-            return redirect()->route('cart.view')->with('error', 'Keranjang belanja Anda kosong.');
-        }
-    
-        // Cek apakah kuantitas melebihi stok
-        foreach ($cart as $id => $details) {
-            $product = Produk::find($id);
-            if ($product && $details['quantity'] > $product->stok) {
-                return redirect()->route('cart.view')->with('error', 'Kuantitas untuk produk ' . $product->nama . ' melebihi stok yang tersedia.');
-            }
-        }
-    
-        // Lanjutkan dengan proses checkout seperti biasa
-        $totalHarga = 0;
-        foreach ($cart as $id => $details) {
-            $totalHarga += $details['harga_tayang'] * $details['quantity'];
-        }
-    
-        // Buat order dan simpan item
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'harga_total' => $totalHarga,
-            'status' => 'pending',
-        ]);
-    
-        foreach ($cart as $id => $details) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'produk_id' => $id,
-                'jumlah' => $details['quantity'],
-                'harga' => $details['harga_tayang'],
-            ]);
-    
-            // Kurangi stok produk
-            $product = Produk::find($id);
-            if ($product) {
-                $product->stok -= $details['quantity'];
-                $product->save();
-            }
-        }
-    
-        // Kosongkan keranjang setelah checkout
-        session()->forget('cart');
-    
-        return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat!');
+    if (!$cart || count($cart) == 0) {
+        return redirect()->route('cart.view')->with('error', 'Keranjang belanja Anda kosong.');
     }
+    
+    foreach ($cart as $id => $details) {
+        $product = Produk::find($id);
+        if ($product && $details['quantity'] > $product->stok) {
+            return redirect()->route('cart.view')->with('error', 'Kuantitas untuk produk ' . $product->nama . ' melebihi stok yang tersedia.');
+        }
+    }
+
+    // Determine initial status based on product negotiation availability
+    $initialStatus = 'Menunggu ACC Admin';
+    foreach ($cart as $id => $details) {
+        $product = Produk::find($id);
+        if ($product && $product->nego == 'yes') {
+            $initialStatus = 'Menunggu ACC Admin untuk Negosiasi';
+            break;
+        }
+    }
+
+    $totalHarga = 0;
+    foreach ($cart as $id => $details) {
+        $totalHarga += $details['harga_tayang'] * $details['quantity'];
+    }
+
+    $order = Order::create([
+        'user_id' => auth()->id(),
+        'harga_total' => $totalHarga,
+        'status' => $initialStatus,
+    ]);
+
+    foreach ($cart as $id => $details) {
+        OrderItem::create([
+            'order_id' => $order->id,
+            'produk_id' => $id,
+            'jumlah' => $details['quantity'],
+            'harga' => $details['harga_tayang'],
+        ]);
+
+        $product = Produk::find($id);
+        if ($product) {
+            $product->stok -= $details['quantity'];
+            $product->save();
+        }
+    }
+
+    session()->forget('cart');
+
+    return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat! Menunggu konfirmasi dari admin.');
+}
+
+    
     
     
 
