@@ -37,10 +37,14 @@
                     <div class="form-group mb-3">
                         <label for="url" class="form-label">URL:</label>
                         <input type="text" class="form-control" id="url" name="url" value="{{ old('url') }}">
+                        
                         @if ($errors->has('url'))
                             <small class="text-danger">{{ $errors->first('url') }}</small>
                         @endif
+                        
+                        <small class="form-text text-muted">Default: "/shop"</small>
                     </div>
+                    
                     <button type="submit" class="btn btn-success">Submit</button>
                     <a href="{{ route('slider.index') }}" class="btn btn-secondary">Back</a>
                 </form>

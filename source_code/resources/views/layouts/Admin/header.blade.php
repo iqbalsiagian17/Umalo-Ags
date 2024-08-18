@@ -14,6 +14,15 @@
       type="image/x-icon"
     />
 
+    <!-- Bootstrap CSS -->
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
     <!-- Fonts and icons -->
     <script src="{{asset('kaiadmin-lite-1.2.0/assets/js/plugin/webfont/webfont.min.js')}}"></script>
     <script>

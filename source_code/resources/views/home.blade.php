@@ -48,25 +48,27 @@
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                         <div class="hero__item set-bg" data-setbg="{{ asset($sliders->image) }}">
                                             <div class="hero__text">
-                                                <span>FRUIT FRESH</span>
-                                                <h2>Vegetable 100% Organic</h2>
-                                                <p>Free Pickup and Delivery Available</p>
-                                                <a href="#" class="primary-btn">SHOP NOW</a>
+                                                <h2>{{ $sliders->deskripsi }}</h2>
+                                                <a href="{{ $sliders->url }}" class="primary-btn">SHOP</a>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                             @endif
                         </div>
-                        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+                    
+                        @if($slider->count() > 1)
+                            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        @endif
                     </div>
+                    
                     
                     
 
@@ -229,13 +231,21 @@
                                 </div>
                                 <div class="featured__item__text">
                                     <h6><a href="#">{{ $item->nama }}</a></h6>
-                                    <h5>Rp{{ number_format($item->harga_tayang, 0, ',', '.') }} @if($item->nego === 'yes')
-                                        <span class="badge badge-success">Bisa Nego</span>
-                                    @endif</h5>
+                                    <h5>
+                                        @if($item->harga_ditampilkan === 'ya')
+                                            Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                        @else
+                                            Hubungi admin untuk detail harga
+                                        @endif
+                                        @if($item->nego === 'ya')
+                                            <span class="badge badge-success">Bisa Nego</span>
+                                        @endif
+                                    </h5>
                                 </div>
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </section>

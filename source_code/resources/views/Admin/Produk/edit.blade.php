@@ -55,11 +55,23 @@
             <div class="form-group">
                 <label for="nego">Bisa Nego:</label>
                 <select name="nego" class="form-control" required>
-                    <option value="no" {{ old('nego', $produk->nego) == 'no' ? 'selected' : '' }}>Tidak</option>
-                    <option value="yes" {{ old('nego', $produk->nego) == 'yes' ? 'selected' : '' }}>Ya</option>
+                    <option value="tidak" {{ old('nego', $produk->nego) == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                    <option value="ya" {{ old('nego', $produk->nego) == 'ya' ? 'selected' : '' }}>Ya</option>
                 </select>
                 @if ($errors->has('nego'))
                     <small class="text-danger">{{ $errors->first('nego') }}</small>
+                @endif
+            </div>
+
+            <!-- Harga Ditampilkan Option -->
+            <div class="form-group">
+                <label for="harga_ditampilkan">Harga Ditampilkan:</label>
+                <select name="harga_ditampilkan" class="form-control" required>
+                    <option value="ya" {{ old('harga_ditampilkan', $produk->harga_ditampilkan) == 'ya' ? 'selected' : '' }}>Ya</option>
+                    <option value="tidak" {{ old('harga_ditampilkan', $produk->harga_ditampilkan) == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                </select>
+                @if ($errors->has('harga_ditampilkan'))
+                    <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
                 @endif
             </div>
             

@@ -36,7 +36,7 @@
                 <td>{{ $index + 1 }}</td>
                 <td>
                     {{ $produk->nama }} 
-                    @if($produk->nego === 'yes')
+                    @if($produk->nego === 'ya')
                         <span class="badge badge-success">Bisa Nego</span>
                     @else
                         <span class="badge badge-danger">Tidak Bisa Nego</span>

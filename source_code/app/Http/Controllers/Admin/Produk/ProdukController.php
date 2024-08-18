@@ -62,6 +62,7 @@ class ProdukController extends Controller
             'jenis_alat' => 'required',
             'fungsi' => 'required',
             'spesifikasi_produk' => 'required',
+            'harga_ditampilkan' => 'required',
             'harga_tayang' => 'required|numeric',
             'komoditas_id' => 'required|exists:komoditas,id',
             'kategori_id' => 'required|exists:kategori,id',

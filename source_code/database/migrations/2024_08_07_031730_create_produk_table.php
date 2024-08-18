@@ -34,7 +34,8 @@ return new class extends Migration
             $table->longText('spesifikasi_produk');
             $table->boolean('ramah_lingkungan')->default(false);
             $table->enum('status', ['publish', 'arsip'])->default('arsip'); 
-            $table->enum('nego', ['yes', 'no'])->default('no');
+            $table->enum('nego', ['ya', 'tidak'])->default('tidak');
+            $table->enum('harga_ditampilkan', ['ya', 'tidak']); 
             $table->decimal('harga_diskon', 15, 2)->nullable();
             $table->decimal('harga_tayang', 15, 2);
             $table->timestamps();
