@@ -19,7 +19,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
 use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
-
+use App\Http\Controllers\Costumer\Shop\ShopController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,7 +38,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/shop', [App\Http\Controllers\HomeController::class, 'shop'])->name('shop');
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+Route::get('/shop/category/{id}', [ShopController::class, 'filterByCategory'])->name('shop.category');
+
 
 //Normal Users Routes List
 Route::middleware(['auth', 'user-access:costumer'])->group(function () {
@@ -79,9 +81,6 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::patch('/order/{id}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
     Route::patch('/order/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get('/negoisasi/{id}', [OrderController::class, 'negoisasi'])->name('negoisasi');
-    Route::get('order/{id}/transaction-history', [OrderController::class, 'transactionHistory'])->name('order.transaction_history');
-Route::get('order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
-
 
 
     //Bigsale
