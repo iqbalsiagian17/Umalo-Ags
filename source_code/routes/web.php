@@ -78,6 +78,9 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::patch('/order/{id}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
     Route::patch('/order/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get('/negoisasi/{id}', [OrderController::class, 'negoisasi'])->name('negoisasi');
+    Route::get('/order/{id}/transaction-history', [OrderController::class, 'transactionHistory'])->name('order.transaction_history');
+    Route::get('/order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
+
 
 
     //Bigsale

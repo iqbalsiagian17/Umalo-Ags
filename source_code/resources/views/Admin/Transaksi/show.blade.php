@@ -172,18 +172,25 @@
         $('#statusInput').val(newStatus);
 
         if (newStatus === 'Pengiriman') {
-            // Prompt the user to enter the tracking number (nomor resi) before proceeding
-            let nomorResi = prompt("Please enter the tracking number (Nomor Resi):");
+            // Check if the tracking number input already exists to prevent duplicates
+            if ($('#resiGroup').length === 0) {
+                // Append the tracking number input field
+                let nomorResiInput = `<div class="form-group" id="resiGroup">
+                                        <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
+                                        <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" placeholder="Enter Tracking Number">
+                                      </div>`;
+                $('#statusForm').append(nomorResiInput);
 
-            if (nomorResi) {
-                $('#nomor_resi').val(nomorResi);  // Set the tracking number in the hidden input field
-                submitForm();
-            } else {
-                alert('Tracking number is required to update status to Pengiriman.');
+                // Automatically focus on the input field
+                $('#nomor_resi').focus();
             }
         } else {
-            submitForm();
+            // Hide the tracking number input if the status is changed to something else
+            $('#resiGroup').remove();
         }
+
+        // Submit the form after showing the input field
+        submitForm();
     }
 
     function cancelOrder() {
@@ -241,7 +248,9 @@
                 }
             },
             error: function(xhr) {
-                alert('An error occurred while updating the status. Please try again.');
+                // Provide more information about the error in the alert
+                let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while updating the status. Please try again.';
+                alert(errorMessage);
             }
         });
     }
