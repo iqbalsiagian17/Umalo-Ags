@@ -66,8 +66,43 @@
         @endif
 
         <!-- Show "Download PDF" button if the order has been shipped or completed -->
-        @if(in_array($order->status, ['Pengiriman', 'Selesai']))
-            <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success mt-3">Download PDF</a>
+        @if(in_array($order->status, ['Diterima', 'Selesai']))
+            <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success mt-3">Download Invoice</a>
+        @endif
+
+        <!-- Upload proof of payment if order status is "Diterima" -->
+        @if($order->status == 'Diterima')
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Unggah Bukti Pembayaran</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('order.upload_bukti_pembayaran', $order->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="bukti_pembayaran">Pilih File Bukti Pembayaran</label>
+                            <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="form-control" required>
+                            @if ($errors->has('bukti_pembayaran'))
+                                <small class="text-danger">{{ $errors->first('bukti_pembayaran') }}</small>
+                            @endif
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Unggah</button>
+                    </form>
+                </div>
+            </div>
+        @endif
+
+        <!-- Display proof of payment if uploaded -->
+        @if($order->bukti_pembayaran)
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Bukti Pembayaran</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>File Bukti Pembayaran:</strong></p>
+                    <a href="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" target="_blank" class="btn btn-info">Lihat Bukti Pembayaran</a>
+                </div>
+            </div>
         @endif
 
         <a href="{{ route('order.history') }}" class="btn btn-secondary mt-3">Kembali ke Riwayat Pesanan</a>

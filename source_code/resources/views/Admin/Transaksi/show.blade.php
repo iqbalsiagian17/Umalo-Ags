@@ -158,6 +158,19 @@
 
 
 <a href="{{ route('transaksi.index') }}" class="btn btn-primary mt-3">Kembali</a>
+<!-- Bukti Pembayaran -->
+@if($order->bukti_pembayaran)
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Bukti Pembayaran</h5>
+    </div>
+    <div class="card-body">
+        <a href="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" target="_blank" class="btn btn-info">
+            Lihat Bukti Pembayaran
+        </a>
+    </div>
+</div>
+@endif
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>

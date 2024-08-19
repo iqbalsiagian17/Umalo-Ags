@@ -97,6 +97,26 @@ public function transactionHistory($id)
 
     return view('customer.order.transaction_history', compact('order'));
 }
+public function uploadBuktiPembayaran(Request $request, $id)
+{
+    $request->validate([
+        'bukti_pembayaran' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+    ]);
+
+    $order = Order::findOrFail($id);
+
+    if ($request->file('bukti_pembayaran')) {
+        $file = $request->file('bukti_pembayaran');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/bukti_pembayaran'), $filename);
+        $order->bukti_pembayaran = $filename;
+    }
+
+    $order->save();
+
+    return redirect()->route('order.show', $id)->with('success', 'Bukti pembayaran berhasil diunggah.');
+}
+
 
                 
     

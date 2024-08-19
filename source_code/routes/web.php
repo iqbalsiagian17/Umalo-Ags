@@ -80,6 +80,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/negoisasi/{id}', [OrderController::class, 'negoisasi'])->name('negoisasi');
     Route::get('/order/{id}/transaction-history', [OrderController::class, 'transactionHistory'])->name('order.transaction_history');
     Route::get('/order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
+    Route::post('/order/{id}/upload_bukti_pembayaran', [OrderController::class, 'uploadBuktiPembayaran'])->name('order.upload_bukti_pembayaran');
+
 
 
 

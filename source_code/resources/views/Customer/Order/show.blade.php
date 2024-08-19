@@ -35,8 +35,8 @@
                 @endforeach
             </tbody>
         </table>
-        @if($order->status == 'Pengiriman')
-        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download PDF</a>
+        @if($order->status == 'Diterima')
+        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download Invoice</a>
     @endif
 
         <div class="mt-4">
