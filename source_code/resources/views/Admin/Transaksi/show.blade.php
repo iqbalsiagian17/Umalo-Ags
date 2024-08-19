@@ -199,61 +199,84 @@
     }
 
     function submitForm() {
-        $.ajax({
-            url: '{{ route("transaksi.update", $order->id) }}',
-            method: 'PUT',
-            data: $('#statusForm').serialize(),
-            success: function(response) {
-                if (response.success) {
-                    alert(response.message);
+    $.ajax({
+        url: '{{ route("transaksi.update", $order->id) }}',
+        method: 'PUT',
+        data: $('#statusForm').serialize(),
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
 
-                    let currentStatus = $('#statusInput').val();
-                    let nextStatusMap = {
-                        'Menunggu ACC Admin': 'Diterima',
-                        'Menunggu ACC Admin untuk Negosiasi': 'Negosiasi',
-                        'Negosiasi': 'Diterima',
-                        'Diterima': 'Packing',
-                        'Packing': 'Pengiriman',
-                        'Pengiriman': 'Selesai'
-                    };
+                let currentStatus = $('#statusInput').val();
+                let nextStatusMap = {
+                    'Menunggu ACC Admin': 'Diterima',
+                    'Menunggu ACC Admin untuk Negosiasi': 'Negosiasi',
+                    'Negosiasi': 'Diterima',
+                    'Diterima': 'Packing',
+                    'Packing': 'Pengiriman',
+                    'Pengiriman': 'Selesai'
+                };
 
-                    if (nextStatusMap[currentStatus]) {
-                        let nextStatus = nextStatusMap[currentStatus];
-                        $('#statusInput').val(nextStatus);
-                        $('#nextButton').text(`Update to ${nextStatus}`)
-                            .attr('onclick', `updateStatus('${nextStatus}')`);
-                        $('#whatsappGroup').hide();
+                if (nextStatusMap[currentStatus]) {
+                    let nextStatus = nextStatusMap[currentStatus];
+                    $('#statusInput').val(nextStatus);
 
-                        if (currentStatus === 'Negosiasi') {
-                            $('#accButton').remove();
-                            $('#statusForm').append('<button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus(\'Diterima\')">Update to Diterima</button>');
-                        } else if (currentStatus === 'Diterima') {
-                            $('#nextButton').text('Update to Packing')
-                                .attr('onclick', 'updateStatus("Packing")')
-                                .removeClass('btn-primary')
-                                .addClass('btn-primary');
-                        } else if (currentStatus === 'Packing') {
-                            $('#nextButton').text('Update to Pengiriman')
-                                .attr('onclick', 'updateStatus("Pengiriman")');
-                        } else if (currentStatus === 'Pengiriman') {
-                            $('#nextButton').text('Selesai')
-                                .attr('onclick', 'updateStatus("Selesai")');
-                        } else if (currentStatus === 'Selesai') {
-                            $('#nextButton').remove();
-                            alert('Order has been completed.');
+                    // Perubahan tombol secara dinamis berdasarkan status dan nego
+                    if (currentStatus === 'Menunggu ACC Admin') {
+                        if (!{{ $negotiable ? 'true' : 'false' }}) {
+                            // Jika produk tidak bisa dinegosiasi
+                            updateButton('Update to Diterima', 'Diterima', 'btn-primary');
+                        } else {
+                            // Jika produk bisa dinegosiasi
+                            updateButton('ACC untuk Negosiasi', 'Negosiasi', 'btn-warning');
                         }
+                    } else if (currentStatus === 'Negosiasi') {
+                        updateButton('Update to Diterima', 'Diterima', 'btn-primary');
+                    } else if (currentStatus === 'Diterima') {
+                        updateButton('Update to Packing', 'Packing', 'btn-primary');
+                    } else if (currentStatus === 'Packing') {
+                        updateButton('Update to Pengiriman', 'Pengiriman', 'btn-primary');
+                    } else if (currentStatus === 'Pengiriman') {
+                        updateButton('Selesai', 'Selesai', 'btn-primary');
+                    } else if (currentStatus === 'Selesai') {
+                        $('#nextButton').remove();
+                        alert('Order has been completed.');
                     }
-                } else {
-                    alert('Failed to update the status. Please try again.');
+
+                    // Menambahkan input tracking number jika diperlukan
+                    if (nextStatus === 'Pengiriman') {
+                        if ($('#resiGroup').length === 0) {
+                            let nomorResiInput = `
+                                <div class="form-group" id="resiGroup">
+                                    <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
+                                    <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" placeholder="Enter Tracking Number">
+                                </div>`;
+                            $('#statusForm').append(nomorResiInput);
+                            $('#nomor_resi').focus();
+                        }
+                    } else {
+                        $('#resiGroup').remove();
+                    }
                 }
-            },
-            error: function(xhr) {
-                // Provide more information about the error in the alert
-                let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while updating the status. Please try again.';
-                alert(errorMessage);
+            } else {
+                alert('Failed to update the status. Please try again.');
             }
-        });
-    }
+        },
+        error: function(xhr) {
+            let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while updating the status. Please try again.';
+            alert(errorMessage);
+        }
+    });
+}
+
+function updateButton(text, nextStatus, btnClass) {
+    $('#accButton, #nextButton').text(text)
+        .attr('onclick', `updateStatus('${nextStatus}')`)
+        .removeClass('btn-success btn-warning btn-primary')
+        .addClass(btnClass)
+        .attr('id', 'nextButton');
+}
+
 </script>
 
 @endsection
