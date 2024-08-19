@@ -13,9 +13,9 @@
                         </div>
                         <ul>
                             @foreach($kategori as $kategoris)
-                                <li><a href="#">{{ $kategoris->nama }}</a></li>
-                            @endforeach
-                        </ul>
+                            <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
+                        @endforeach
+                        </ul>                        
                     </div>
                     
                 </div>

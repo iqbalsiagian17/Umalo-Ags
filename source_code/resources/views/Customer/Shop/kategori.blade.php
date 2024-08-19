@@ -141,7 +141,6 @@
                         </div>
                     </div>
 
-
                     @empty
                         <p>Tidak ada produk dalam kategori ini.</p>
                     @endforelse

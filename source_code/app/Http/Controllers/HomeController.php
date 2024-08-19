@@ -52,21 +52,14 @@ class HomeController extends Controller
     
         return view('home', compact('produk', 'bigSale', 'slider', 'kategori'));
     }
+    
+    public function filterByCategory($id)
+{
+    $category = Kategori::find($id);
+    $products = Produk::where('kategori_id', $id)->where('status', 'publish')->get(); // Sesuaikan dengan struktur tabel Anda
+    return view('shop.index', compact('products', 'category'));
+}
 
-    public function shop()
-    {
-        // Update the status of expired Big Sales
-    
-        $produk = Produk::with('images')
-            ->where('status', 'publish')
-            ->get();
-    
-        $kategori = Kategori::get(); // Retrieve all categories
-
-        $komoditas = Komoditas::get();
-    
-        return view('customer.home.shop', compact('produk', 'kategori','komoditas'));
-    }    
     
 
 
