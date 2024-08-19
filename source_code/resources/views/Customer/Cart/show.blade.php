@@ -115,43 +115,45 @@
 </div>
 </section>
 
-    <script>
-        document.querySelectorAll('.quantity').forEach(function(input) {
-            input.addEventListener('input', function() {
-                var id = this.dataset.id;
-                var quantity = parseInt(this.value);
+<script>
+    document.querySelectorAll('.quantity').forEach(function(input) {
+        input.addEventListener('input', function() {
+            var id = this.dataset.id;
+            var quantity = parseInt(this.value);
 
-                fetch('/cart/update-quantity/' + id, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ quantity: quantity })
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          var harga = parseFloat(this.closest('tr').querySelector('td:nth-child(3)').innerText);
-                          var subtotalElement = this.closest('tr').querySelector('.subtotal');
-                          var subtotal = quantity * harga;
-                          subtotalElement.innerText = subtotal;
-                          updateTotal();
-                      } else {
-                          alert('Kuantitas melebihi stok yang tersedia!');
-                          this.value = this.getAttribute('max');  // Reset kuantitas ke stok maksimum
-                      }
-                  });
-            });
+            fetch('/cart/update-quantity/' + id, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ quantity: quantity })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      var harga = parseFloat(this.closest('tr').querySelector('.shoping__cart__price').innerText.replace(/[^0-9,-]+/g,"").replace(',', '.'));
+                      var subtotalElement = this.closest('tr').querySelector('.subtotal');
+                      var subtotal = quantity * harga;
+                      subtotalElement.innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
+                      updateTotal();
+                  } else {
+                      alert('Kuantitas melebihi stok yang tersedia!');
+                      this.value = this.getAttribute('max');  // Reset kuantitas ke stok maksimum
+                  }
+              });
         });
+    });
 
-        function updateTotal() {
-            var total = 0;
-            document.querySelectorAll('.subtotal').forEach(function(subtotalElement) {
-                total += parseFloat(subtotalElement.innerText);
-            });
-            document.getElementById('total').innerText = total;
-        }
-    </script>
+    function updateTotal() {
+        var total = 0;
+        document.querySelectorAll('.subtotal').forEach(function(subtotalElement) {
+            var subtotal = parseFloat(subtotalElement.innerText.replace(/[^0-9,-]+/g,"").replace(',', '.'));
+            total += subtotal;
+        });
+        document.getElementById('total').innerText = 'Rp ' + total.toLocaleString('id-ID');
+    }
+</script>
+
 @endsection
 
 
