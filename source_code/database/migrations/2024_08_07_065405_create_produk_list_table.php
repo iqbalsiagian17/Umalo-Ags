@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('produk_list', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->string('nama')->nullable();
             $table->text('spesifikasi')->nullable();
             $table->string('merk')->nullable();
             $table->string('tipe')->nullable();
-            $table->integer('jumlah');
-            $table->string('satuan');
-            $table->decimal('harga_satuan', 15, 2);
+            $table->integer('jumlah')->nullable();
+            $table->string('satuan')->nullable();
+            $table->decimal('harga_satuan', 15, 2)->nullable();
 
 
             $table->foreignId('produk_id')->constrained('produk');

@@ -79,6 +79,16 @@
                     <span class="sub-item">Sub-Kategori</span>
                   </a>
                 </li>
+                <li>
+                  <a href="{{ route('admin.masterdata.ppn.index') }}">
+                    <span class="sub-item">PPN</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('admin.masterdata.materai.index') }}">
+                    <span class="sub-item">Materai</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>

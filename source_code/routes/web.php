@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\Slider\SliderController;
 use App\Http\Controllers\Costumer\User\UserDetailController;
 use App\Http\Controllers\Costumer\Produk\ProdukCostumerController;
 use App\Http\Controllers\Admin\BigSale;
+use App\Http\Controllers\Admin\MasterData\MateraiController;
+use App\Http\Controllers\Admin\MasterData\PPNController;
 use App\Http\Controllers\Admin\QnA\QaController;
 use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use Laravel\Socialite\Facades\Socialite;
@@ -31,13 +33,11 @@ use App\Http\Controllers\Costumer\Shop\ShopController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
@@ -121,6 +121,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::resource('kategori', KategoriController::class);
         Route::resource('subkategori', SubKategoriController::class);
         Route::resource('komoditas', KomoditasController::class)->parameters(['komoditas' => 'komoditas']);
+        Route::resource('ppn', PPNController::class);
+        Route::resource('materai', MateraiController::class);
+
     });
 });
 

@@ -31,7 +31,7 @@
                             <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">Images</a>
+                            <a class="nav-link" id="produk_list-tab" data-toggle="tab" href="#produk_lists" role="tab" aria-controls="produk_lists" aria-selected="false">Produk List</a>
                         </li>
                     </ul>
                 
@@ -90,6 +90,22 @@
                                     <small class="text-danger">{{ $errors->first('spesifikasi_produk') }}</small>
                                 @endif
                             </div>
+
+                            <div class="form-group">
+                                <label for="link_ekatalog">Link E-katalog:</label>
+                                <input type="text" name="link_ekatalog" class="form-control" value="{{ old('link_ekatalog') }}" required>
+                                @if ($errors->has('link_ekatalog'))
+                                    <small class="text-danger">{{ $errors->first('link_ekatalog') }}</small>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gambar">Gambar Produk:</label>
+                                <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
+                                @if ($errors->has('gambar.*'))
+                                    <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
+                                @endif
+                            </div>
                         </div>
     
                         <!-- Categories Tab -->
@@ -143,20 +159,20 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="no_produk_penyedia">No Produk Penyedia:</label>
-                                        <input type="text" name="no_produk_penyedia" class="form-control" value="{{ old('no_produk_penyedia') }}" required>
-                                        @if ($errors->has('no_produk_penyedia'))
-                                            <small class="text-danger">{{ $errors->first('no_produk_penyedia') }}</small>
+                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
+                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
+                                        @if ($errors->has('masa_berlaku_produk'))
+                                            <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
                                         @endif
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="jenis_alat">Jenis Alat:</label>
-                                        <input type="text" name="jenis_alat" class="form-control" value="{{ old('jenis_alat') }}" required>
-                                        @if ($errors->has('jenis_alat'))
-                                            <small class="text-danger">{{ $errors->first('jenis_alat') }}</small>
+                                        <label for="stok">Stok:</label>
+                                        <input type="number" name="stok" class="form-control" value="{{ old('stok') }}" required>
+                                        @if ($errors->has('stok'))
+                                            <small class="text-danger">{{ $errors->first('stok') }}</small>
                                         @endif
                                     </div>
                                 </div>
@@ -166,22 +182,25 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="unit_pengukuran">Unit Pengukuran:</label>
-                                        <input type="text" name="unit_pengukuran" class="form-control" value="{{ old('unit_pengukuran') }}" required>
+                                        <select name="unit_pengukuran" class="form-control">
+                                            <option value="set" {{ old('unit_pengukuran') == 'set' ? 'selected' : '' }}>Set</option>
+                                            <option value="paket" {{ old('unit_pengukuran') == 'paket' ? 'selected' : '' }}>Paket</option>
+                                        </select>
                                         @if ($errors->has('unit_pengukuran'))
                                             <small class="text-danger">{{ $errors->first('unit_pengukuran') }}</small>
                                         @endif
                                     </div>
                                 </div>
-    
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
-                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
-                                        @if ($errors->has('masa_berlaku_produk'))
-                                            <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
+                                        <label for="jenis_alat">Jenis Alat:</label>
+                                        <input type="text" name="jenis_alat" class="form-control" value="{{ old('jenis_alat') }}">
+                                        @if ($errors->has('jenis_alat'))
+                                            <small class="text-danger">{{ $errors->first('jenis_alat') }}</small>
                                         @endif
                                     </div>
                                 </div>
+                                                            
                             </div>
     
                             <div class="row">
@@ -198,7 +217,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="merk">Merk:</label>
-                                        <input type="text" name="merk" class="form-control" value="{{ old('merk') }}" required>
+                                        <input type="text" name="merk" class="form-control" value="{{ old('merk') }}">
                                         @if ($errors->has('merk'))
                                             <small class="text-danger">{{ $errors->first('merk') }}</small>
                                         @endif
@@ -209,23 +228,22 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="stok">Stok:</label>
-                                        <input type="number" name="stok" class="form-control" value="{{ old('stok') }}" required>
-                                        @if ($errors->has('stok'))
-                                            <small class="text-danger">{{ $errors->first('stok') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-    
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label for="sni">SNI:</label>
-                                        <select name="sni" class="form-control" required>
+                                        <select name="sni" class="form-control">
                                             <option value="ya" {{ old('sni') == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ old('sni') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                         @if ($errors->has('sni'))
                                             <small class="text-danger">{{ $errors->first('sni') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="no_produk_penyedia">No Produk Penyedia:</label>
+                                        <input type="text" name="no_produk_penyedia" class="form-control" value="{{ old('no_produk_penyedia') }}">
+                                        @if ($errors->has('no_produk_penyedia'))
+                                            <small class="text-danger">{{ $errors->first('no_produk_penyedia') }}</small>
                                         @endif
                                     </div>
                                 </div>
@@ -245,7 +263,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="memiliki_svlk">Memiliki SVLK:</label>
-                                        <select name="memiliki_svlk" class="form-control" required>
+                                        <select name="memiliki_svlk" class="form-control">
                                             <option value="ya" {{ old('memiliki_svlk') == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ old('memiliki_svlk') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
@@ -259,10 +277,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="kode_kbli">Kode KBLI:</label>
-                                        <input type="number" name="kode_kbli" class="form-control" value="{{ old('kode_kbli') }}" required>
-                                        @if ($errors->has('kode_kbli'))
-                                            <small class="text-danger">{{ $errors->first('kode_kbli') }}</small>
+                                        <label for="kode_kbki">Kode KBLI:</label>
+                                        <input type="number" name="kode_kbki" class="form-control" value="{{ old('kode_kbki') }}">
+                                        @if ($errors->has('kode_kbki'))
+                                            <small class="text-danger">{{ $errors->first('kode_kbki') }}</small>
                                         @endif
                                     </div>
                                 </div>
@@ -270,7 +288,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="asal_negara">Asal Negara:</label>
-                                        <input type="text" name="asal_negara" class="form-control" value="{{ old('asal_negara') }}" required>
+                                        <input type="text" name="asal_negara" class="form-control" value="{{ old('asal_negara') }}">
                                         @if ($errors->has('asal_negara'))
                                             <small class="text-danger">{{ $errors->first('asal_negara') }}</small>
                                         @endif
@@ -282,7 +300,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="jenis_produk">Jenis Produk:</label>
-                                        <select name="jenis_produk" class="form-control" required>
+                                        <select name="jenis_produk" class="form-control">
                                             <option value="PDN" {{ old('jenis_produk') == 'PDN' ? 'selected' : '' }}>PDN</option>
                                             <option value="Impor" {{ old('jenis_produk') == 'Impor' ? 'selected' : '' }}>Impor</option>
                                         </select>
@@ -295,7 +313,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fungsi">Fungsi:</label>
-                                        <input type="text" name="fungsi" class="form-control" value="{{ old('fungsi') }}" required>
+                                        <input type="text" name="fungsi" class="form-control" value="{{ old('fungsi') }}">
                                         @if ($errors->has('fungsi'))
                                             <small class="text-danger">{{ $errors->first('fungsi') }}</small>
                                         @endif
@@ -305,7 +323,7 @@
                                 <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="tipe_barang">Tipe Barang:</label>
-                                    <input type="text" name="tipe_barang" class="form-control" value="{{ old('tipe_barang') }}" required>
+                                    <input type="text" name="tipe_barang" class="form-control" value="{{ old('tipe_barang') }}">
                                     @if ($errors->has('tipe_barang'))
                                         <small class="text-danger">{{ $errors->first('tipe_barang') }}</small>
                                     @endif
@@ -315,7 +333,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="garansi_produk">Garansi Produk:</label>
-                                        <input type="text" name="garansi_produk" class="form-control" value="{{ old('garansi_produk') }}" required>
+                                        <input type="text" name="garansi_produk" class="form-control" value="{{ old('garansi_produk') }}">
                                         @if ($errors->has('garansi_produk'))
                                             <small class="text-danger">{{ $errors->first('garansi_produk') }}</small>
                                         @endif
@@ -325,15 +343,7 @@
                         </div>
     
                         <!-- Images Tab -->
-                        <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
-                            <div class="form-group">
-                                <label for="gambar">Gambar Produk:</label>
-                                <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
-                                @if ($errors->has('gambar.*'))
-                                    <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
-                                @endif
-                            </div>
-    
+                        <div class="tab-pane fade" id="produk_lists" role="tabpanel" aria-labelledby="produk_list-tab">
                             <!-- Detail Produk List -->
                             <h2 class="mt-5">Detail Produk List</h2>
                             <div id="detail-list-container">
@@ -458,7 +468,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const tabs = ['general', 'categories', 'details', 'images'];
+        const tabs = ['general', 'categories', 'details', 'produk_lists'];
         let currentTabIndex = 0;
 
         // Function to update the tabs based on the current index

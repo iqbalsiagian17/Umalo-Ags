@@ -40,70 +40,73 @@ class ProdukController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Validate the request data
-        $request->validate([
-            'nama' => 'required',
-            'tipe_barang' => 'required',
-            'stok' => 'required|integer',
-            'masa_berlaku_produk' => 'required|date',
-            'merk' => 'required',
-            'no_produk_penyedia' => 'required',
-            'unit_pengukuran' => 'required',
-            'jenis_produk' => 'required',
-            'kode_kbli' => 'required|integer',
-            'asal_negara' => 'required',
-            'nilai_tkdn' => 'nullable|numeric',
-            'no_sni' => 'nullable',
-            'garansi_produk' => 'required',
-            'uji_fungsi' => 'nullable',
-            'sni' => 'required',
-            'memiliki_svlk' => 'required',
-            'jenis_alat' => 'required',
-            'fungsi' => 'required',
-            'spesifikasi_produk' => 'required',
-            'harga_ditampilkan' => 'required',
-            'harga_tayang' => 'required|numeric',
-            'komoditas_id' => 'required|exists:komoditas,id',
-            'kategori_id' => 'required|exists:kategori,id',
-            'sub_kategori_id' => 'required|exists:sub_kategori,id',
-            'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:15000',
-        ]);
+{
+    // Validate the request data
+    $request->validate([
+        'nama' => 'required',
+        'tipe_barang' => 'nullable',
+        'stok' => 'required|integer',
+        'masa_berlaku_produk' => 'required|date',
+        'merk' => 'nullable',
+        'no_produk_penyedia' => 'nullable',
+        'unit_pengukuran' => 'nullable',
+        'jenis_produk' => 'nullable',
+        'kode_kbli' => 'nullable|integer',
+        'asal_negara' => 'nullable',
+        'nilai_tkdn' => 'nullable|numeric',
+        'no_sni' => 'nullable',
+        'garansi_produk' => 'nullable',
+        'uji_fungsi' => 'nullable',
+        'sni' => 'nullable',
+        'memiliki_svlk' => 'nullable',
+        'jenis_alat' => 'nullable',
+        'fungsi' => 'nullable',
+        'spesifikasi_produk' => 'required',
+        'harga_ditampilkan' => 'required',
+        'harga_tayang' => 'required|numeric',
+        'komoditas_id' => 'required|exists:komoditas,id',
+        'kategori_id' => 'required|exists:kategori,id',
+        'sub_kategori_id' => 'required|exists:sub_kategori,id',
+        'gambar.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:15000',
+    ]);
 
-        $produk = new Produk;
-        $produk->fill($request->all());
-        $produk->save();
-    
-        if ($request->hasFile('gambar')) {
-            foreach ($request->file('gambar') as $imgProduk) {
-                $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
-                $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
-                $imgProduk->move('uploads/produk/', $newImageName);
-    
-                $produkImage = new ProdukImage;
-                $produkImage->produk_id = $produk->id;
-                $produkImage->gambar = 'uploads/produk/' . $newImageName;
-                $produkImage->save();
-            }
+    $produk = new Produk;
+    $produk->fill($request->all());
+    $produk->save();
+
+    if ($request->hasFile('gambar')) {
+        foreach ($request->file('gambar') as $imgProduk) {
+            $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
+            $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
+            $imgProduk->move('uploads/produk/', $newImageName);
+
+            $produkImage = new ProdukImage;
+            $produkImage->produk_id = $produk->id;
+            $produkImage->gambar = 'uploads/produk/' . $newImageName;
+            $produkImage->save();
         }
-    
-        $details = $request->input('detail');
-        foreach($details['nama'] as $key => $value){
+    }
+
+    $details = $request->input('detail');
+    if ($details && isset($details['nama'])) {
+        foreach ($details['nama'] as $key => $value) {
             $data2 = [
                 'produk_id' => $produk->id,
-                'nama' => $details['nama'][$key],
-                'spesifikasi' => $details['spesifikasi'][$key],
-                'merk' => $details['merk'][$key],
-                'tipe' => $details['tipe'][$key],
-                'jumlah' => $details['jumlah'][$key],
-                'satuan' => $details['satuan'][$key],  
-                'harga_satuan' => $details['harga_satuan'][$key],  
+                'nama' => $details['nama'][$key] ?? null,
+                'spesifikasi' => $details['spesifikasi'][$key] ?? null,
+                'merk' => $details['merk'][$key] ?? null,
+                'tipe' => $details['tipe'][$key] ?? null,
+                'jumlah' => $details['jumlah'][$key] ?? null,
+                'satuan' => $details['satuan'][$key] ?? null,
+                'harga_satuan' => $details['harga_satuan'][$key] ?? null,
             ];
             ProdukList::create($data2);
         }
-    
-        return redirect()->route('produk.index')->with('success', 'Produk created successfully.');
     }
+
+    return redirect()->route('produk.index')->with('success', 'Produk created successfully.');
+}
+
     
 
 
@@ -138,23 +141,23 @@ class ProdukController extends Controller
     // Validate the request data
     $request->validate([
         'nama' => 'required',
-        'tipe_barang' => 'required',
+        'tipe_barang' => 'nullable',
         'stok' => 'required|integer',
-        'masa_berlaku_produk' => 'required|date',
-        'merk' => 'required',
-        'no_produk_penyedia' => 'required',
-        'unit_pengukuran' => 'required',
-        'jenis_produk' => 'required',
-        'kode_kbli' => 'required|integer',
-        'asal_negara' => 'required',
-        'nilai_tkdn' => 'required|numeric',
-        'no_sni' => 'required',
-        'garansi_produk' => 'required',
-        'uji_fungsi' => 'required',
-        'sni' => 'required',
-        'memiliki_svlk' => 'required',
-        'jenis_alat' => 'required',
-        'fungsi' => 'required',
+        'masa_berlaku_produk' => 'nullable|date',
+        'merk' => 'nullable',
+        'no_produk_penyedia' => 'nullable',
+        'unit_pengukuran' => 'nullable',
+        'jenis_produk' => 'nullable',
+        'kode_kbki' => 'nullable|integer',
+        'asal_negara' => 'nullable',
+        'nilai_tkdn' => 'nullable|numeric',
+        'no_sni' => 'nullable',
+        'garansi_produk' => 'nullable',
+        'uji_fungsi' => 'nullable',
+        'sni' => 'nullable',
+        'memiliki_svlk' => 'nullable',
+        'jenis_alat' => 'nullable',
+        'fungsi' => 'nullable',
         'spesifikasi_produk' => 'required',
         'harga_tayang' => 'required|numeric',
         'komoditas_id' => 'required|exists:komoditas,id',

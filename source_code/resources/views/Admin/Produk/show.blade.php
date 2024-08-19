@@ -43,6 +43,10 @@
                             <td>{{ $produk->nama }}</td>
                         </tr>
                         <tr>
+                            <td>Link E-katalog</td>
+                            <td>{{ $produk->link_ekatalog }}</td>
+                        </tr>
+                        <tr>
                             <td>Tipe Barang</td>
                             <td>{{ $produk->tipe_barang }}</td>
                         </tr>
@@ -71,8 +75,8 @@
                             <td>{{ $produk->jenis_produk }}</td>
                         </tr>
                         <tr>
-                            <td>Kode KBLI</td>
-                            <td>{{ $produk->kode_kbli }}</td>
+                            <td>Kode KBKI</td>
+                            <td>{{ $produk->kode_kbki }}</td>
                         </tr>
                         <tr>
                             <td>Asal Negara</td>

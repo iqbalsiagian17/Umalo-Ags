@@ -19,7 +19,7 @@ class Produk extends Model
         'no_produk_penyedia',
         'unit_pengukuran',
         'jenis_produk',
-        'kode_kbli',
+        'kode_kbki',
         'nilai_tkdn',
         'no_sni',
         'asal_negara',
@@ -39,6 +39,7 @@ class Produk extends Model
         'harga_ditampilkan',
         'harga_diskon',
         'harga_tayang',
+        'link_ekatalog',
     ];
 
     public function komoditas()
