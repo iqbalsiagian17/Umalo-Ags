@@ -38,8 +38,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/category/{id}', [ShopController::class, 'filterByCategory'])->name('shop.category');
+Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
+Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 
 
 //Normal Users Routes List
