@@ -372,11 +372,10 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
                         </div>
                     </div>
     
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                 </form>
             </div>
         </div>

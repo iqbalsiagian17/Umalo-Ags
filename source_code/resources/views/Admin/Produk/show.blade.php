@@ -8,7 +8,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="card-title">
                     <h2>Spesifikasi Produk</h2>
-                    @if($produk->nego === 'yes')
+                    @if($produk->nego === 'ya')
                         <span class="badge badge-success">Bisa Nego</span>
                     @endif
                 </div>

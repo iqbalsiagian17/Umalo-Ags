@@ -101,7 +101,7 @@
 <div class="mt-4">
     @php
         $negotiable = $order->orderItems->contains(function($item) {
-            return $item->produk->nego == 'yes';
+            return $item->produk->nego == 'ya';
         });
     @endphp
 

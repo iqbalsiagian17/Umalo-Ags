@@ -29,7 +29,7 @@ class CartController extends Controller
     $initialStatus = 'Menunggu ACC Admin';
     foreach ($cart as $id => $details) {
         $product = Produk::find($id);
-        if ($product && $product->nego == 'yes') {
+        if ($product && $product->nego == 'ya') {
             $initialStatus = 'Menunggu ACC Admin untuk Negosiasi';
             break;
         }
