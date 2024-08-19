@@ -54,11 +54,16 @@
             </table>
 
             <div class="text-right">
+                @if(auth()->user()->userDetail)
                 <h3>Total: <span id="total">{{ $total }}</span></h3>
                 <form action="{{ route('cart.checkout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-success">Checkout</button>
                 </form>
+                @else
+                <p class="text-danger">Anda harus melengkapi data pribadi Anda sebelum melanjutkan ke checkout.</p>
+                <a href="{{ route('user.create') }}" class="btn btn-primary">Isi Data Pribadi</a>
+            @endif
 
             </div>
             

@@ -24,7 +24,7 @@
                         <div class="hero__search__form">
                             <form action="#">
                                 <input type="text" placeholder="Search">
-                                <button type="submit" class="site-btn">SEARCH</button>
+                                <button type="submit" class="site-btn rounded">SEARCH</button>
                             </form>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             @if($slider->isEmpty())
                                 <!-- If no sliders are available, show a default image -->
                                 <div class="carousel-item active">
-                                    <div class="hero__item set-bg" data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
+                                    <div class="hero__item set-bg rounded" data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
                                         <div class="hero__text">
                                             <span></span>
                                             <h2 class="text-white">Welcome</h2>
@@ -46,7 +46,7 @@
                             @else
                                 @foreach($slider as $index => $sliders)
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                        <div class="hero__item set-bg" data-setbg="{{ asset($sliders->image) }}">
+                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
                                             <div class="hero__text">
                                                 <h2>{{ $sliders->deskripsi }}</h2>
                                                 <a href="{{ $sliders->url }}" class="primary-btn">SHOP</a>
@@ -226,9 +226,17 @@
                                 <div class="featured__item__pic" style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center;">
                                     <ul class="featured__item__pic__hover">
                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                
+                                        @auth
+                                            <!-- Jika pengguna sudah login -->
+                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                        @else
+                                            <!-- Jika pengguna belum login -->
+                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                        @endauth
                                     </ul>
                                 </div>
+                                
                                 <div class="featured__item__text">
                                     <h6><a href="#">{{ $item->nama }}</a></h6>
                                     <h5>
