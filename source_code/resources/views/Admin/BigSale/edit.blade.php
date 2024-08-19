@@ -8,7 +8,7 @@
                 <h2>Edit Big Sale</h2>
             </div>
             <div class="card-body">
-                <form action="{{ route('bigsale.update', $bigSale->id) }}" method="POST">
+                <form action="{{ route('bigsale.update', $bigSale->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group mb-3">
@@ -40,6 +40,16 @@
                         </select>
                         @if ($errors->has('status'))
                             <small class="text-danger">{{ $errors->first('status') }}</small>
+                        @endif
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="image">Gambar</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                        @if ($bigSale->image)
+                            <img src="{{ asset($bigSale->image) }}" alt="Big Sale Image" class="img-fluid mt-2" style="max-width: 200px;">
+                        @endif
+                        @if ($errors->has('image'))
+                            <small class="text-danger">{{ $errors->first('image') }}</small>
                         @endif
                     </div>
                     

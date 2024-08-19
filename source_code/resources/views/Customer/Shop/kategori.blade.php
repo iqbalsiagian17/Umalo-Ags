@@ -129,10 +129,19 @@
                                 $imagePath = $product->images->isNotEmpty() ? $product->images->first()->gambar : 'path/to/default/image.jpg';
                             @endphp
                             <div class="product__item__pic" style="background-image: url('{{ asset($imagePath) }}');">
-                                <ul class="product__item__pic__hover">
-                                    <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
-                                    <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
+                                @if($product->nego === 'ya')
+                        <span class="nego-badge">Bisa Nego</span>
+                    @endif
+                    <ul class="product__item__pic__hover">
+                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
+                        @auth
+                            <!-- Jika pengguna sudah login -->
+                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                        @else
+                            <!-- Jika pengguna belum login -->
+                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                        @endauth
+                    </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a></h6>
@@ -156,7 +165,8 @@
                                     $imagePath = $product->images->isNotEmpty() ? $product->images->first()->gambar : 'path/to/default/image.jpg';
                                 @endphp
                                     <div class="product__item__pic" style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 0; padding-top: 75%; position: relative;">
-                                    <ul class="product__item__pic__hover">
+                                    
+                                        <ul class="product__item__pic__hover">
                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
 
                                         <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>

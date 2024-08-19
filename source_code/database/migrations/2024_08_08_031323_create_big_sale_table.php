@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('big_sale', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
+            $table->string('image');
             $table->dateTime('mulai');
             $table->dateTime('berakhir');
             $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');

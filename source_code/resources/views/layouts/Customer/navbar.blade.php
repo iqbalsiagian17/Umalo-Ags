@@ -136,7 +136,7 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo text-center">
-                        <a href="/home"><img src="{{asset('assets/images/ags.png')}}" alt="" width="100px"></a>
+                        <a href="/"><img src="{{asset('assets/images/ags.png')}}" alt="" width="100px"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">

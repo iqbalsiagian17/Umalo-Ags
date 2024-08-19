@@ -85,8 +85,7 @@
                         <!-- Exclusive deal start -->
                         <section class="exclusive-deal-area">
                             <div class="container-fluid">
-                                <div class="row justify-content-center align-items-center"
-                                    style="background: url('{{ asset('img/customer.jpg') }}') no-repeat center center/cover; position: relative;">
+                                <div class="row justify-content-center align-items-center" style="background: url('{{ asset($bigSale->image) }}') no-repeat center center/cover; position: relative;">
                                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7);"></div>
                                     <div class="col-lg-6 no-padding exclusive-left" style="position: relative; z-index: 1;">
                                         <div class="row clock_sec clockdiv" id="clockdiv">
@@ -119,31 +118,50 @@
                                 </div>
                             </div>
                         </section>
-                        <br><br>
                         <!-- Exclusive deal end -->
                     
                         <!-- Product list start -->
-                        <h3>Produk Diskon:</h3>
-                        <ul>
+                        <div class="row featured__filter mt-5" id="MixItUpD27635">
                             @foreach($bigSale->produk as $product)
-                                <li>
-                                    <div class="product-item mb-4">
-                                        <h4>{{ $product->nama }}</h4>
-                                        @if ($product->images->isNotEmpty())
-                                            <div class="product-images mb-3">
-                                                <img src="{{ asset($product->images->first()->gambar) }}" class="img-fluid" alt="{{ $product->nama }}" style="max-width: 100px; height: auto;">
-                                            </div>
-                                        @endif
-                                        <p><strong>Diskon:</strong> Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</p>
-                                        <!-- Add to Cart Button -->
-                                        <button type="button" class="btn btn-primary mt-2 add-to-cart-btn" data-id="{{ $product->id }}">Masukkan Keranjang</button>
-                            
-                                        <!-- View Detail Button -->
-                                        <a href="{{ route('produk_customer.user.show', $product->id) }}" class="btn btn-secondary mt-2">Lihat Detail</a>
+                                @php
+                                    $imagePath = $product->images->isNotEmpty() ? $product->images->first()->gambar : 'path/to/default/image.jpg';
+                                @endphp
+                                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                                    <div class="featured__item">
+                                        <div class="featured__item__pic" style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                            @if($product->nego === 'ya')
+                                                <span class="nego-badge">Bisa Nego</span>
+                                            @endif
+                                            <ul class="featured__item__pic__hover">
+                                                <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
+                                                
+                                                @auth
+                                                    <!-- Jika pengguna sudah login -->
+                                                    <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                                @else
+                                                    <!-- Jika pengguna belum login -->
+                                                    <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                                @endauth
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="featured__item__text">
+                                            <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ $product->nama }}</a></h6>
+                                            <h5>
+                                                <span style="text-decoration: line-through; color: #a5a5a5;">
+                                                    Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}
+                                                </span>
+                                                <br>
+                                                Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}
+                                            </h5>
+                                        </div>
                                     </div>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
+
+                        
+                        <hr>
                         <!-- Product list end -->
                     
                         <script>
@@ -211,7 +229,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title">
-                            <h2>Best Seller Products !!</h2>
+                            <h2>Produk Terlaris !!</h2>
                         </div>
                     </div>
                 </div>
@@ -224,8 +242,11 @@
                         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                             <div class="featured__item">
                                 <div class="featured__item__pic" style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center;">
+                                    @if($item->nego === 'ya')
+                                        <span class="nego-badge">Bisa Nego</span>
+                                    @endif
                                     <ul class="featured__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                        <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i class="fa fa-info-circle"></i></a></li>
                                 
                                         @auth
                                             <!-- Jika pengguna sudah login -->
@@ -253,7 +274,6 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
             </div>
         </section>

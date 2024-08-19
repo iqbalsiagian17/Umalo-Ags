@@ -18,7 +18,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('bigsale.store') }}" method="POST">
+                <form action="{{ route('bigsale.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group mb-3">
                         <label for="judul">Judul</label>
@@ -49,6 +49,14 @@
                         </select>
                         @if ($errors->has('status'))
                             <small class="text-danger">{{ $errors->first('status') }}</small>
+                        @endif
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="image" class="form-label">Image:</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                        @if ($errors->has('image'))
+                            <small class="text-danger">{{ $errors->first('image') }}</small>
                         @endif
                     </div>
                     

@@ -23,7 +23,7 @@ class SocialiteController extends Controller
 
         Auth::login($authuser);
 
-        return redirect('/home');
+        return redirect('/');
     }
 
     public function store($socialUser, $provider){

@@ -11,7 +11,7 @@ class BigSale extends Model
 
     protected $table = 'big_sale';
 
-    protected $fillable = ['judul', 'mulai', 'berakhir', 'status'];
+    protected $fillable = ['judul', 'mulai', 'berakhir', 'status', 'image'];
 
     public function produk()
     {

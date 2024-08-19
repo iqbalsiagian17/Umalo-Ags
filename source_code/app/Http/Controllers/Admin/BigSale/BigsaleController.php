@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\BigSale;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class BigsaleController extends Controller
 {
@@ -32,19 +34,40 @@ class BigsaleController extends Controller
      */
     public function store(Request $request)
     {
-        $bigSale = BigSale::create($request->only('judul', 'mulai', 'berakhir', 'status'));
+        $request->validate([
+            'judul' => 'required|string',
+            'mulai' => 'required|date',
+            'berakhir' => 'required|date',
+            'status' => 'required|in:aktif,tidak aktif',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is required during creation
+        ]);
     
+        $image = $request->file('image');
+        $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
+        $imageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('uploads/bigsale/'), $imageName);
+    
+        $bigSale = BigSale::create([
+            'judul' => $request->input('judul'),
+            'mulai' => $request->input('mulai'),
+            'berakhir' => $request->input('berakhir'),
+            'status' => $request->input('status'),
+            'image' => 'uploads/bigsale/' . $imageName,
+        ]);
+    
+        // Attach products if any
         if ($request->has('products')) {
-            foreach ($request->products as $product_id) {
-                if (isset($request->harga_diskon[$product_id])) {
-                    $harga_diskon = $request->harga_diskon[$product_id];
+            foreach ($request->products as $product_id => $value) {
+                $harga_diskon = $request->input("harga_diskon.{$product_id}");
+                if ($harga_diskon) {
                     $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
                 }
             }
         }
     
-        return redirect()->route('bigsale.index');
+        return redirect()->route('bigsale.index')->with('success', 'Big Sale created successfully.');
     }
+    
     
     
 
@@ -75,22 +98,60 @@ class BigsaleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'judul' => 'required|string',
+            'mulai' => 'required|date',
+            'berakhir' => 'required|date',
+            'status' => 'required|in:aktif,tidak aktif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is optional during update
+        ]);
+    
         $bigSale = BigSale::findOrFail($id);
-        $bigSale->update($request->only('judul', 'mulai', 'berakhir', 'status'));
+    
+        // Prepare the data array
+        $data = $request->only('judul', 'mulai', 'berakhir', 'status');
+    
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($bigSale->image && file_exists(public_path($bigSale->image))) {
+                @unlink(public_path($bigSale->image));
+            }
+    
+            // Get the new uploaded file
+            $image = $request->file('image');
+            $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
+            $newImageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
+    
+            // Move the image to the desired directory
+            $image->move(public_path('uploads/bigsale/'), $newImageName);
+    
+            // Update the image path in the data array
+            $data['image'] = 'uploads/bigsale/' . $newImageName;
+        }
+    
+        // Update the BigSale record with the provided data
+        $bigSale->update($data);
     
         // Detach existing products
         $bigSale->produk()->detach();
     
         // Attach new products with discount prices
-        foreach ($request->products as $product_id => $value) {
-            $harga_diskon = $request->input("products.{$product_id}_harga_diskon");
-            if ($harga_diskon) {
-                $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
+        if ($request->has('products')) {
+            foreach ($request->products as $product_id => $value) {
+                $harga_diskon = $request->input("harga_diskon.{$product_id}");
+                if ($harga_diskon) {
+                    $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
+                }
             }
         }
     
-        return redirect()->route('bigsale.index');
+        return redirect()->route('bigsale.index')->with('success', 'Big Sale updated successfully.');
     }
+    
+
+    
+
+
     
 
     /**
