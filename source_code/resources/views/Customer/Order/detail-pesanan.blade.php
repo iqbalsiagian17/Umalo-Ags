@@ -58,10 +58,10 @@
                 <button type="submit" class="btn btn-primary">Terima Barang</button>
             </form>
         @endif
+        @if(in_array($order->status, ['Pengiriman', 'Selesai']))
+        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download PDF</a>
+    @endif
 
-        @if($order->status == 'Selesai')
-            <p><strong>Pesanan ini telah selesai. Terima kasih telah berbelanja!</strong></p>
-        @endif
 
         <a href="{{ route('order.history') }}" class="btn btn-secondary">Back to History</a>
     </div>

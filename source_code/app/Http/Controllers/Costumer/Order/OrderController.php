@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Costumer\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use PDF;
 
 class OrderController extends Controller
 {
@@ -83,6 +84,20 @@ class OrderController extends Controller
 
     return redirect()->route('order.show', $order->id)->with('error', 'Pesanan tidak dapat dibatalkan pada tahap ini.');
 }
+public function generatePdf($id)
+{
+    $order = Order::with('orderItems.produk')->findOrFail($id);
+
+    $pdf = PDF::loadView('customer.order.pdf', compact('order'));
+    return $pdf->download('order-details.pdf');
+}
+public function transactionHistory($id)
+{
+    $order = Order::with('statusHistories')->findOrFail($id);
+
+    return view('customer.order.transaction_history', compact('order'));
+}
+
                 
     
 }

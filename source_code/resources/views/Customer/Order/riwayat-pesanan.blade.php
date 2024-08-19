@@ -27,6 +27,18 @@
                             <td>
                                 <a href="{{ route('order.detail', $order->id) }}" class="btn btn-primary btn-sm">Lihat Detail</a>
                             </td>
+                            <td>
+                                <a href="{{ route('order.transaction_history', $order->id) }}" class="btn btn-info btn-sm">Lihat Riwayat Transaksi</a>
+                            </td>
+                            <td>
+                                @if(in_array($order->status, ['Pengiriman', 'Selesai']))
+                                    <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">Download PDF</a>
+                                    @if($order->status == 'Pengiriman' && $order->nomor_resi)
+                                        <p>Nomor Resi: {{ $order->nomor_resi }}</p>
+                                    @endif
+                                @endif
+                            </td>
+                            
                         </tr>
                     @endforeach
                 </tbody>

@@ -35,10 +35,17 @@
                 @endforeach
             </tbody>
         </table>
+        @if($order->status == 'Pengiriman')
+        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download PDF</a>
+    @endif
 
         <div class="mt-4">
             <a href="{{ route('cart.view') }}" class="btn btn-secondary">Back</a>
         </div>
+        <div class="mt-4">
+            <a href="{{ route('order.transaction_history', $order->id) }}" class="btn btn-info">Lihat Riwayat Transaksi</a>
+        </div>
+        
         
     </div>
 @endsection

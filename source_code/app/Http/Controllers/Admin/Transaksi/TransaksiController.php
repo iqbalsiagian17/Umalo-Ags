@@ -27,25 +27,39 @@ class TransaksiController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $order = Order::findOrFail($id);
-
-    if ($request->ajax()) {
-        if ($request->status == 'Negosiasi' && $request->has('whatsapp_number')) {
+    {
+        $order = Order::findOrFail($id);
+    
+        // Validate and set the tracking number if the status is Pengiriman
+        if ($request->status == 'Pengiriman') {
+            $request->validate([
+                'nomor_resi' => 'required|string',
+            ]);
+            $order->nomor_resi = $request->nomor_resi;
+        }
+    
+        // Validate and set the WhatsApp number if the status is Negosiasi
+        if ($request->status == 'Negosiasi') {
             $request->validate([
                 'whatsapp_number' => 'required|string',
             ]);
             $order->whatsapp_number = $request->whatsapp_number;
         }
-
+    
+        // Update the order status
         $order->status = $request->status;
         $order->save();
-
-        return response()->json(['success' => true, 'message' => 'Status updated successfully!', 'whatsapp_number' => $order->whatsapp_number]);
+    
+        // Log the status change with any additional info
+        $order->statusHistories()->create([
+            'status' => $request->status,
+            'extra_info' => $request->status == 'Pengiriman' ? $order->nomor_resi : null,
+            'created_at' => now(),
+        ]);
+    
+        return redirect()->route('transaksi.index')->with('success', 'Status pesanan berhasil diperbarui.');
     }
-
-    return redirect()->route('transaksi.index', $order->id)->with('success', 'Status pesanan berhasil diperbarui.');
-}
+    
 
     
 

@@ -109,6 +109,13 @@
         @csrf
         @method('PUT')
         <input type="hidden" name="status" id="statusInput" value="{{ $order->status }}">
+        <!-- Tracking Number Input -->
+        @if($order->status == 'Packing')
+            <div class="form-group">
+                <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
+                <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" placeholder="Enter Tracking Number">
+            </div>
+        @endif
 
         <!-- WhatsApp Number Input -->
         <div class="form-group" id="whatsappGroup" style="display: none;">
@@ -163,7 +170,20 @@
 
     function updateStatus(newStatus) {
         $('#statusInput').val(newStatus);
-        submitForm();
+
+        if (newStatus === 'Pengiriman') {
+            // Prompt the user to enter the tracking number (nomor resi) before proceeding
+            let nomorResi = prompt("Please enter the tracking number (Nomor Resi):");
+
+            if (nomorResi) {
+                $('#nomor_resi').val(nomorResi);  // Set the tracking number in the hidden input field
+                submitForm();
+            } else {
+                alert('Tracking number is required to update status to Pengiriman.');
+            }
+        } else {
+            submitForm();
+        }
     }
 
     function cancelOrder() {
