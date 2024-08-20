@@ -3,6 +3,7 @@
 {{--   <div id="preloder">
       <div class="loader"></div>
   </div> --}}
+                            {{-- div --}}
 
     
     <!-- Humberger Begin -->
@@ -93,7 +94,9 @@
                                     <li><a href="#" data-lang="id">Bahasa</a></li>
                                     <li><a href="#" data-lang="en">English</a></li>
                                 </ul>
-                            </div>                            
+                            </div>      
+                            
+                            {{-- div --}}
                             <div class="header__top__right__auth">
                                 @guest
                                     @if (Route::has('login'))
@@ -125,6 +128,7 @@
                                     </div>
                                 @endguest
                             </div>
+                            {{-- div --}}
                             
                             
                         </div>
@@ -174,6 +178,8 @@
             </div>
         </div>
     </header>
+                            {{-- div --}}
+
     <!-- Header Section End -->
 
 

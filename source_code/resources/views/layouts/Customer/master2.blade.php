@@ -4,3 +4,5 @@
 @include('layouts.customer.content')
 
 @include('layouts.customer.footer')
+
+{{-- test --}}

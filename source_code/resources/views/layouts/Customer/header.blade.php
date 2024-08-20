@@ -23,3 +23,5 @@
     <link rel="stylesheet" href="{{asset('ogani/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('ogani/css/style.css')}} " type="text/css">
 </head>
+
+                            {{-- div --}}
