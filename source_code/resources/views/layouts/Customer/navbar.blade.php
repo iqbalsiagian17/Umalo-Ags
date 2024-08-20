@@ -140,7 +140,7 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo text-center">
-                        <a href="/"><img src="{{ asset('assets/images/ags.png') }}" alt=""
+                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt=""
                                 width="100px"></a>
                     </div>
                 </div>

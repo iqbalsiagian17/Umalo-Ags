@@ -3,17 +3,10 @@
 @section('content')
     <!-- Hero Section Begin -->
     <section class="hero">
-{{-- test --}}
-
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt=""
-                                style="width: 100%; height: 70px;"></a>
-                    </div>
-                </div>
-                {{-- <div class="hero__categories">
+                    <div class="hero__categories">
                         <div class="hero__categories__all">
                             <i class="fa fa-bars"></i>
                             <span>Kategori</span>
@@ -29,29 +22,17 @@
 
                 </div>
                 <div class="col-lg-9">
-                    <div class="hero__search" style="display: flex; align-items: center;">
-                        <div class="hero__search__form" style="flex: 1;">
+                    <div class="hero__search">
+                        <div class="hero__search__form">
                             <form action="#">
-                                <input type="text" placeholder="Apa yang Anda butuhkan?" style="width: 100%;">
-                                <button type="submit" class="site-btn rounded">Cari Disini</button>
+                                <input type="text" placeholder="Search">
+                                <button type="submit" class="site-btn rounded">SEARCH</button>
                             </form>
                         </div>
-                        <div class="header__cart" style="margin-left: 20px;">
-                            <ul style="display: flex; align-items: center; list-style: none; padding: 0;">
-                                {{-- <li>
-                                <a href="/cart"><i class="fa fa-shopping-cart"></i> <span>3</span></a>
-                            </li> --}}
-                            <li>
-                                <a href="/sign-in" class="site-btn" style="border-radius: 30px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-user" style="margin-right: 8px; color: white;"></i>Masuk
-                                </a>
-                            </li>
-                            </ul>
-                        </div>
                     </div>
-                </div>
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
+
                             @if ($slider->isEmpty())
                                 <!-- If no sliders are available, show a default image -->
                                 <div class="carousel-item active">
@@ -59,9 +40,7 @@
                                         data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
                                         <div class="hero__text">
                                             <span></span>
-                                            <h6 class="text-white" style="font-weight: bold">OPTIMIZATION OF INNOVATIVE
-                                                TECHNOLOGY</h6><br>
-                                            <h2 class="text-white">High Quality and <br>Advanced Product</h2>
+                                            <h2 class="text-white">Welcome</h2>
                                             <p></p>
                                             <a href="/shop" class="primary-btn">SHOP NOW</a>
                                         </div>
@@ -199,56 +178,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row featured__filter mt-5" id="MixItUpD27635">
-                                    @foreach ($bigSale->produk as $product)
-                                        @php
-                                            $imagePath = $product->images->isNotEmpty()
-                                                ? $product->images->first()->gambar
-                                                : 'path/to/default/image.jpg';
-                                        @endphp
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                                            <div class="featured__item">
-                                                <div class="featured__item__pic"
-                                                    style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                                    @if ($product->nego === 'ya')
-                                                        <span class="nego-badge">Bisa Nego</span>
-                                                    @endif
-                                                    <ul class="featured__item__pic__hover">
-                                                        <li><a
-                                                                href="{{ route('produk_customer.user.show', $product->id) }}"><i
-                                                                    class="fa fa-info-circle"></i></a></li>
-
-                                                        @auth
-                                                            <!-- Jika pengguna sudah login -->
-                                                            <li><a href="#" class="add-to-cart-btn"
-                                                                    data-id="{{ $product->id }}"><i
-                                                                        class="fa fa-shopping-cart"></i></a></li>
-                                                        @else
-                                                            <!-- Jika pengguna belum login -->
-                                                            <li><a href="{{ route('login') }}"><i
-                                                                        class="fa fa-shopping-cart"></i></a></li>
-                                                        @endauth
-                                                    </ul>
-                                                </div>
-
-                                                <div class="featured__item__text">
-                                                    <h6><a
-                                                            href="{{ route('produk_customer.user.show', $product->id) }}">{{ $product->nama }}</a>
-                                                    </h6>
-                                                    <h5>
-                                                        <span style="text-decoration: line-through; color: #a5a5a5;">
-                                                            Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}
-                                                        </span>
-                                                        <br>
-                                                        Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </section>
+                            @endforeach
+                        </div>
 
 
                         <hr>
@@ -319,7 +250,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title">
-                            <h2>New Arrival Products !!</h2>
+                            <h2>Produk Terlaris !!</h2>
                         </div>
                     </div>
                 </div>
@@ -352,7 +283,6 @@
                                         @endauth
                                     </ul>
                                 </div>
-                                {{-- <div class="featured__item__text"> --}}
 
                                 <div class="featured__item__text">
                                     <h6><a href="#">{{ $item->nama }}</a></h6>
