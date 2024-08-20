@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use PDF;
-
+use App\Models\PPN;
+use App\Models\Materai;
 class OrderController extends Controller
 {
     public function negoisasi($id)
@@ -85,12 +86,18 @@ class OrderController extends Controller
     return redirect()->route('order.show', $order->id)->with('error', 'Pesanan tidak dapat dibatalkan pada tahap ini.');
 }
 public function generatePdf($id)
-{
-    $order = Order::with('orderItems.produk')->findOrFail($id);
+    {
+        $order = Order::with('orderItems.produk')->findOrFail($id);
+        $ppn = PPN::latest()->first();
+        $materai = Materai::all(); // Retrieve all Materai records
 
-    $pdf = PDF::loadView('customer.order.pdf', compact('order'));
-    return $pdf->download('order-details.pdf');
-}
+        $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
+
+        $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materai', 'totalPriceWithPPN'));
+        return $pdf->download('order-details.pdf');
+    }
+
+
 public function transactionHistory($id)
 {
     $order = Order::with('statusHistories')->findOrFail($id);
