@@ -5,31 +5,7 @@
     <section class="hero">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="hero__categories">
-                        <div class="hero__categories__all">
-                            <i class="fa fa-bars"></i>
-                            <span>Kategori</span>
-                        </div>
-                        <ul>
-                            @foreach ($kategori as $kategoris)
-                                <li><a
-                                        href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="col-lg-9">
-                    <div class="hero__search">
-                        <div class="hero__search__form">
-                            <form action="#">
-                                <input type="text" placeholder="Search">
-                                <button type="submit" class="site-btn rounded">SEARCH</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
 

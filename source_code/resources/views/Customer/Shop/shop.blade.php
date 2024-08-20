@@ -1,39 +1,6 @@
 @extends('layouts.customer.master')
 
 @section('content')
-    <section class="hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="hero__categories">
-                        <div class="hero__categories__all" id="toggleCategories">
-                            <i class="fa fa-bars"></i>
-                            <span>Kategori</span>
-                        </div>
-                        <ul id="categoriesList">
-                            @foreach ($kategori as $kategoris)
-                                <li><a
-                                        href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-9">
-                    <div class="hero__search">
-                        <div class="hero__search__form">
-                            <form action="#">
-                                <input type="text" placeholder="What do you need?">
-                                <button type="submit" class="site-btn">SEARCH</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Hero Section End -->
-
     <!-- Product Section Begin -->
     <section class="product spad">
         <div class="container">
