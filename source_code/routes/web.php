@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\MasterData\MateraiController;
 use App\Http\Controllers\Admin\MasterData\PPNController;
 use App\Http\Controllers\Admin\QnA\QaController;
 use App\Http\Controllers\Admin\Transaksi\TransaksiController;
+use App\Http\Controllers\Admin\User\UserController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
@@ -112,6 +113,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('slider', SliderController::class);
     Route::resource('qas', QaController::class);
     Route::resource('transaksi', TransaksiController::class);
+    Route::resource('users', UserController::class);
 
 
     Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);

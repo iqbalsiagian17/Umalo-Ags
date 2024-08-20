@@ -99,6 +99,28 @@
                                 @endif
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
+                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
+                                        @if ($errors->has('masa_berlaku_produk'))
+                                            <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="stok">Stok:</label>
+                                        <input type="number" name="stok" class="form-control" value="{{ old('stok') }}" required>
+                                        @if ($errors->has('stok'))
+                                            <small class="text-danger">{{ $errors->first('stok') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="gambar">Gambar Produk:</label>
                                 <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
@@ -156,28 +178,6 @@
     
                         <!-- Details Tab -->
                         <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
-                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
-                                        @if ($errors->has('masa_berlaku_produk'))
-                                            <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="stok">Stok:</label>
-                                        <input type="number" name="stok" class="form-control" value="{{ old('stok') }}" required>
-                                        @if ($errors->has('stok'))
-                                            <small class="text-danger">{{ $errors->first('stok') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-    
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -390,6 +390,7 @@
             </div>
         </div>
         <small>*Produk, ketika berhasil ditambahkan, maka status akan otomatis menjadi "Arsip" yang artinya anda perlu merubahnya menjadi "Publish" agar muncul di halaman User</small>
+        <small>*General Information, Categories adalah hal yang wajib di isi jika ingin memasukkan barang, dan untuk details dan Produk List dapat di isi belakangan.</small>
     </div>
 
     <script>

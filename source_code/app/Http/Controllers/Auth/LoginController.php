@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -40,45 +42,60 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {   
-        $input = $request->all();
-       
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-       
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
-            if (auth()->user()->role == 'admin') {
-                return redirect()->route('dashboard');
-            }else if (auth()->user()->role == 'costumer') {
-                return redirect()->route('/');
-            }
-        }else{
-            return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+{
+    $input = $request->all();
+
+    $this->validate($request, [
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+        $user = auth()->user();
+
+        // Use query builder to update last_login_at
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['last_login_at' => now()]);
+
+        if ($user->role == 'admin') {
+            return redirect()->route('dashboard');
+        } else if ($user->role == 'costumer') {
+            return redirect()->route('home');
         }
-            
+    } else {
+        return redirect()->route('login')
+            ->with('error', 'Email-Address And Password Are Wrong.');
+    }
+}
+
+
+
+public function logout(Request $request)
+{
+    $user = Auth::user();  // Capture the user before logging out
+
+    Auth::logout();  // Log the user out
+    $request->session()->invalidate();  // Invalidate the session
+    $request->session()->regenerateToken();  // Regenerate the CSRF token
+
+    // Update the last_login_at to now to indicate they are no longer online
+    if ($user) {
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['last_login_at' => now()]);
     }
 
-    public function logout(Request $request)
-    {
-        $role = auth()->user()->role;  // Capture the user's role before logging out
-    
-        auth()->logout();  // Log the user out
-        $request->session()->invalidate();  // Invalidate the session
-        $request->session()->regenerateToken();  // Regenerate the CSRF token
-    
-        // Redirect based on user role
-        if ($role == 'admin') {
-            return redirect('/login');  // Redirect admin users to the login page
-        } elseif ($role == 'costumer') {
-            return redirect('/');  // Redirect customer users to the home page
-        }
-    
-        return redirect('/');  // Fallback to home for other roles
+    // Redirect based on user role
+    if ($user->role == 'admin') {
+        return redirect('/login');  // Redirect admin users to the login page
+    } elseif ($user->role == 'costumer') {
+        return redirect('/');  // Redirect customer users to the home page
     }
+
+    return redirect('/');  // Fallback to home for other roles
+}
+
     
 
 

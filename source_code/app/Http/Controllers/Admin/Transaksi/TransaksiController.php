@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
@@ -11,6 +12,13 @@ class TransaksiController extends Controller
     public function index()
     {
         $orders = Order::with('orderItems')->get();
+        // Ambil daftar ID transaksi yang telah dilihat dari session
+        $seenOrders = Session::get('seen_orders', []);
+
+        // Simpan ID transaksi yang telah dilihat di session
+        $newSeenOrders = $orders->pluck('id')->toArray();
+        $seenOrders = array_merge($seenOrders, $newSeenOrders);
+        Session::put('seen_orders', array_unique($seenOrders));
         return view('admin.transaksi.index', compact('orders'));
     }
 

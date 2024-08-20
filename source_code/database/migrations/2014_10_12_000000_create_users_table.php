@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->boolean('role')->default(false); //Users: 0=>Costumer, 1=>Admin 
             $table->string('foto_profile')->nullable();
-            $table->string('no_telepon', 12)->nullable();
+            $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
