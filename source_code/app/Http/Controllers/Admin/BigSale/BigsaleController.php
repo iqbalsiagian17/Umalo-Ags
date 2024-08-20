@@ -97,56 +97,52 @@ class BigsaleController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'judul' => 'required|string',
-            'mulai' => 'required|date',
-            'berakhir' => 'required|date',
-            'status' => 'required|in:aktif,tidak aktif',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is optional during update
-        ]);
-    
-        $bigSale = BigSale::findOrFail($id);
-    
-        // Prepare the data array
-        $data = $request->only('judul', 'mulai', 'berakhir', 'status');
-    
-        if ($request->hasFile('image')) {
-            // Delete the old image if it exists
-            if ($bigSale->image && file_exists(public_path($bigSale->image))) {
-                @unlink(public_path($bigSale->image));
-            }
-    
-            // Get the new uploaded file
-            $image = $request->file('image');
-            $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
-            $newImageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
-    
-            // Move the image to the desired directory
-            $image->move(public_path('uploads/bigsale/'), $newImageName);
-    
-            // Update the image path in the data array
-            $data['image'] = 'uploads/bigsale/' . $newImageName;
+{
+    $request->validate([
+        'judul' => 'required|string',
+        'mulai' => 'required|date',
+        'berakhir' => 'required|date',
+        'status' => 'required|in:aktif,tidak aktif',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $bigSale = BigSale::findOrFail($id);
+
+    $data = $request->only('judul', 'mulai', 'berakhir', 'status');
+
+    if ($request->hasFile('image')) {
+        if ($bigSale->image && file_exists(public_path($bigSale->image))) {
+            @unlink(public_path($bigSale->image));
         }
-    
-        // Update the BigSale record with the provided data
-        $bigSale->update($data);
-    
-        // Detach existing products
-        $bigSale->produk()->detach();
-    
-        // Attach new products with discount prices
-        if ($request->has('products')) {
-            foreach ($request->products as $product_id => $value) {
-                $harga_diskon = $request->input("harga_diskon.{$product_id}");
-                if ($harga_diskon) {
-                    $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
-                }
-            }
-        }
-    
-        return redirect()->route('bigsale.index')->with('success', 'Big Sale updated successfully.');
+
+        $image = $request->file('image');
+        $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
+        $newImageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
+
+        $image->move(public_path('uploads/bigsale/'), $newImageName);
+
+        $data['image'] = 'uploads/bigsale/' . $newImageName;
     }
+
+    $bigSale->update($data);
+
+    // Synchronize the products with their discounts
+    $products = [];
+    if ($request->has('products')) {
+        foreach ($request->products as $product_id => $value) {
+            $harga_diskon = $request->input("products.{$product_id}_harga_diskon");
+            if ($harga_diskon) {
+                $products[$product_id] = ['harga_diskon' => $harga_diskon];
+            }
+        }
+    }
+
+    // Sync the products with the Big Sale
+    $bigSale->produk()->sync($products);
+
+    return redirect()->route('bigsale.index')->with('success', 'Big Sale updated successfully.');
+}
+
     
 
     

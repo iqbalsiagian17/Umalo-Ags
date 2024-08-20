@@ -89,38 +89,7 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                @guest
-                                    @if (Route::has('login'))
-                                        <a class="nav-link" href="{{ route('login') }}">
-                                            <i class="fa fa-user"></i> {{ __('Login') }}
-                                        </a>
-                                    @endif
-                                @else
-                                    <div class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
-                                            role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            <i class="fa fa-user"></i> {{ Auth::user()->name }}
-                                        </a>
-
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="{{ route('user.show') }}">
-                                                {{ __('Settings') }}
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('order.history') }}">
-                                                {{ __('Pesanan') }}
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                {{ __('Logout') }}
-                                            </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                class="d-none">
-                                                @csrf
-                                            </form>
-                                        </div>
-                                    </div>
-                                @endguest
+                                
                             </div>
                         </div>
                     </div>
@@ -130,12 +99,12 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3">
-                    <div class="header__logo text-center">
-                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt="" style="width: 100%; height: 80px;"></a>
+                    <div class="header__logo text-center mb-3">
+                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt="" style="width: 100%; height: 100px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="hero__search mt-2">
+                    <div class="hero__search mb-3">
                         <div class="hero__search__form">
                             <form action="#">
                                 <input type="text" placeholder="Search">
@@ -145,14 +114,57 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    @if (Auth::check())
-                        <div class="header__cart mt-2">
-                            <ul>
-                                <li><a href="{{ route('cart.view') }}">My Cart<i class="fa fa-shopping-cart" style="font-size: 36px;"></i></a></li>
-                            </ul>
-                        </div>
-                    @endif
+                    <div class="header__cart mb-3">
+                        <ul>
+                                @if (Auth::check())
+                                    <li>
+                                        <a href="{{ route('cart.view') }}"><i class="fa fa-shopping-cart"></i></a>
+                                    </li>
+                                @endif
+                                @guest
+                                <li>
+                                    @if (Route::has('login'))
+                                        <a class="nav-link" href="{{ route('login') }}">
+                                            {{ __('Login') }}
+                                        </a>
+                                    @endif
+                                </li>
+                            @else
+                            <li>
+                                <div class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
+                                        <!-- Avatar Gambar -->
+                                        <img src="{{ asset('assets/images/logo.png') }}" alt="Avatar"
+    style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
+
+                                        {{ Auth::user()->name }}
+                                    </a>
+                            
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('user.show') }}">
+                                            {{ __('Settings') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('order.history') }}">
+                                            {{ __('Pesanan') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            
+                            @endguest
+                        </ul>
+                    </div>
                 </div>
+                
                 <div class="humberger__open">
                     <i class="fa fa-bars"></i>
                 </div>
