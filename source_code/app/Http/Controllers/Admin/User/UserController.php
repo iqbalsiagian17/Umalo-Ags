@@ -56,7 +56,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::with('userDetail')->findOrFail($id);
-        return view('users.edit', compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -64,7 +64,7 @@ class UserController extends Controller
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'nullable|string|min:8|confirmed',
+        'password' => 'nullable|string|min:8|confirmed', // Make password nullable to allow optional update
         'role' => 'required|in:0,1', // 0 for customer, 1 for admin
     ]);
 
@@ -91,8 +91,9 @@ class UserController extends Controller
         'jenis_kelamin' => $request->jenis_kelamin,
     ]);
 
-    return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+    return redirect()->route('users.index')->with('success', 'User updated successfully.');
 }
+
 
 
     public function destroy($id)
