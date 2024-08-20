@@ -16,8 +16,8 @@
                                         data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
                                         <div class="hero__text">
                                             <span></span>
-                                            <h2 class="text-white">Welcome</h2>
-                                            <p></p>
+                                            <h5 class="text-white" style="font-weight: bold;">OPTIMIZATION OF INNOVATIVE TECHNOLOGY</h5>
+                                            <h2 class="text-white">High Quality and <br> Advanced Products</h2>
                                             <a href="/shop" class="primary-btn">SHOP NOW</a>
                                         </div>
                                     </div>
@@ -47,10 +47,6 @@
                             </a>
                         @endif
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>
@@ -227,6 +223,64 @@
                     <div class="col-lg-12">
                         <div class="section-title">
                             <h2>Produk Terlaris !!</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row featured__filter" id="MixItUpD27635">
+                    @foreach ($produk as $item)
+                        @php
+                            $imagePath = $item->images->isNotEmpty()
+                                ? $item->images->first()->gambar
+                                : 'path/to/default/image.jpg';
+                        @endphp
+                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                            <div class="featured__item">
+                                <div class="featured__item__pic"
+                                    style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center;">
+                                    @if ($item->nego === 'ya')
+                                        <span class="nego-badge">Bisa Nego</span>
+                                    @endif
+                                    <ul class="featured__item__pic__hover">
+                                        <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                                    class="fa fa-info-circle"></i></a></li>
+
+                                        @auth
+                                            <!-- Jika pengguna sudah login -->
+                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-shopping-cart"></i></a></li>
+                                        @else
+                                            <!-- Jika pengguna belum login -->
+                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                        @endauth
+                                    </ul>
+                                </div>
+
+                                <div class="featured__item__text">
+                                    <h6><a href="#">{{ $item->nama }}</a></h6>
+                                    <h5>
+                                        @if ($item->harga_ditampilkan === 'ya')
+                                            Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                        @else
+                                            Hubungi admin untuk detail harga
+                                        @endif
+                                        @if ($item->nego === 'ya')
+                                            <span class="badge badge-success">Bisa Nego</span>
+                                        @endif
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        <section class="featured spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            <h2>Produk Terbaru !!</h2>
                         </div>
                     </div>
                 </div>

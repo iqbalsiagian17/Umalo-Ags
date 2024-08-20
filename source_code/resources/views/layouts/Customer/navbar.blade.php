@@ -4,7 +4,6 @@
       <div class="loader"></div>
   </div> --}}
 
-
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
@@ -72,26 +71,20 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                <li>Simplifying Industries</li>
+                                <li><i class="fa fa-envelope"></i>info@labtek.id</li>
+                                <li>Level-Up Your Output With LABTEK</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
-                            <div class="header__top__right__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                            </div>
                             <div class="header__top__right__language">
                                 <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
                                     alt="" data-lang="id">
                                 <div id="language-text">Bahasa</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#" data-lang="id">Bahasa</a></li>
+                                    <li><a href="#" data-lang="id">Indonesia</a></li>
                                     <li><a href="#" data-lang="en">English</a></li>
                                 </ul>
                             </div>
@@ -129,22 +122,20 @@
                                     </div>
                                 @endguest
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-lg-3">
                     <div class="header__logo text-center">
-                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt="" width="200px"></a>
+                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt="" style="width: 100%; height: 80px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="hero__search mt-4">
+                    <div class="hero__search mt-2">
                         <div class="hero__search__form">
                             <form action="#">
                                 <input type="text" placeholder="Search">
@@ -157,18 +148,16 @@
                     @if (Auth::check())
                         <div class="header__cart mt-2">
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> {{-- <span>1</span> --}}</a></li>
-                                <li><a href="{{ route('cart.view') }}"><i class="fa fa-shopping-bag"></i>
-                                        {{-- <span>3</span> --}}</a></li>
+                                <li><a href="{{ route('cart.view') }}">My Cart<i class="fa fa-shopping-cart" style="font-size: 36px;"></i></a></li>
                             </ul>
-                            {{--                     <div class="header__cart__price">item: <span>$150.00</span></div> --}}
                         </div>
                     @endif
-
                 </div>
                 <div class="humberger__open">
                     <i class="fa fa-bars"></i>
                 </div>
             </div>
+        </div>
+
     </header>
     <!-- Header Section End -->
