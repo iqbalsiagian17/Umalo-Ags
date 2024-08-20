@@ -80,7 +80,7 @@ class MateraiController extends Controller
     public function update(Request $request, Materai $materai)
     {
         $request->validate([
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:20483',
         ]);
 
         if ($request->hasFile('image')) {
