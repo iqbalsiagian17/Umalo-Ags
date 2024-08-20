@@ -4,7 +4,7 @@
       <div class="loader"></div>
   </div> --}}
 
-    
+
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
@@ -72,29 +72,29 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                <li>Simplifying Industries</li>
+                                <li><i class="fa fa-envelope"></i>info@labtek.id</li>
+                                <li>Level-Up Your Output With LABTEK</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
-                            <div class="header__top__right__social">
+                            {{-- <div class="header__top__right__social">
                                 <a href="#"><i class="fa fa-facebook"></i></a>
                                 <a href="#"><i class="fa fa-twitter"></i></a>
                                 <a href="#"><i class="fa fa-linkedin"></i></a>
                                 <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                            </div>
+                            </div> --}}
                             <div class="header__top__right__language">
                                 <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}" alt="" data-lang="id">
                                 <div id="language-text">Bahasa</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#" data-lang="id">Bahasa</a></li>
+                                    <li><a href="#" data-lang="id">Indonesia</a></li>
                                     <li><a href="#" data-lang="en">English</a></li>
                                 </ul>
-                            </div>                            
-                            <div class="header__top__right__auth">
+                            </div>
+                            {{-- <div class="header__top__right__auth">
                                 @guest
                                     @if (Route::has('login'))
                                         <a class="nav-link" href="{{ route('login') }}">
@@ -106,7 +106,7 @@
                                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                         </a>
-                                    
+
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                             <a class="dropdown-item" href="{{ route('user.show') }}">
                                                 {{ __('Settings') }}
@@ -124,9 +124,7 @@
                                         </div>
                                     </div>
                                 @endguest
-                            </div>
-                            
-                            
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -134,11 +132,11 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                {{-- <div class="col-lg-3">
                     <div class="header__logo text-center">
-                        <a href="/"><img src="{{asset('assets/images/ags.png')}}" alt="" width="100px"></a>
+                        <a href="/"><img src="{{asset('assets/images/logo.png')}}" alt="" style="width: 100%; height: 80px;"></a>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-lg-6">
                     {{-- <nav class="header__menu">
                         <ul>

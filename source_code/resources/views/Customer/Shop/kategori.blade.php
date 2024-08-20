@@ -87,8 +87,8 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        
+
+
                         <script>
                             function sortProducts() {
                                 var sortBy = document.getElementById('sort-by').value;
@@ -96,7 +96,7 @@
                                 url.searchParams.set('sort', sortBy);
                                 window.location.href = url.toString();
                             }
-                        
+
                             // Optional: Menyimpan pilihan sebelumnya setelah reload
                             document.addEventListener('DOMContentLoaded', function() {
                                 var urlParams = new URLSearchParams(window.location.search);
@@ -104,14 +104,14 @@
                                 document.getElementById('sort-by').value = sortBy;
                             });
                         </script>
-                        
-                        
+
+
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
                                 <h6><span>{{ $productCount }}</span> Produk</h6>
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-4 col-md-3">
                             <div class="filter__option">
                                 @if(isset($currentCategory))
@@ -154,9 +154,9 @@
                         <p>Tidak ada produk dalam kategori ini.</p>
                     @endforelse
                 </div>
-                @else   
+                @else
                 <!-- Section for All Products -->
-                
+
                 <div class="row">
                     @foreach($produk as $product)
                         <div class="col-lg-4 col-md-6 col-sm-6">
@@ -165,7 +165,7 @@
                                     $imagePath = $product->images->isNotEmpty() ? $product->images->first()->gambar : 'path/to/default/image.jpg';
                                 @endphp
                                     <div class="product__item__pic" style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 0; padding-top: 75%; position: relative;">
-                                    
+
                                         <ul class="product__item__pic__hover">
                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
 
