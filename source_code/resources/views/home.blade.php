@@ -5,6 +5,7 @@
     <section class="hero">
         <div class="container">
             <div class="row">
+<<<<<<< Updated upstream
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
@@ -19,36 +20,92 @@
                                             <h5 class="text-white" style="font-weight: bold;">OPTIMIZATION OF INNOVATIVE TECHNOLOGY</h5>
                                             <h2 class="text-white">High Quality and <br> Advanced Products</h2>
                                             <a href="/shop" class="primary-btn">SHOP NOW</a>
+=======
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt=""
+                                style="width: 100%; height: 70px;"></a>
+                    </div>
+                </div>
+                {{-- <div class="hero__categories">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>Kategori</span>
+                        </div>
+                        <ul>
+                            @foreach ($kategori as $kategoris)
+                            <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
+                        @endforeach
+                        </ul>
+                    </div> --}}
+                <div class="col-lg-9">
+                    <div class="hero__search" style="display: flex; align-items: center;">
+                        <div class="hero__search__form" style="flex: 1;">
+                            <form action="#">
+                                <input type="text" placeholder="Apa anda butuhkan?" style="width: 100%;">
+                                <button type="submit" class="site-btn rounded">Cari Disini</button>
+                            </form>
+                        </div>
+                        <div class="header__cart" style="margin-left: 20px;">
+                            <ul style="display: flex; align-items: center; list-style: none; padding: 0;">
+                                {{-- <li>
+                                <a href="/cart"><i class="fa fa-shopping-cart"></i> <span>3</span></a>
+                            </li> --}}
+                                <li>
+                                    <a href="/sign-in" class="site-btn"
+                                        style="border-radius: 30px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user" style="margin-right: 8px; color: white;"></i>Masuk
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="heroCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        @if ($slider->isEmpty())
+                            <!-- If no sliders are available, show a default image -->
+                            <div class="carousel-item active">
+                                <div class="hero__item set-bg rounded"
+                                    data-setbg="{{ asset('assets/images/slider_default.jpg') }}">
+                                    <div class="hero__text">
+                                        <span></span>
+                                        <h6 class="text-white" style="font-weight: bold">OPTIMIZATION OF INNOVATIVE
+                                            TECHNOLOGY</h6><br>
+                                        <h2 class="text-white">High Quality and <br>Advanced Product</h2>
+                                        <p></p>
+                                        <a href="/shop" class="primary-btn">SHOP NOW</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            @foreach ($slider as $index => $sliders)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
+                                        <div class="hero__text">
+                                            <h2>{{ $sliders->deskripsi }}</h2>
+                                            <a href="{{ $sliders->url }}" class="primary-btn">SHOP</a>
+>>>>>>> Stashed changes
                                         </div>
                                     </div>
                                 </div>
-                            @else
-                                @foreach ($slider as $index => $sliders)
-                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
-                                            <div class="hero__text">
-                                                <h2>{{ $sliders->deskripsi }}</h2>
-                                                <a href="{{ $sliders->url }}" class="primary-btn">SHOP</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-
-                        @if ($slider->count() > 1)
-                            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
+                            @endforeach
                         @endif
                     </div>
+
+                    @if ($slider->count() > 1)
+                        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    @endif
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- Hero Section End -->
