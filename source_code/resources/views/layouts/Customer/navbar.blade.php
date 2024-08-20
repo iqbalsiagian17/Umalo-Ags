@@ -1,16 +1,15 @@
 <body>
-  <!-- Page Preloder -->
-{{--   <div id="preloder">
+    <!-- Page Preloder -->
+    {{--   <div id="preloder">
       <div class="loader"></div>
   </div> --}}
-                            {{-- div --}}
 
-    
+
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="{{asset('assets/images/ags.png')}}" alt=""></a>
+            <a href="#"><img src="{{ asset('assets/images/ags.png') }}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -87,16 +86,15 @@
                                 <a href="#"><i class="fa fa-pinterest-p"></i></a>
                             </div>
                             <div class="header__top__right__language">
-                                <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}" alt="" data-lang="id">
+                                <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
+                                    alt="" data-lang="id">
                                 <div id="language-text">Bahasa</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
                                     <li><a href="#" data-lang="id">Bahasa</a></li>
                                     <li><a href="#" data-lang="en">English</a></li>
                                 </ul>
-                            </div>      
-                            
-                            {{-- div --}}
+                            </div>
                             <div class="header__top__right__auth">
                                 @guest
                                     @if (Route::has('login'))
@@ -106,10 +104,12 @@
                                     @endif
                                 @else
                                     <div class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
+                                            role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
                                             <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                         </a>
-                                    
+
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                             <a class="dropdown-item" href="{{ route('user.show') }}">
                                                 {{ __('Settings') }}
@@ -118,19 +118,19 @@
                                                 {{ __('Pesanan') }}
                                             </a>
                                             <a class="dropdown-item" href="{{ route('logout') }}"
-                                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 {{ __('Logout') }}
                                             </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
                                                 @csrf
                                             </form>
                                         </div>
                                     </div>
                                 @endguest
                             </div>
-                            {{-- div --}}
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,8 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo text-center">
-                        <a href="/"><img src="{{asset('assets/images/ags.png')}}" alt="" width="100px"></a>
+                        <a href="/"><img src="{{ asset('assets/images/ags.png') }}" alt=""
+                                width="100px"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -162,24 +163,21 @@
                     </nav> --}}
                 </div>
                 <div class="col-lg-3">
-                    @if(Auth::check())
-                    <div class="header__cart">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> {{-- <span>1</span> --}}</a></li>
-                            <li><a href="{{ route('cart.view') }}"><i class="fa fa-shopping-bag"></i> {{-- <span>3</span> --}}</a></li>
-                        </ul>
-{{--                     <div class="header__cart__price">item: <span>$150.00</span></div> --}}
+                    @if (Auth::check())
+                        <div class="header__cart">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-heart"></i> {{-- <span>1</span> --}}</a></li>
+                                <li><a href="{{ route('cart.view') }}"><i class="fa fa-shopping-bag"></i>
+                                        {{-- <span>3</span> --}}</a></li>
+                            </ul>
+                            {{--                     <div class="header__cart__price">item: <span>$150.00</span></div> --}}
+                        </div>
+                    @endif
+
                 </div>
-                @endif
-
+                <div class="humberger__open">
+                    <i class="fa fa-bars"></i>
+                </div>
             </div>
-            <div class="humberger__open">
-                <i class="fa fa-bars"></i>
-            </div>
-        </div>
     </header>
-                            {{-- div --}}
-
     <!-- Header Section End -->
-
-

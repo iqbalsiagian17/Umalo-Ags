@@ -6,6 +6,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt=""
+                            style="width: 100%; height: 70px;"></a>
+                </div>
+            </div>
+            {{-- <div class="col-lg-3">
                 <div class="hero__categories">
                     <div class="hero__categories__all" id="toggleCategories">
                         <i class="fa fa-bars"></i>
@@ -14,17 +20,29 @@
                     <ul id="categoriesList">
                         @foreach($kategori as $kategoris)
                         <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
-                    @endforeach                    
+                    @endforeach
                     </ul>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-lg-9">
-                <div class="hero__search">
-                    <div class="hero__search__form">
+                <div class="hero__search" style="display: flex; align-items: center;">
+                    <div class="hero__search__form" style="flex: 1;">
                         <form action="#">
-                            <input type="text" placeholder="What do you need?">
-                            <button type="submit" class="site-btn">SEARCH</button>
+                            <input type="text" placeholder="Apa yang Anda butuhkan?" style="width: 100%;">
+                            <button type="submit" class="site-btn rounded">Cari Disini</button>
                         </form>
+                    </div>
+                    <div class="header__cart" style="margin-left: 20px;">
+                        <ul style="display: flex; align-items: center; list-style: none; padding: 0;">
+                            {{-- <li>
+                            <a href="/cart"><i class="fa fa-shopping-cart"></i> <span>3</span></a>
+                        </li> --}}
+                        <li>
+                            <a href="/sign-in" class="site-btn" style="border-radius: 30px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="margin-right: 8px; color: white;"></i>Masuk
+                            </a>
+                        </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -72,12 +90,12 @@
                             </div>
                         </div>
                     </div> --}}
-                    
-                    
+
+
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
-                
+
                 <div class="filter__item">
                     <div class="row">
                         <div class="col-lg-4 col-md-5">
@@ -90,8 +108,8 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        
+
+
                         <script>
                             function sortProducts() {
                                 var sortBy = document.getElementById('sort-by').value;
@@ -99,7 +117,7 @@
                                 url.searchParams.set('sort', sortBy);
                                 window.location.href = url.toString();
                             }
-                        
+
                             // Optional: Menyimpan pilihan sebelumnya setelah reload
                             document.addEventListener('DOMContentLoaded', function() {
                                 var urlParams = new URLSearchParams(window.location.search);
@@ -110,7 +128,7 @@
 
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
-                                <h6><span>{{ $productCount }}</span> Produk</h6>
+                                <h6><span>{{ $productCount }}</span> Produk Ditemukan</h6>
                             </div>
                         </div>
 
@@ -153,14 +171,13 @@
                     @endforeach
 
                 </div>
-                
-                
-                {{-- <div class="product__pagination">
+                <div class="product__pagination">
+                    <a href="#"><i class="fa fa-long-arrow-left"></i></a>
                     <a href="#">1</a>
                     <a href="#">2</a>
                     <a href="#">3</a>
                     <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                </div> --}}
+                </div>
             </div>
         </div>
     </div>
@@ -177,7 +194,7 @@
 <script>
     document.getElementById('toggleCategories').addEventListener('click', function() {
         var categoriesList = document.getElementById('categoriesList');
-        
+
         if (categoriesList.style.display === 'block' || categoriesList.style.display === 'block') {
             categoriesList.style.display = 'none';
         } else {
