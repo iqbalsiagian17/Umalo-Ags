@@ -7,25 +7,28 @@
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
             <!--------------------------- Left Box ----------------------------->
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #416bbf;">
-                <div class="featured-image mb-3">
-                    <img src="{{asset('assets/images/ags.png')}}" class="img-fluid" style="width: 250px;">
+                <div class="inner-box rounded-4 p-4" style="background: #ffffff;">
+                    <div class="featured-image mb-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/images/logo.png')}}" class="img-fluid" style="width: 250px;">
+                    </div>
+                    <p class="text-dark fs-2 text-center">Bergabunglah dengan Kami</p>
+                    <p class="text-dark text-wrap text-center">Jadilah bagian dari komunitas kami.</p>
                 </div>
-                <p class="text-white fs-2">Join Us</p>
-                <small class="text-white text-wrap text-center">Become part of our community.</small>
             </div>
+
             <!----------------------------- Right Box ---------------------------->
             <div class="col-md-6 right-box">
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
                     <div class="row align-items-center">
                         <div class="header-text mb-4">
-                            <h2>Create Account</h2>
-                            <p>Join us and start your journey.</p>
+                            <h2>Buat Akun</h2>
+                            <p>Bergabunglah dengan kami dan mulai pengalaman Anda.</p>
                         </div>
 
                         <!-- Name Input -->
                         <div class="input-group mb-3">
-                            <input id="name" type="text" class="form-control form-control-lg bg-light @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Full Name">
+                            <input id="name" type="text" class="form-control form-control-lg bg-light @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Nama Lengkap">
                             @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -35,7 +38,7 @@
 
                         <!-- Email Input -->
                         <div class="input-group mb-3">
-                            <input id="email" type="email" class="form-control form-control-lg bg-light @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Email Address">
+                            <input id="email" type="email" class="form-control form-control-lg bg-light @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Alamat Email">
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -45,7 +48,7 @@
 
                         <!-- Password Input -->
                         <div class="input-group mb-3">
-                            <input id="password" type="password" class="form-control form-control-lg bg-light @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Password">
+                            <input id="password" type="password" class="form-control form-control-lg bg-light @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Kata Sandi">
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -55,25 +58,25 @@
 
                         <!-- Confirm Password Input -->
                         <div class="input-group mb-3">
-                            <input id="password-confirm" type="password" class="form-control form-control-lg bg-light" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
+                            <input id="password-confirm" type="password" class="form-control form-control-lg bg-light" name="password_confirmation" required autocomplete="new-password" placeholder="Konfirmasi Kata Sandi">
                         </div>
 
                         <!-- Register Button -->
                         <div class="input-group mb-3">
-                            <button type="submit" class="btn btn-lg text-white w-100 fs-6" style="background: #416bbf;">{{ __('Sign Up') }}</button>
+                            <button type="submit" class="btn btn-lg text-white w-100 fs-6" style="background: #416bbf;">{{ __('Daftar') }}</button>
                         </div>
 
                         <!-- Sign In with Google Button -->
                         <div class="input-group mb-3">
                             <a href="{{ route('socialite.redirect', 'google') }}" class="btn btn-lg btn-light w-100 fs-6">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAzFBMVEVHcEz////////+/v77+/vx8fL9/f309fX+/v739/f////09PXOz8/5+vr8/P3////////29vf///////84qlf8wAdGiPX8/PzsUUTqQjQsqFLrSj3S3/w6g/TqPCs0gPQgpUf85+bv9P+63sL62Nb+8ef4ycbw+PJkunkeePP81HXwgGv0jhzc5/3o9efX7N5Fr19Uj/WQy562zPr2trL94KDzoJrzoJv80Gjyl5H94qgyh9v7xzihsSp+wYV1sE5ZtXBmmvUynoWKrvzKDGT6AAAAE3RSTlMAW+TTeBLcHLMt1WsKzfUznkBIxSDAuAAAAUZJREFUKJFtktligkAMRUFZxKVuDMOAggpu1apVu+/t//9TkxBU1PsySQ4hlyGadpTd0fWOrV2R3eqyWhe80j1RpYCc7pmcI2tyaZimQw6bOTMplU9hpKIofJSUmgwtTCYq9EFhqKIJ5lbGdGIRAGhUQLNX6wRLOA2Y8vdpuvfVOJtaOjhdhL56yYrjU8cGFsRSLc4/x+DPfxBiSZN6LMlXUYXzVghBT8/7pPkdxFX28yzEO8HYI8U9dlQudMZx3AeInWWe+SrExxrhCLTre3E+M3P7FXznLn887z53a2PwGbjBLLvUP2jcYUC/FYdOA9d1g22SbN1fbizT9bUxXA+QguB4G2GlfbIFqw1i0GCzKmzDDQ1LZgPQLKHk5rAJpmSj0ykH0jxArW4V79yqF1bMkEckjYvFrTWIy0btApFsx7m68Ff1D4OdMHbngtKsAAAAAElFTkSuQmCC" style="width:20px" class="me-2">
-                                <small>Sign Up with Google</small>
+                                <small>Daftar dengan Akun Google</small>
                             </a>
                         </div>
 
                         <!-- Login Link -->
                         <div class="input-group">
-                            <small>Already have an account? <a href="{{ route('login') }}">Sign In</a></small>
+                            <small>Sudah Punya Akun? <a href="{{ route('login') }}">Masuk</a></small>
                         </div>
                     </div>
                 </form>

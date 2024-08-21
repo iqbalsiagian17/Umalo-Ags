@@ -6,12 +6,15 @@
         <!----------------------- Login Container -------------------------->
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
             <!--------------------------- Left Box ----------------------------->
+            
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #416bbf;">
-                <div class="featured-image mb-3">
-                    <img src="{{asset('assets/images/ags.png')}}" class="img-fluid" style="width: 250px;">
+                <div class="inner-box rounded-4 p-4" style="background: #ffffff;">
+                    <div class="featured-image mb-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/images/logo.png')}}" class="img-fluid" style="width: 250px;">
+                    </div>
+                    <p class="text-dark fs-2 text-center">Diverifikasi</p>
+                    <p class="text-dark text-wrap text-center">Bergabunglah dengan Desainer berpengalaman di platform ini.</p>
                 </div>
-                <p class="text-white fs-2">Be Verified</p>
-                <small class="text-white text-wrap text-center" >Join experienced Designers on this platform.</small>
             </div>
             <!----------------------------- Right Box ---------------------------->
             <div class="col-md-6 right-box">
@@ -19,13 +22,13 @@
                     @csrf
                     <div class="row align-items-center">
                         <div class="header-text mb-4">
-                            <h2>Hello, Again</h2>
-                            <p>We are happy to have you back.</p>
+                            <h2>Selamat Datang</h2>
+                            <p>Kami senang Anda kembali.</p>
                         </div>
 
                         <!-- Email Input -->
                         <div class="input-group mb-3">
-                            <input id="email" type="email" class="form-control form-control-lg bg-light @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email address">
+                            <input id="email" type="email" class="form-control form-control-lg bg-light @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Alamat Email">
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -35,7 +38,7 @@
 
                         <!-- Password Input -->
                         <div class="input-group mb-3">
-                            <input id="password" type="password" class="form-control form-control-lg bg-light @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
+                            <input id="password" type="password" class="form-control form-control-lg bg-light @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Kata Sandi">
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -47,32 +50,32 @@
                         <div class="input-group mb-5 d-flex justify-content-between">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" name="remember" id="formCheck" {{ old('remember') ? 'checked' : '' }}>
-                                <label for="formCheck" class="form-check-label text-secondary"><small>Remember Me</small></label>
+                                <label for="formCheck" class="form-check-label text-secondary"><small>Ingat Saya</small></label>
                             </div>
                             <div class="forgot">
                                 @if (Route::has('password.request'))
-                                    <small><a href="{{ route('password.request') }}" style="color: #416bbf;">Forgot Password?</a></small>
+                                    <small><a href="{{ route('password.request') }}" style="color: #416bbf;">Lupa Kata Sandi?</a></small>
                                 @endif
                             </div>
                         </div>
 
                         <!-- Sign In Button -->
                         <div class="input-group mb-3">
-                            <button type="submit" class="btn btn-lg text-white w-100 fs-6" style="background: #416bbf;">{{ __('Sign In') }}</button>
+                            <button type="submit" class="btn btn-lg text-white w-100 fs-6" style="background: #416bbf;">{{ __('Masuk') }}</button>
                         </div>
 
                         <!-- Sign In with Google Button -->
                         <div class="input-group mb-3">
                             <a href="{{ route('socialite.redirect','google') }}" class="btn btn-lg btn-light w-100 fs-6" >
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAzFBMVEVHcEz////////+/v77+/vx8fL9/f309fX+/v739/f////09PXOz8/5+vr8/P3////////29vf///////84qlf8wAdGiPX8/PzsUUTqQjQsqFLrSj3S3/w6g/TqPCs0gPQgpUf85+bv9P+63sL62Nb+8ef4ycbw+PJkunkeePP81HXwgGv0jhzc5/3o9efX7N5Fr19Uj/WQy562zPr2trL94KDzoJrzoJv80Gjyl5H94qgyh9v7xzihsSp+wYV1sE5ZtXBmmvUynoWKrvzKDGT6AAAAE3RSTlMAW+TTeBLcHLMt1WsKzfUznkBIxSDAuAAAAUZJREFUKJFtktligkAMRUFZxKVuDMOAggpu1apVu+/t//9TkxBU1PsySQ4hlyGadpTd0fWOrV2R3eqyWhe80j1RpYCc7pmcI2tyaZimQw6bOTMplU9hpKIofJSUmgwtTCYq9EFhqKIJ5lbGdGIRAGhUQLNX6wRLOA2Y8vdpuvfVOJtaOjhdhL56yYrjU8cGFsRSLc4/x+DPfxBiSZN6LMlXUYXzVghBT8/7pPkdxFX28yzEO8HYI8U9dlQudMZx3AeInWWe+SrExxrhCLTre3E+M3P7FXznLn887z53a2PwGbjBLLvUP2jcYUC/FYdOA9d1g22SbN1fbizT9bUxXA+QguB4G2GlfbIFqw1i0GCzKmzDDQ1LZgPQLKHk5rAJpmSj0ykH0jxArW4V79yqF1bMkEckjYvFrTWIy0btApFsx7m68Ff1D4OdMHbngtKsAAAAAElFTkSuQmCC" style="width:20px" class="me-2">
-                                <small>Sign In with Google</small>
+                                <small>Masuk dengan Akun Google</small>
                             </a>
                         </div>
                         
 
                         <!-- Sign Up Link -->
                         <div class="input-group">
-                            <small>Don't have an account? <a href="{{ route('register') }}">Sign Up</a></small>
+                            <small>Belum Punya Akun? <a href="{{ route('register') }}">Daftar</a></small>
                         </div>
                     </div>
                 </form>
