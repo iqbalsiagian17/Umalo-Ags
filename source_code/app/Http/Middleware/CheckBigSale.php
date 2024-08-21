@@ -15,10 +15,14 @@ class CheckBigSale
         $products = Produk::with('bigSales')->get();
 
         foreach ($products as $product) {
-             $product->harga_tayang; // Default ke harga tayang
+            // Mulai dengan harga tayang
+            $harga_tayang = $product->harga_tayang;
+
             foreach ($product->bigSales as $bigSale) {
                 if ($bigSale->status && now()->between($bigSale->mulai, $bigSale->berakhir)) {
-                     $product->pivot->harga_diskon;
+                    // Gunakan accessor untuk mendapatkan harga_diskon
+                    $harga_diskon = $bigSale->pivot->harga_diskon ?? $harga_tayang;
+                    $product->$harga_diskon;
                     break; // Keluar dari loop setelah menemukan harga diskon
                 }
             }
@@ -29,4 +33,3 @@ class CheckBigSale
         return $next($request);
     }
 }
-

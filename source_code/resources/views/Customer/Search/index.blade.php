@@ -27,7 +27,6 @@
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">
-
                     <div class="filter__item">
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
@@ -43,8 +42,6 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <script>
                                 function sortProducts() {
                                     var sortBy = document.getElementById('sort-by').value;
@@ -53,7 +50,6 @@
                                     window.location.href = url.toString();
                                 }
 
-                                // Optional: Menyimpan pilihan sebelumnya setelah reload
                                 document.addEventListener('DOMContentLoaded', function() {
                                     var urlParams = new URLSearchParams(window.location.search);
                                     var sortBy = urlParams.get('sort') || 'default';
@@ -63,20 +59,20 @@
 
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span>{{ $productCount }}</span> Produk Ditemukan</h6>
+                                    <h6><span> {{ $productCount }} </span> Produk Ditemukan</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
-                                    <span class="icon_grid-2x2"></span>
-                                    <span class="icon_ul"></span>
+                                    <h6>Produk Ditemukan dari : <span style="font-size: 1em;">{{ $query }}</span></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
-                        @foreach ($produk as $product)
+                        @forelse ($produk as $product)
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     @php
@@ -93,35 +89,24 @@
                                             <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>
                                             @auth
-                                                <!-- Jika pengguna sudah login -->
                                                 <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i
                                                             class="fa fa-shopping-cart"></i></a></li>
                                             @else
-                                                <!-- Jika pengguna belum login -->
                                                 <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
                                             @endauth
                                         </ul>
                                     </div>
                                     <div class="product__item__text">
-                                        <h6><a
-                                                href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
-                                        </h6>
+                                        <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a></h6>
                                         <h5>Rp{{ number_format($product->harga_tayang, 2) }}</h5>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-
-                    </div>
-                    <div class="product__pagination text-center">
-                        <!-- Pagination Elements -->
-                        @for ($i = 1; $i <= $produk->lastPage(); $i++)
-                            @if ($i == $produk->currentPage())
-                                <span class="">{{ $i }}</span>
-                            @else
-                                <a href="{{ $produk->url($i) }}">{{ $i }}</a>
-                            @endif
-                        @endfor
+                        @empty
+                            <div class="col-lg-12">
+                                <p class="text-center">No products found.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -129,26 +114,7 @@
     </section>
     <!-- Product Section End -->
 
-    <style>
-        /* Hide the categories list by default */
-        #categoriesList {
-            display: none;
-        }
-    </style>
-
-    <script>
-        document.getElementById('toggleCategories').addEventListener('click', function() {
-            var categoriesList = document.getElementById('categoriesList');
-
-            if (categoriesList.style.display === 'block' || categoriesList.style.display === 'block') {
-                categoriesList.style.display = 'none';
-            } else {
-                categoriesList.style.display = 'none';
-            }
-        });
-    </script>
-
-    <!-- Notifikasi (Hidden by Default) -->
+    <!-- Optional Notification for Add to Cart -->
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
@@ -156,7 +122,6 @@
         </div>
     </div>
 
-    <!-- CSS untuk Notifikasi -->
     <style>
         .cart-notification {
             position: fixed;
@@ -184,11 +149,10 @@
         }
     </style>
 
-    <!-- AJAX untuk Add to Cart -->
     <script>
         document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
             button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent the default link behavior
+                event.preventDefault();
                 var productId = this.dataset.id;
                 var token = '{{ csrf_token() }}';
 
@@ -199,7 +163,7 @@
                             'X-CSRF-TOKEN': token
                         },
                         body: JSON.stringify({
-                            quantity: 1 // Always add 1 quantity
+                            quantity: 1
                         })
                     })
                     .then(response => {
@@ -210,15 +174,13 @@
                     })
                     .then(data => {
                         if (data.success) {
-                            // Show the notification
                             var notification = document.getElementById('cart-notification');
                             notification.style.display = 'flex';
                             setTimeout(() => {
                                 notification.style.display = 'none';
-                            }, 3000); // Hide the notification after 3 seconds
+                            }, 3000);
                         } else {
-                            alert('Failed to add product to cart: ' + (data.message ||
-                                'Unknown error.'));
+                            alert('Failed to add product to cart: ' + (data.message || 'Unknown error.'));
                         }
                     })
                     .catch(error => {

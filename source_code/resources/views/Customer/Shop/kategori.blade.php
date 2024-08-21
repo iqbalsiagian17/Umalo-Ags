@@ -173,12 +173,16 @@
                         </div>
                         @endif
 
-                        {{-- <div class="product__pagination">
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                </> --}}
+                        <div class="product__pagination text-center">
+                            <!-- Pagination Elements -->
+                            @for ($i = 1; $i <= $produk->lastPage(); $i++)
+                                @if ($i == $produk->currentPage())
+                                    <span class="">{{ $i }}</span>
+                                @else
+                                    <a href="{{ $produk->url($i) }}">{{ $i }}</a>
+                                @endif
+                            @endfor
+                        </div>
                     </div>
                 </div>
             </div>

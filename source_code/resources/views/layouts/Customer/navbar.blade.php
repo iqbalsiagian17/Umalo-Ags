@@ -106,13 +106,13 @@
                 <div class="col-lg-6">
                     <div class="hero__search mb-3">
                         <div class="hero__search__form">
-                            <form action="#">
-                                <input type="text" placeholder="Search">
+                            <form action="{{ route('produk.search') }}" method="GET">
+                                <input type="text" name="query" placeholder="Search" value="{{ request('query') }}">
                                 <button type="submit" class="site-btn rounded">SEARCH</button>
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>                
                 <div class="col-lg-3">
                     <div class="header__cart mb-3">
                         <ul>

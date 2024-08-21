@@ -217,7 +217,7 @@
         </div>
             </section>
 
-            @if($produk->isNotEmpty())
+            @if($topSellingProducts->isNotEmpty())
             <section class="featured spad">
                 <div class="container">
                     <div class="row">
@@ -229,7 +229,7 @@
                     </div>
             
                     <div class="row featured__filter" id="MixItUpD27635">
-                        @foreach ($produk as $item)
+                        @foreach ($topSellingProducts as $item)
                             @php
                                 $imagePath = $item->images->isNotEmpty()
                                     ? $item->images->first()->gambar
@@ -279,62 +279,71 @@
         <hr>
 
         @if($produk->isNotEmpty())
-        <section class="featured spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section-title">
-                            <h2>Produk Terbaru !!</h2>
-                        </div>
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>Produk Terbaru !!</h2>
                     </div>
                 </div>
+            </div>
 
-                <div class="row featured__filter" id="MixItUpD27635">
-                    @foreach ($produk as $item)
-                        @php
-                            $imagePath = $item->images->isNotEmpty()
-                                ? $item->images->first()->gambar
-                                : 'path/to/default/image.jpg';
-                        @endphp
-                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                            <div class="featured__item">
-                                <div class="featured__item__pic"
-                                    style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                    @if ($item->nego === 'ya')
-                                        <span class="nego-badge">Bisa Nego</span>
+            <div class="row featured__filter" id="MixItUpD27635">
+                @foreach ($produk as $index => $item)
+                    @php
+                        $imagePath = $item->images->isNotEmpty()
+                            ? $item->images->first()->gambar
+                            : 'path/to/default/image.jpg';
+                    @endphp
+                    <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                        <div class="featured__item">
+                            <div class="featured__item__pic"
+                                style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                @if ($item->nego === 'ya')
+                                    <span class="nego-badge">Bisa Nego</span>
+                                @endif
+                                <ul class="featured__item__pic__hover">
+                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                                class="fa fa-info-circle"></i></a></li>
+
+                                    @auth
+                                        <!-- Jika pengguna sudah login -->
+                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
+                                                    class="fa fa-shopping-cart"></i></a></li>
+                                    @else
+                                        <!-- Jika pengguna belum login -->
+                                        <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                    @endauth
+                                </ul>
+                            </div>
+
+                            <div class="featured__item__text">
+                                <h6><a href="#">{{ $item->nama }}</a></h6>
+                                <h5>
+                                    @if ($item->harga_ditampilkan === 'ya')
+                                        Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                    @else
+                                        Hubungi admin untuk detail harga
                                     @endif
-                                    <ul class="featured__item__pic__hover">
-                                        <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
-                                                    class="fa fa-info-circle"></i></a></li>
-
-                                        @auth
-                                            <!-- Jika pengguna sudah login -->
-                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                        class="fa fa-shopping-cart"></i></a></li>
-                                        @else
-                                            <!-- Jika pengguna belum login -->
-                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                        @endauth
-                                    </ul>
-                                </div>
-
-                                <div class="featured__item__text">
-                                    <h6><a href="#">{{ $item->nama }}</a></h6>
-                                    <h5>
-                                        @if ($item->harga_ditampilkan === 'ya')
-                                            Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                        @else
-                                            Hubungi admin untuk detail harga
-                                        @endif
-                                    </h5>
-                                </div>
+                                </h5>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+
+                    @if ($index == 7 && $produk->count() > 8)
+                        <div class="col-lg-12 text-center mt-3">
+                            <a href="/shop" class="primary-btn rounded">Selengkapnya</a>
+                        </div>
+                        @break
+                    @endif
+
+                @endforeach
             </div>
-        </section>
-        @endif
+        </div>
+    </section>
+@endif
+
 
 
 
