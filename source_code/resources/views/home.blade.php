@@ -50,12 +50,13 @@
                 </div>
             </div>
         </div>
+        <br>
     </section>
     <!-- Hero Section End -->
     <section class="hero">
         <div class="container">
                 <div class="row">
-                        <div class="card-body">
+                        <div class="col-lg-12">
                             @if ($bigSale)
                                 <section class="exclusive-deal-area">
                                     <div class="container-fluid">
