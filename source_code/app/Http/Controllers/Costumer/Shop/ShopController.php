@@ -36,9 +36,11 @@ class ShopController extends Controller
             $query->orderBy('created_at', 'asc');
         }
     
+    
+        $produk = $query->paginate(9);
+    
         // Dapatkan produk setelah menerapkan filter dan sorting
-        $produk = $query->get();
-        $productCount = $produk->count(); // Hitung jumlah produk yang ditemukan
+        $productCount = $produk->total();
     
         return view('customer.shop.shop', compact('produk', 'kategori', 'komoditas', 'productCount'));
     }
@@ -68,7 +70,7 @@ class ShopController extends Controller
         }
     
         // Selalu dapatkan produk setelah sorting
-        $produk = $query->get();
+        $produk = $query->paginate(9);
         
         // Pastikan untuk mengirimkan variabel $productCount ke view
         return view('customer.shop.kategori', compact('produk', 'kategori', 'currentCategory', 'komoditas', 'productCount'));

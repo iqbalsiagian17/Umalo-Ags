@@ -32,26 +32,60 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        // Update the status of expired Big Sales
-        $this->updateBigSaleStatus();
-    
-        $produk = Produk::with('images')
-            ->where('status', 'publish')
-            ->get();
-    
-        $slider = Slider::all();
-    
-        $bigSale = BigSale::with('produk')
-            ->where('status', 'aktif')
-            ->whereDate('mulai', '<=', now())
-            ->whereDate('berakhir', '>=', now())
-            ->first();
-    
-        $kategori = Kategori::take(10)->get(); // Retrieve all categories
-    
-        return view('home', compact('produk', 'bigSale', 'slider', 'kategori'));
+{
+    // Update the status of expired Big Sales
+    $this->updateBigSaleStatus();
+
+    // Retrieve Big Sales that are within the time frame but may be inactive
+    $activeOrUpcomingBigSales = BigSale::with('produk')
+        ->whereDate('mulai', '<=', now())
+        ->whereDate('berakhir', '>=', now())
+        ->get();
+
+    // Collect product IDs from active or valid Big Sales
+    $bigSaleProductIds = collect();
+    foreach ($activeOrUpcomingBigSales as $bigSale) {
+        if ($bigSale->status === 'aktif') {
+            $bigSaleProductIds = $bigSaleProductIds->merge($bigSale->produk->pluck('id'));
+        }
     }
+    $bigSaleProductIds = $bigSaleProductIds->toArray();
+
+    // Retrieve products that are either not in any active Big Sale or in an inactive Big Sale
+    $produk = Produk::with('images')
+    ->where('status', 'publish')
+    ->where(function ($query) use ($bigSaleProductIds) {
+        $query->whereNotIn('id', $bigSaleProductIds)
+              ->orWhereHas('bigSales', function ($query) {
+                  $query->where('status', '!=', 'aktif')
+                        ->whereDate('mulai', '<=', now())
+                        ->whereDate('berakhir', '>=', now());
+              });
+    })
+    ->orderBy('created_at', 'desc') // Order by latest products
+    ->take(9) // Limit to the top 8 products
+    ->get();
+
+
+    $slider = Slider::all();
+
+    $bigSale = $activeOrUpcomingBigSales->where('status', 'aktif')->first();
+
+    $topSellingProducts = Produk::with('images')
+    ->select('produk.id', 'produk.nama', 'produk.harga_tayang', 'produk.nego', 'produk.harga_ditampilkan', DB::raw('SUM(order_items.jumlah) as total_sold'))
+    ->join('order_items', 'produk.id', '=', 'order_items.produk_id')
+    ->groupBy('produk.id', 'produk.nama', 'produk.harga_tayang', 'produk.nego', 'produk.harga_ditampilkan')
+    ->orderBy('total_sold', 'desc')
+    ->where('produk.status', 'publish')
+    ->take(4) // Limit to the top 8 best-sellers
+    ->get();
+
+
+
+    return view('home', compact('produk', 'bigSale', 'slider','topSellingProducts' ));
+}
+
+
     
     public function filterByCategory($id)
 {

@@ -42,6 +42,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
+Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
 
 
 //Normal Users Routes List

@@ -42,6 +42,15 @@ class Produk extends Model
         'link_ekatalog',
     ];
 
+
+       
+    public function getHargaDiskonAttribute()
+    {
+        // Kembalikan harga_diskon dari pivot atau logika lain
+        return $this->pivot ? $this->pivot->harga_diskon : null;
+    }
+
+
     public function komoditas()
     {
         return $this->belongsTo(Komoditas::class);
@@ -73,4 +82,5 @@ class Produk extends Model
                     ->withTimestamps();
     }
 
+ 
 }
