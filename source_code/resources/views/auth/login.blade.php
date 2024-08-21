@@ -8,12 +8,12 @@
             <!--------------------------- Left Box ----------------------------->
             
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #416bbf;">
-                <div class="inner-box rounded-4 p-4" style="background: #ffffff;">
+                <div class="inner-box rounded-4 p-4" style="background: #ffffff; width: 70%;">
                     <div class="featured-image mb-3 d-flex justify-content-center">
                         <img src="{{asset('assets/images/logo.png')}}" class="img-fluid" style="width: 250px;">
                     </div>
-                    <p class="text-dark fs-2 text-center">Diverifikasi</p>
-                    <p class="text-dark text-wrap text-center">Bergabunglah dengan Desainer berpengalaman di platform ini.</p>
+                    <p class="text-dark fs-2 text-center">Telah Di Verifikasi</p>
+                    <p class="text-dark text-wrap text-center">Temukan teknologi terbaru di platform kami.</p>
                 </div>
             </div>
             <!----------------------------- Right Box ---------------------------->

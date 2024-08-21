@@ -12,7 +12,7 @@
                         <img src="{{asset('assets/images/logo.png')}}" class="img-fluid" style="width: 250px;">
                     </div>
                     <p class="text-dark fs-2 text-center">Bergabunglah dengan Kami</p>
-                    <p class="text-dark text-wrap text-center">Jadilah bagian dari komunitas kami.</p>
+                    <p class="text-dark text-wrap text-center">Jadilah bagian dari platform kami.</p>
                 </div>
             </div>
 
