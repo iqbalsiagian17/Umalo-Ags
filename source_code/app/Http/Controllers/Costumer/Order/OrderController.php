@@ -94,9 +94,23 @@ public function generatePdf($id)
     $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
     $userDetail = $order->user->userDetail; // Retrieve the UserDetail from the Order's user relationship
 
-    $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materai', 'totalPriceWithPPN', 'userDetail'));
+    // Convert Materai images to base64
+    $materaiImages = [];
+    foreach ($materai as $item) {
+        $path = public_path($item->image);
+        if (file_exists($path)) {
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            $materaiImages[] = $base64;
+        }
+    }
+
+    $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail'));
     return $pdf->download('order-details.pdf');
 }
+
+
 
 
 

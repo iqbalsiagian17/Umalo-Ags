@@ -172,16 +172,16 @@
 </head>
 
 <body>
-    <div class="header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+    <div class="header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
         <div style="display: flex; align-items: center;">
-            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 20px;">
-                <div style="font-size: 36px; font-family: 'Brush Script MT', cursive; color: #b8860b;">
-                    ags.
-                </div>
-                <p style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #333; margin: 0;">
-                    Simplifying Industries
-                </p>
+            <div style="font-size: 36px; font-family: 'Brush Script MT', cursive; color: #b8860b;">
+                ags.
             </div>
+            <p style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #333; margin: 0 0 0 10px;">
+                Simplifying Industries
+            </p>
+        </div>
+        <div style="text-align: center;">
             <h1 style="font-size: 28px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #b8860b; font-weight: 700; margin: 0;">
                 ARKAMAYA GUNA SAHARSA
             </h1>
@@ -258,15 +258,10 @@
             <div class="signature-section">
                 <p>Kind Regards,</p>
                 <p><strong>PT. Arkamaya Guna Saharsa</strong></p>
-                @foreach ($materai as $item)
-                <div class="materai">
-                    @php
-                    $path = public_path($item->image);
-                    $base64 = base64_encode(file_get_contents($path));
-                    @endphp
-                    <img src="data:image/png;base64,{{ $base64 }}" alt="Materai Image" style="width: 100px;">
-                </div>
-                @endforeach
+                @foreach ($materaiImages as $image)
+    <img src="{{ $image }}" alt="Materai Image" style="width: 100px;">
+@endforeach
+
                 <p>Agustina Panjaitan</p>
                 <p>Director</p>
             </div>
