@@ -159,11 +159,13 @@
         
                                 <script>
                                     function startCountdown(endTime) {
+                                        let statusUpdated = false; // Add a flag to prevent multiple updates
+
                                         function updateCountdown() {
                                             const now = new Date().getTime();
                                             const distance = endTime - now;
-        
-                                            if (distance < 0) {
+
+                                            if (distance < 0 && !statusUpdated) {
                                                 clearInterval(countdownInterval);
                                                 document.getElementById('days').textContent = '00';
                                                 document.getElementById('hours').textContent = '00';
@@ -172,51 +174,59 @@
                                                 updateBigSaleStatus();
                                                 return;
                                             }
-        
+
                                             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                                             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                                             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                                             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
+
                                             document.getElementById('days').textContent = String(days).padStart(2, '0');
                                             document.getElementById('hours').textContent = String(hours).padStart(2, '0');
                                             document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
                                             document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
                                         }
-        
+
+                                        function updateBigSaleStatus() {
+                                            if (!statusUpdated) {
+                                                statusUpdated = true; // Prevent further status updates
+                                                fetch('{{ route('bigsale.updateStatus', $bigSale->id) }}', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                    },
+                                                    body: JSON.stringify({
+                                                        status: 'tidak aktif'
+                                                    })
+                                                }).then(response => {
+                                                    if (response.ok) {
+                                                        console.log('Big Sale status updated to tidak aktif.');
+                                                        location.reload(); // Reload the page only if status update is successful
+                                                    } else {
+                                                        console.error('Failed to update Big Sale status.');
+                                                        statusUpdated = false; // Allow retry if update failed
+                                                    }
+                                                }).catch(error => {
+                                                    console.error('Error:', error);
+                                                    statusUpdated = false; // Allow retry if there's an error
+                                                });
+                                            }
+                                        }
+
                                         const countdownInterval = setInterval(updateCountdown, 1000);
                                         updateCountdown();
                                     }
-        
-                                    function updateBigSaleStatus() {
-                                        fetch('{{ route('bigsale.updateStatus', $bigSale->id) }}', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                            },
-                                            body: JSON.stringify({
-                                                status: 'tidak aktif'
-                                            })
-                                        }).then(response => {
-                                            if (response.ok) {
-                                                console.log('Big Sale status updated to tidak aktif.');
-                                                location.reload();
-                                            } else {
-                                                console.error('Failed to update Big Sale status.');
-                                            }
-                                        });
-                                    }
-        
+
                                     const bigSaleEndTime = new Date("{{ date('Y-m-d\TH:i:s', strtotime($bigSale->berakhir)) }}").getTime();
                                     startCountdown(bigSaleEndTime);
+
                                 </script>
                             @else
                             @endif
                         </div>
                 </div>
         </div>
-            </section>
+    </section>
 
             @if($topSellingProducts->isNotEmpty())
             <section class="featured spad">

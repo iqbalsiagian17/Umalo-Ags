@@ -45,12 +45,17 @@ class BigSaleCustomerController extends Controller
     return view('customer.bigsale.index', compact('bigSale','products', 'komoditas', 'kategori', 'productCount'));
 }
 
-    public function updateStatus($id)
+public function updateStatus($id)
 {
-    $bigSale = BigSale::findOrFail($id);
-    $bigSale->update(['status' => 'tidak aktif']);
-    
-    return response()->json(['message' => 'Status updated successfully']);
+    try {
+        $bigSale = BigSale::findOrFail($id);
+        $bigSale->update(['status' => 'tidak aktif']);
+
+        return response()->json(['message' => 'Status updated successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to update status'], 500);
+    }
 }
+
 
 }

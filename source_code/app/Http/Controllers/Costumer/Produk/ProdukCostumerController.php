@@ -14,8 +14,22 @@ class ProdukCostumerController extends Controller
     {
         $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas'])->findOrFail($id);
         $images = $produk->images;
-        return view('customer.produk.show', compact('produk', 'images'));
+        
+        // Ambil 5 produk lain yang memiliki komoditas atau kategori yang sama, tetapi bukan produk yang sedang ditampilkan
+        $produK = Produk::where('id', '!=', $id)
+                        ->where(function ($query) use ($produk) {
+                            $query->where('komoditas_id', $produk->komoditas_id)
+                                  ->orWhere('kategori_id', $produk->kategori_id);
+                        })
+                        ->has('images')
+                        ->limit(5)
+                        ->get();
+        
+        return view('customer.produk.show', compact('produk', 'images', 'produK'));
     }
+    
+    
+    
 
     public function search(Request $request)
     {

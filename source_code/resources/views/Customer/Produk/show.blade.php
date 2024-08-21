@@ -1,45 +1,421 @@
-@extends('layouts.app')
+@extends('layouts.customer.master')
 
 @section('content')
-    <div class="container mt-5">
-        <h1 class="mb-4">{{ $produk->nama }}</h1>
+<!-- Product Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                @if($images->isNotEmpty())
-                    @foreach ($images as $image)
-                        <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid mb-2" style="max-width: 500px; height: auto;">
-                    @endforeach
-                @else
-                    <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
-                @endif
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__item">
+                        @if($images->isNotEmpty())
+                            <img class="product__details__pic__item--large"
+                                src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}">
+                        @else
+                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
+                        @endif
+
+                    </div>
+                    <div class="product__details__pic__slider owl-carousel">
+                        @if($images->isNotEmpty())
+                            @foreach ($images as $image)
+                                <img data-imgbigurl="{{ asset($image->gambar) }}"
+                                     src="{{ asset($image->gambar) }}" alt="{{ $produk->nama }}">
+                            @endforeach
+                       @endif
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <p><strong>Tipe Barang:</strong> {{ $produk->tipe_barang }}</p>
-                <p><strong>Stok:</strong> {{ $produk->stok }}</p>
-                <p><strong>Masa Berlaku Produk:</strong> {{ $produk->masa_berlaku_produk }}</p>
-                <p><strong>Merk:</strong> {{ $produk->merk }}</p>
-                <p><strong>No Produk Penyedia:</strong> {{ $produk->no_produk_penyedia }}</p>
-                <p><strong>Unit Pengukuran:</strong> {{ $produk->unit_pengukuran }}</p>
-                <p><strong>Jenis Produk:</strong> {{ $produk->jenis_produk }}</p>
-                <p><strong>Kode KBLI:</strong> {{ $produk->kode_kbli }}</p>
-                <p><strong>Nilai TKDN:</strong> {{ $produk->nilai_tkdn }}</p>
-                <p><strong>No SNI:</strong> {{ $produk->no_sni }}</p>
-                <p><strong>Asal Negara:</strong> {{ $produk->asal_negara }}</p>
-                <p><strong>Garansi Produk:</strong> {{ $produk->garansi_produk }}</p>
-                <p><strong>SNI:</strong> {{ $produk->sni }}</p>
-                <p><strong>Uji Fungsi:</strong> {{ $produk->uji_fungsi }}</p>
-                <p><strong>Memiliki SVLK:</strong> {{ $produk->memiliki_svlk }}</p>
-                <p><strong>Jenis Alat:</strong> {{ $produk->jenis_alat }}</p>
-                <p><strong>Fungsi:</strong> {{ $produk->fungsi }}</p>
-                <p><strong>Spesifikasi Produk:</strong> {{ $produk->spesifikasi_produk }}</p>
-                <p><strong>Ramah Lingkungan:</strong> {{ $produk->ramah_lingkungan ? 'Ya' : 'Tidak' }}</p>
-                <p><strong>Harga Diskon:</strong> {{ $produk->harga_diskon }}</p>
-                <p><strong>Harga Tayang:</strong> {{ $produk->harga_tayang }}</p>
-                <p><strong>Kategori:</strong> {{ $produk->kategori->nama }}</p>
-                <p><strong>Sub Kategori:</strong> {{ $produk->subKategori->nama }}</p>
-                <p><strong>Komoditas:</strong> {{ $produk->komoditas->nama }}</p>
-                <a href="{{ route('home') }}" class="btn btn-primary mt-3">Kembali</a> <!-- Menggunakan nama route baru -->
+            <div class="col-lg-6 col-md-6">
+                <div class="product__details__text">
+                    <h3>{{ $produk->nama }}</h3>
+                    <div class="product__details__price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</div>
+                    <div class="product__details__quantity">
+                        <div class="quantity">
+                            <div class="pro-qty">
+                                <input type="text" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">Tambahkan Keranjang</a>
+                    @if ($produk->nego === 'ya')
+                        <span class="nego-badge">Bisa Nego</span>
+                    @endif
+                    <ul>
+                        <li><b>Stock</b> <span>{{ $produk->stok }}</span></li>
+                    
+                        <li><b>Komoditas</b> 
+                            <span>
+                                {{ $produk->komoditas ? $produk->komoditas->nama : 'N/A' }}
+                            </span>
+                        </li>   
+
+                        <li><b>Kategori</b> 
+                            <span>
+                                {{ $produk->kategori ? $produk->kategori->nama : 'N/A' }}
+                            </span>
+                        </li>
+                    
+                        <li><b>Sub Kategori</b> 
+                            <span>
+                                {{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="product__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
+                                aria-selected="true">Spesifikasi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
+                                aria-selected="false">Informasi Lanjutan</a>
+                        </li>
+                        
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <h6>Products Infomation</h6>
+                                <p>{{ $produk->spesifikasi_produk }}</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="product__details__tab__desc">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        @if($produk->tipe_barang)
+                                        <tr>
+                                            <th scope="row"><strong>Tipe Barang:</strong></th>
+                                            <td>{{ $produk->tipe_barang }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->stok)
+                                        <tr>
+                                            <th scope="row"><strong>Stok:</strong></th>
+                                            <td>{{ $produk->stok }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->masa_berlaku_produk)
+                                        <tr>
+                                            <th scope="row"><strong>Masa Berlaku Produk:</strong></th>
+                                            <td>{{ $produk->masa_berlaku_produk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->merk)
+                                        <tr>
+                                            <th scope="row"><strong>Merk:</strong></th>
+                                            <td>{{ $produk->merk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->no_produk_penyedia)
+                                        <tr>
+                                            <th scope="row"><strong>No Produk Penyedia:</strong></th>
+                                            <td>{{ $produk->no_produk_penyedia }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->unit_pengukuran)
+                                        <tr>
+                                            <th scope="row"><strong>Unit Pengukuran:</strong></th>
+                                            <td>{{ $produk->unit_pengukuran }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->jenis_produk)
+                                        <tr>
+                                            <th scope="row"><strong>Jenis Produk:</strong></th>
+                                            <td>{{ $produk->jenis_produk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->kode_kbli)
+                                        <tr>
+                                            <th scope="row"><strong>Kode KBLI:</strong></th>
+                                            <td>{{ $produk->kode_kbli }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->nilai_tkdn)
+                                        <tr>
+                                            <th scope="row"><strong>Nilai TKDN:</strong></th>
+                                            <td>{{ $produk->nilai_tkdn }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->no_sni)
+                                        <tr>
+                                            <th scope="row"><strong>No SNI:</strong></th>
+                                            <td>{{ $produk->no_sni }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->asal_negara)
+                                        <tr>
+                                            <th scope="row"><strong>Asal Negara:</strong></th>
+                                            <td>{{ $produk->asal_negara }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->garansi_produk)
+                                        <tr>
+                                            <th scope="row"><strong>Garansi Produk:</strong></th>
+                                            <td>{{ $produk->garansi_produk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->sni)
+                                        <tr>
+                                            <th scope="row"><strong>SNI:</strong></th>
+                                            <td>{{ $produk->sni }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->uji_fungsi)
+                                        <tr>
+                                            <th scope="row"><strong>Uji Fungsi:</strong></th>
+                                            <td>{{ $produk->uji_fungsi }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->memiliki_svlk)
+                                        <tr>
+                                            <th scope="row"><strong>Memiliki SVLK:</strong></th>
+                                            <td>{{ $produk->memiliki_svlk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->jenis_alat)
+                                        <tr>
+                                            <th scope="row"><strong>Jenis Alat:</strong></th>
+                                            <td>{{ $produk->jenis_alat }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->fungsi)
+                                        <tr>
+                                            <th scope="row"><strong>Fungsi:</strong></th>
+                                            <td>{{ $produk->fungsi }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->spesifikasi_produk)
+                                        <tr>
+                                            <th scope="row"><strong>Spesifikasi Produk:</strong></th>
+                                            <td>{{ $produk->spesifikasi_produk }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->ramah_lingkungan !== null)
+                                        <tr>
+                                            <th scope="row"><strong>Ramah Lingkungan:</strong></th>
+                                            <td>{{ $produk->ramah_lingkungan ? 'Ya' : 'Tidak' }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->harga_diskon)
+                                        <tr>
+                                            <th scope="row"><strong>Harga Diskon:</strong></th>
+                                            <td>{{ $produk->harga_diskon }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->harga_tayang)
+                                        <tr>
+                                            <th scope="row"><strong>Harga Tayang:</strong></th>
+                                            <td>{{ $produk->harga_tayang }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->kategori && $produk->kategori->nama)
+                                        <tr>
+                                            <th scope="row"><strong>Kategori:</strong></th>
+                                            <td>{{ $produk->kategori->nama }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->subKategori && $produk->subKategori->nama)
+                                        <tr>
+                                            <th scope="row"><strong>Sub Kategori:</strong></th>
+                                            <td>{{ $produk->subKategori->nama }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                        @if($produk->komoditas && $produk->komoditas->nama)
+                                        <tr>
+                                            <th scope="row"><strong>Komoditas:</strong></th>
+                                            <td>{{ $produk->komoditas->nama }}</td>
+                                        </tr>
+                                        @endif
+                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
+<!-- Product Details Section End -->
+
+
+@if($produK->isNotEmpty())
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>Produk Lainnya !!</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row featured__filter" id="MixItUpD27635">
+                @foreach ($produK as $index => $item)
+                    @php
+                        $imagePath = $item->images->isNotEmpty()
+                            ? $item->images->first()->gambar
+                            : 'path/to/default/image.jpg';
+                    @endphp
+                    <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                        <div class="featured__item">
+                            <div class="featured__item__pic"
+                                style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                @if ($item->nego === 'ya')
+                                    <span class="nego-badge">Bisa Nego</span>
+                                @endif
+                                <ul class="featured__item__pic__hover">
+                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                                class="fa fa-info-circle"></i></a></li>
+
+                                    @auth
+                                        <!-- Jika pengguna sudah login -->
+                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
+                                                    class="fa fa-shopping-cart"></i></a></li>
+                                    @else
+                                        <!-- Jika pengguna belum login -->
+                                        <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                    @endauth
+                                </ul>
+                            </div>
+
+                            <div class="featured__item__text">
+                                <h6><a href="#">{{ $item->nama }}</a></h6>
+                                <h5>
+                                    @if ($item->harga_ditampilkan === 'ya')
+                                        Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                    @else
+                                        Hubungi admin untuk detail harga
+                                    @endif
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($index == 3 && $produK->count() > 4)
+                        <div class="col-lg-12 text-center mt-3">
+                            <a href="/shop" class="primary-btn rounded">Selengkapnya</a>
+                        </div>
+                        @break
+                    @endif
+
+                @endforeach
+            </div>
+        </div>
+    </section>
+@endif
+
+
+    <!-- Notifikasi (Hidden by Default) -->
+    <div id="cart-notification" class="cart-notification" style="display: none;">
+        <div class="notification-content">
+            <div class="notification-icon">&#10003;</div>
+            <div class="notification-text">Produk telah ditambahkan ke keranjang belanja</div>
+        </div>
+    </div>
+
+    <!-- CSS untuk Notifikasi -->
+    <style>
+        .cart-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .notification-icon {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+
+        .notification-text {
+            font-size: 18px;
+        }
+    </style>
+
+    <!-- AJAX for Add to Cart -->
+    <script>
+        document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default action
+
+                var productId = this.dataset.id;
+                var token = '{{ csrf_token() }}';
+
+                fetch('{{ route('cart.add', '') }}/' + productId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({
+                            quantity: 1 // Add exactly 1 quantity
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Display notification or update cart count
+                            var notification = document.getElementById('cart-notification');
+                            notification.style.display = 'flex';
+                            setTimeout(() => {
+                                notification.style.display = 'none';
+                            }, 3000); // Notification disappears after 3 seconds
+                        } else {
+                            alert('Failed to add product to cart: ' + (data.message ||
+                                'Unknown error.'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while adding the product to the cart.');
+                    });
+            });
+        });
+    </script>
+
 @endsection

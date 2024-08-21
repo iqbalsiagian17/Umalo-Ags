@@ -38,33 +38,34 @@
         @if(isset($cart) && count($cart) > 0)
         <div class="shoping__cart__table">
             <table>
-                <thead>
+                <thead class="thead-light">
                     <tr>
-                        <th class="shoping__product">Produk</th>
-                        <th>Gambar</th>
-                        <th>Harga Tayang</th>
-                        <th>Kuantitas</th>
-                        <th>Sub Total</th>
-                        <th>Aksi</th>
+                        <th class="text-center">Produk</th>
+                        <th class="text-center">Gambar</th>
+                        <th class="text-center">Harga Tayang</th>
+                        <th class="text-center">Kuantitas</th>
+                        <th class="text-center">Sub Total</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @php $total = 0; @endphp
                     @foreach($cart as $id => $details)
                     <tr>
-                        <td class="shoping__cart__item">
+                        <td class="shoping__cart__item align-middle text-center ">
                             {{ $details['name'] ?? 'Nama Produk Tidak Tersedia' }}
                         </td>
-                        <td class="shoping__cart__item">
-                            <img src="{{ asset($details['image'] ?? 'default.png') }}" alt="{{ $details['name'] ?? 'Gambar Produk' }}" style="max-width: 100px; height: auto;">
+                        <td class="shoping__cart__item align-middle text-center">
+                            <img src="{{ asset($details['image'] ?? 'default.png') }}" alt="{{ $details['name'] ?? 'Gambar Produk' }}" class="img-thumbnail" style="max-width: 100px;">
                         </td>
-                        <td class="shoping__cart__price">
+                        <td class="shoping__cart__price align-middle text-center">
                             Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
                         </td>
-                        <td class="shoping__cart__quantity">
-                            <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1">
+                        <td class="shoping__cart__quantity align-middle text-center">
+                            <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1" style="width: 60px; padding: 5px; text-align: center; margin: 0 auto;">
                         </td>
-                        <td class="shoping__cart__total subtotal" data-id="{{ $id }}">
+                        
+                        <td class="shoping__cart__total subtotal align-middle text-center" data-id="{{ $id }}">
                             Rp {{ number_format($subtotal = ($details['harga_tayang'] ?? 0) * $details['quantity'], 0, ',', '.') }}
                         </td>
                         <td>
