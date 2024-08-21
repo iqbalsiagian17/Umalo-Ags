@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('kota');
             $table->string('provinsi');
             $table->string('kode_pos');
+            $table->string('perusahaan');
             $table->date('lahir');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
             $table->timestamps();

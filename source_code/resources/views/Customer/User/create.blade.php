@@ -49,6 +49,13 @@
                         @endif
                     </div>
                     <div class="mb-3">
+                        <label for="perusahaan" class="form-label">perusahaan</label>
+                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ old('perusahaan') }}">
+                        @if ($errors->has('perusahaan'))
+                            <small class="text-danger">{{ $errors->first('perusahaan') }}</small>
+                        @endif
+                    </div>
+                    <div class="mb-3">
                         <label for="kode_pos" class="form-label">Kode Pos</label>
                         <input type="number" class="form-control" id="kode_pos" name="kode_pos" value="{{ old('kode_pos') }}" maxlength="5">
                         @if ($errors->has('kode_pos'))

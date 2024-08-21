@@ -20,6 +20,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Perusahaan</th>
                             <th>Role</th>
                             <th>Dibuat</th>
                             <th>Terakhir Online</th>
@@ -31,6 +32,7 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->perusahaan }}</td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->created_at }}</td>
                         <td>

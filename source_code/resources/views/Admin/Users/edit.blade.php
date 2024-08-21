@@ -104,7 +104,13 @@
                             <small class="text-danger">{{ $errors->first('provinsi') }}</small>
                         @endif
                     </div>
-
+                    <div class="mb-3">
+                        <label for="perusahaan" class="form-label">Perusahaan</label>
+                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ $user->userDetail->perusahaan }}" required>
+                        @if ($errors->has('perusahaan'))
+                            <small class="text-danger">{{ $errors->first('perusahaan') }}</small>
+                        @endif
+                    </div>
                     <div class="mb-3">
                         <label for="kode_pos" class="form-label">Postal Code</label>
                         <input type="text" class="form-control" id="kode_pos" name="kode_pos" value="{{ $user->userDetail->kode_pos }}" required>

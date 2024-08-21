@@ -124,11 +124,12 @@
                                 @guest
                                 <li>
                                     @if (Route::has('login'))
-                                        <a class="nav-link" href="{{ route('login') }}">
+                                        <a class="site-btn rounded" href="{{ route('login') }}">
                                             {{ __('Login') }}
                                         </a>
                                     @endif
                                 </li>
+                                
                             @else
                             <li>
                                 <div class="nav-item dropdown">
@@ -136,7 +137,7 @@
                                         aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
                                         <!-- Avatar Gambar -->
                                         <img src="{{ asset('assets/images/logo.png') }}" alt="Avatar"
-    style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
+                                        style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
 
                                         {{ Auth::user()->name }}
                                     </a>

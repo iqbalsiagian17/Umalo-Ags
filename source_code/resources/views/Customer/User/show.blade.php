@@ -54,6 +54,7 @@
             <p><strong>Kode Pos:</strong> {{ $userDetail->kode_pos }}</p>
             <p><strong>Tanggal Lahir:</strong> {{ $userDetail->lahir}}</p>
             <p><strong>Jenis Kelamin:</strong> {{ $userDetail->jenis_kelamin }}</p>
+            <p><strong>Perusahaan:</strong> {{ $userDetail->perusahaan }}</p>
         </div>
     </div>
 

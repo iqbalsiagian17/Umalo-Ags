@@ -18,6 +18,7 @@ class UserDetail extends Model
         'kota',
         'provinsi',
         'kode_pos',
+        'perusahaan',
         'lahir',
         'jenis_kelamin',
     ];

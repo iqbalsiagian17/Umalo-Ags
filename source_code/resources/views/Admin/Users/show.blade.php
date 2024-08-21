@@ -58,6 +58,13 @@
                 </div>
 
                 <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label"><strong>Perusahaan:</strong></label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">{{ $user->userDetail->perusahaan }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Postal Code:</strong></label>
                     <div class="col-sm-9">
                         <p class="form-control-plaintext">{{ $user->userDetail->kode_pos }}</p>
