@@ -162,18 +162,33 @@
     .icon-phone svg {
         fill: #FFD700; /* Gold color for the phone icon */
     }
+    .content p {
+    margin: 0; /* Removes margin to prevent extra space */
+    padding: 0; /* Removes padding to prevent extra space */
+    font-weight: normal; /* Ensure text is not bold */
+    line-height: 1.4; /* Adjust line height for better readability */
+}
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="{{ asset('assets/images/image.png') }}" alt="AGS Logo">
-            <div class="header-title">
-                <h1>ARKAMAYA GUNA SAHARSA</h1>
-                <p>Simplifying Industries</p>
+    <div class="header" style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center;">
+            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 20px;">
+                <div style="font-size: 36px; font-family: 'Brush Script MT', cursive; color: #b8860b;">
+                    ags.
+                </div>
+                <p style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #333; margin: 0;">
+                    Simplifying Industries
+                </p>
             </div>
+            <h1 style="font-size: 28px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #b8860b; font-weight: 700; margin: 0;">
+                ARKAMAYA GUNA SAHARSA
+            </h1>
         </div>
+    </div>
+    
+    
         <hr>
 
         <div class="invoice-info">
@@ -183,12 +198,15 @@
         </div>
 
         <div class="content">
-            <p><strong>Billed To:</strong></p>
-            <p>PT. Gudang Solusi Acommerce</p>
-            <p>Bizpark Jababeka, Jl. Industri Sel. Blok QQ No.6, Pasirsari, Cikarang Sel., Kabupaten Bekasi, Jawa Barat 17530</p>
-            <p>Dear PT. Gudang Solusi Acommerce,</p>
-            <p>Based on Purchase Order No. 05.028/GSA-PROC/IV/2024, PT. Arkamaya Guna Saharsa submits the invoice:</p>
+            <p style="margin: 0;">Billed To:</p>
+            <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
+            <p style="margin: 0;">Bizpark Jababeka, Jl. Industri Sel. Blok QQ No.6, Pasirsari, </p>
+            <p style="margin: 0;">Cikarang Sel., Kabupaten Bekasi, Jawa Barat 17530</p>
+            <br>
+            <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
+            <p style="margin: 0;">Based on Purchase Order No. 05.028/GSA-PROC/IV/2024, PT. Arkamaya Guna Saharsa submits the invoice:</p>
         </div>
+        
 
         <table class="invoice-table">
             <thead>
@@ -230,7 +248,8 @@
             <p>PT. Arkamaya Guna Saharsa</p>
             <p>121-00-002881-1</p>
             <p>Bank Mandiri Kebon Sirih</p>
-            <p>Jl. Tanah Abang Timur No. 1, RT.2/RW.3, Gambir, Central Jakarta City, Jakarta 10110</p>
+            <p>Jl. Tanah Abang Timur No. 1, RT.2/RW.3,</p>
+            <p> Gambir, Central Jakarta City, Jakarta 10110</p>
         </div>
 
         <div class="footer">
