@@ -2,63 +2,93 @@
 
 @section('content')
 <div class="container">
-    <h1>User Details</h1>
-    @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="personal-profile-tab" data-bs-toggle="tab" data-bs-target="#personal-profile" type="button" role="tab" aria-controls="personal-profile" aria-selected="true">Personal Profile</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="address-list-tab" data-bs-toggle="tab" data-bs-target="#address-list" type="button" role="tab" aria-controls="address-list" aria-selected="false">Address List</button>
+        </li>
+    </ul>
 
-    <div class="card mb-3">
-        <div class="card-header">
-            <h4>Account Information</h4>
+    <div class="tab-content" id="profileTabsContent">
+        <!-- Personal Profile Tab -->
+        <div class="tab-pane fade show active" id="personal-profile" role="tabpanel" aria-labelledby="personal-profile-tab">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <img src="{{ $user->foto_profile ? asset('storage/' . $user->foto_profile) : asset('assets/images/logo.png') }}"  
+                                         class="rounded-circle mb-3" alt="User Photo" style="width: 250px;">
+                                         <br>
+                                    <button class="btn btn-primary btn-sm">Choose Photo</button>
+                                    <p class="text-muted mt-3">File size max 10MB. JPG, JPEG, PNG allowed.</p>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column mt-4">
+                                @if (is_null($user->password) || $user->password === '')
+                                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createPasswordModal">Create Password</button>
+                                @else
+                                    <button type="button" class="btn btn-link mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+                                @endif
+                                <a href="{{ route('user.edit') }}" class="btn btn-primary">Edit Data Anda</a>
+                            </div>
+                            
+                            
+                        </div>
+                        
+
+                        <!-- Account Information Section -->
+                        <div class="col-md-6">
+                            <h4>Account Information</h4>
+                            <p><strong>Name:</strong> {{ $user->name }} </p>
+                            <p><strong>Email:</strong> {{ $user->email }} <span class="badge bg-success">Verified</span> </p>
+                            <p><strong>Phone Number:</strong> {{ $userDetail->no_telepone }}</p>
+                            <p><strong>Date of Birth:</strong> {{ $userDetail->lahir }}</p>
+                            <p><strong>Gender:</strong> {{ $userDetail->jenis_kelamin }} </p>
+                            <p><strong>Perusahaan:</strong> {{ $userDetail->perusahaan }} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <p><strong>Name:</strong> {{ $user->name }}</p>
-            <p><strong>Email:</strong> {{ $user->email }}</p>
-            <p><strong>Registered At:</strong> {{ $user->created_at}}</p>
 
-            @if (is_null($user->password) || $user->password === '')
-                <p><strong>Password:</strong> Not Set</p>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPasswordModal">
-                    Create Password
-                </button>
-            @else
-                <p><strong>Password:</strong> **************</p>
-                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                    Change Password
-                </button>
-            @endif
+        <!-- Address List Tab -->
+        <div class="tab-pane fade" id="address-list" role="tabpanel" aria-labelledby="address-list-tab">
+            <div class="card-body">
+                    <div class="row">
+                        <!-- Profile Photo Section -->
+                        <div class="col-md-12 ">
+                            <div class="card ">
+                                <div class="card-body">
+                                    <div class="card p-3 mb-3" style="border: 1px solid #28a745; background-color: #f0fff4;">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5 class="card-title"><strong>Rumah</strong> <span class="badge bg-light text-dark">Default</span></h5>
+                                                <p class="mb-0">{{ $user->name }}, {{ $userDetail->perusahaan }}</p>
+                                                <p class="mb-0">{{ $userDetail->no_telepone }}</p>
+                                                <p class="mb-0">{{ $userDetail->alamat }} {{ $userDetail->kota }}, {{ $userDetail->provinsi }} {{ $userDetail->kode_pos }}</p>
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-check-circle" style="color: #28a745; font-size: 1.5rem;"></i>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-start">
+                                            <a href="{{ route('user.edit') }}" class="text-primary">Edit Address</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h4>Personal Details</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>No Telepone:</strong> {{ $userDetail->no_telepone }}</p>
-            <p><strong>Alamat:</strong> {{ $userDetail->alamat }}</p>
-            <p><strong>Kota:</strong> {{ $userDetail->kota }}</p>
-            <p><strong>Provinsi:</strong> {{ $userDetail->provinsi }}</p>
-            <p><strong>Kode Pos:</strong> {{ $userDetail->kode_pos }}</p>
-            <p><strong>Tanggal Lahir:</strong> {{ $userDetail->lahir}}</p>
-            <p><strong>Jenis Kelamin:</strong> {{ $userDetail->jenis_kelamin }}</p>
-            <p><strong>Perusahaan:</strong> {{ $userDetail->perusahaan }}</p>
-        </div>
-    </div>
-
-    <a href="{{ route('user.edit') }}" class="btn btn-primary mt-3">Edit Details</a>
 </div>
 
 <!-- Modal for Creating Password -->
@@ -125,7 +155,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
