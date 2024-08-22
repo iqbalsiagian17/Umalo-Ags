@@ -45,7 +45,7 @@
         @endif
 
         <!-- Show "Cancel Order" button if the order is in a cancellable state -->
-        @if(in_array($order->status, ['Menunggu ACC Admin', 'Menunggu ACC Admin untuk Negosiasi', 'Negosiasi', 'Diterima']))
+        @if(in_array($order->status, ['Menunggu Konfirmasi Admin', 'Menunggu Konfirmasi Admin untuk Negosiasi', 'Negosiasi', 'Diterima']))
             <form action="{{ route('order.cancel', $order->id) }}" method="POST">
                 @csrf
                 @method('PATCH')

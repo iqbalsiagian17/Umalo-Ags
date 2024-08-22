@@ -97,7 +97,7 @@
             </div>
         </div>
 
-
+        <div class="container-fluid shadow">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3">
@@ -138,9 +138,14 @@
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
                                         <!-- Avatar Gambar -->
-                                        <img src="{{ asset('assets/images/logo.png') }}" alt="Avatar"
-                                        style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
-
+                                        @if (Auth::check())
+                                        <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}" 
+                                             alt="Avatar"
+                                             style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
+                                    @else
+                                        <!-- Tampilkan alternatif jika pengguna belum login -->
+                                    @endif
+                                    
                                         {{ Auth::user()->name }}
                                     </a>
                             
@@ -172,6 +177,7 @@
                     <i class="fa fa-bars"></i>
                 </div>
             </div>
+        </div>
         </div>
 
     </header>

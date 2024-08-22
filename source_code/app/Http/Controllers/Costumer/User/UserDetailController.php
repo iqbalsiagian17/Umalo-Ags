@@ -7,6 +7,8 @@ use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class UserDetailController extends Controller
 {
@@ -145,6 +147,44 @@ public function changePassword(Request $request)
         dd('User is not an instance of User model');
     }
 }
+
+public function uploadProfilePhoto(Request $request)
+    {
+        $request->validate([
+            'foto_profile' => 'required|image|max:2048', // 2048 KB = 2 MB
+        ]);
+
+        $user = Auth::user();
+
+        if ($user instanceof \App\Models\User) {
+            $imagePath = null;
+            if ($request->hasFile('foto_profile')) {
+                // Get the uploaded file
+                $image = $request->file('foto_profile');
+                $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
+                $newImageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
+
+                // Move the image to the desired directory
+                $image->move(public_path('uploads/user/'), $newImageName);
+
+                // Path to be saved in the database
+                $imagePath = 'uploads/user/' . $newImageName;
+
+                // Delete old photo if it exists
+                if ($user->foto_profile) {
+                    Storage::delete('public/' . $user->foto_profile);
+                }
+
+                // Update the user's profile photo path
+                $user->foto_profile = $imagePath;
+                $user->save();
+            }
+
+            return redirect()->route('user.show')->with('success', 'Profile photo updated successfully.');
+        } else {
+            dd('User is not an instance of User model');
+        }
+    }
 
     
 

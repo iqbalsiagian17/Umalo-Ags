@@ -104,11 +104,13 @@
             </div>
 
         @else
-            <div class="alert alert-warning">Keranjang belanja kosong.</div>
-        @endif
-        <div class="text-right">
-            <a href="{{ url('/') }}" class="btn btn-secondary">Back</a>
+        <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
+                <h5 class="mb-1">Belum Produk dalam Kerajan anda</h5>
+                <a href="/" class="btn btn-primary mt-3">Belanja Sekarang</a>
+            </div>
         </div>
+                @endif
     </div>
     </div>
         </div>

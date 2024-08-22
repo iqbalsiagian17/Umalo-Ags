@@ -55,7 +55,7 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/personal', [UserDetailController::class, 'store'])->name('user.store');
     Route::get('/personal/edit', [UserDetailController::class, 'edit'])->name('user.edit');
     Route::put('/personal', [UserDetailController::class, 'update'])->name('user.update');
-
+    Route::post('/user/upload-profile-photo', [UserDetailController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
 

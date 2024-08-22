@@ -1,7 +1,55 @@
 @extends('layouts.customer.master')
 
 @section('content')
-<div class="container">
+
+<style>
+    /* Styling untuk nav-tabs */
+    .nav-tabs {
+        border-bottom: none; /* Menghilangkan garis bawah tab */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan shadow pada nav */
+        background-color: #fff; /* Memberikan background putih */
+        padding: 10px 15px;
+        border-radius: 4px; /* Membuat sudut sedikit melengkung */
+    }
+    
+    /* Styling untuk tab aktif dan hover */
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+        color: #494c57;
+        background-color: #f8f9fa;
+        font-weight: bold;
+        transition: background-color 0.3s ease-in-out;
+        border: none; /* Menghilangkan border */
+        box-shadow: none; /* Menghilangkan shadow ekstra */
+    }
+    
+    /* Styling untuk tab yang tidak aktif */
+    .nav-tabs .nav-link {
+        border: none; /* Menghilangkan border pada tab */
+        padding: 12px 20px;
+        color: #413937;
+        transition: color 0.3s ease-in-out;
+    }
+    
+    /* Styling untuk hover pada tab */
+    .nav-tabs .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+    }
+    
+    /* Styling untuk konten tab */
+    .tab-content > .tab-pane {
+        padding: 20px;
+        border: none; /* Menghilangkan garis border */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan shadow */
+        background-color: #fff; /* Memberikan background putih */
+        border-radius: 4px; /* Membuat sudut konten sedikit melengkung */
+    }
+    
+    
+    </style>
+
+    
+<div class="container mt-5 mb-5">
 
     <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
         <li class="nav-item" role="presentation">
@@ -15,79 +63,103 @@
     <div class="tab-content" id="profileTabsContent">
         <!-- Personal Profile Tab -->
         <div class="tab-pane fade show active" id="personal-profile" role="tabpanel" aria-labelledby="personal-profile-tab">
-            <div class="card mb-5">
+            <div class="card mb-5 shadow rounded border-0">
                 <div class="card-body">
                     <div class="row">
+                        <!-- Profile Photo and Actions Section -->
                         <div class="col-md-6 text-center">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <img src="{{ $user->foto_profile ? asset('storage/' . $user->foto_profile) : asset('assets/images/logo.png') }}"  
-                                         class="rounded-circle mb-3" alt="User Photo" style="width: 250px;">
-                                         <br>
-                                    <button class="btn btn-primary btn-sm">Choose Photo</button>
-                                    <p class="text-muted mt-3">File size max 10MB. JPG, JPEG, PNG allowed.</p>
+                            <div class="card text-center mb-4 shadow rounded border-0">
+                                <div class="card border-0">
+                                    <div class="card-body text-center">
+                                        <img id="profilePhoto" src="{{ $user->foto_profile ? asset($user->foto_profile) : asset('assets/images/logo.png') }}"  
+                                             class="rounded-circle mb-3" alt="User Photo" style="width: 250px;">
+                                        <br>
+                                
+                                        <form id="uploadForm" method="POST" action="{{ route('user.uploadProfilePhoto') }}" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <input type="file" name="foto_profile" class="form-control-file" id="fotoProfileInput" style="display: none;">
+                                                @if ($errors->has('foto_profile'))
+                                                    <small class="text-danger">{{ $errors->first('foto_profile') }}</small>
+                                                @endif
+                                            </div>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('fotoProfileInput').click();">Choose Photo</button>
+                                        </form>
+                                
+                                        <p class="text-muted mt-3">Besar file: maksimum 2048 bytes (2 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
+
+
+                                        </p>
+                                    </div>
                                 </div>
+                                
+                                <script>
+                                    document.getElementById('fotoProfileInput').addEventListener('change', function() {
+                                        var form = document.getElementById('uploadForm');
+                                        form.submit(); // Automatically submit the form when a file is selected
+                                    });
+                                
+                                    document.getElementById('fotoProfileInput').addEventListener('change', function(event) {
+                                        var reader = new FileReader();
+                                        reader.onload = function(){
+                                            var output = document.getElementById('profilePhoto');
+                                            output.src = reader.result; // Update the image src to the selected file
+                                        };
+                                        reader.readAsDataURL(event.target.files[0]);
+                                    });
+                                </script>
+                                
                             </div>
                             <div class="d-flex flex-column mt-4">
                                 @if (is_null($user->password) || $user->password === '')
                                     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createPasswordModal">Create Password</button>
                                 @else
-                                    <button type="button" class="btn btn-link mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+                                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
                                 @endif
                                 <a href="{{ route('user.edit') }}" class="btn btn-primary">Edit Data Anda</a>
                             </div>
-                            
-                            
                         </div>
-                        
-
+        
                         <!-- Account Information Section -->
                         <div class="col-md-6">
-                            <h4>Account Information</h4>
-                            <p><strong>Name:</strong> {{ $user->name }} </p>
-                            <p><strong>Email:</strong> {{ $user->email }} <span class="badge bg-success">Verified</span> </p>
+                            <h4 class="mb-3">Biodata Akun</h4>
+                            <p><strong>Name:</strong> {{ $user->name }}</p>
+                            <p><strong>Email:</strong> {{ $user->email }} <span class="badge bg-success">Verified</span></p>
                             <p><strong>Phone Number:</strong> {{ $userDetail->no_telepone }}</p>
                             <p><strong>Date of Birth:</strong> {{ $userDetail->lahir }}</p>
-                            <p><strong>Gender:</strong> {{ $userDetail->jenis_kelamin }} </p>
-                            <p><strong>Perusahaan:</strong> {{ $userDetail->perusahaan }} </p>
+                            <p><strong>Gender:</strong> {{ $userDetail->jenis_kelamin }}</p>
+                            <p><strong>Perusahaan:</strong> {{ $userDetail->perusahaan }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        
         <!-- Address List Tab -->
         <div class="tab-pane fade" id="address-list" role="tabpanel" aria-labelledby="address-list-tab">
-            <div class="card-body">
-                    <div class="row">
-                        <!-- Profile Photo Section -->
-                        <div class="col-md-12 ">
-                            <div class="card ">
-                                <div class="card-body">
-                                    <div class="card p-3 mb-3" style="border: 1px solid #28a745; background-color: #f0fff4;">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5 class="card-title"><strong>Rumah</strong> <span class="badge bg-light text-dark">Default</span></h5>
-                                                <p class="mb-0">{{ $user->name }}, {{ $userDetail->perusahaan }}</p>
-                                                <p class="mb-0">{{ $userDetail->no_telepone }}</p>
-                                                <p class="mb-0">{{ $userDetail->alamat }} {{ $userDetail->kota }}, {{ $userDetail->provinsi }} {{ $userDetail->kode_pos }}</p>
-                                            </div>
-                                            <div>
-                                                <i class="bi bi-check-circle" style="color: #28a745; font-size: 1.5rem;"></i>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-start">
-                                            <a href="{{ route('user.edit') }}" class="text-primary">Edit Address</a>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
+            <div class="card mb-5 shadow rounded border-0">
+                <div class="card-body">
+                    <div class="card p-3 mb-3" style="border: 1px solid #28a745; background-color: #f0fff4;">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title"><strong>Rumah</strong> <span class="badge bg-light text-dark">Default</span></h5>
+                                <p class="mb-0">{{ $user->name }}, {{ $userDetail->perusahaan }}</p>
+                                <p class="mb-0">{{ $userDetail->no_telepone }}</p>
+                                <p class="mb-0">{{ $userDetail->alamat }}, {{ $userDetail->kota }}, {{ $userDetail->provinsi }} {{ $userDetail->kode_pos }}</p>
+                            </div>
+                            <div>
+                                <i class="bi bi-check-circle" style="color: #28a745; font-size: 1.5rem;"></i>
                             </div>
                         </div>
+                        <hr>
+                        <div class="d-flex justify-content-start">
+                            <a href="{{ route('user.edit') }}" class="btn btn-primary">Edit Address</a>
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
+        
     </div>
 </div>
 

@@ -131,8 +131,8 @@
 
         <!-- Dynamic Buttons -->
         @if($negotiable)
-            @if($order->status == 'Menunggu ACC Admin untuk Negosiasi')
-                <button type="button" id="accButton" class="btn btn-success" onclick="prepareNegosiasi()">ACC</button>
+            @if($order->status == 'Menunggu Konfirmasi Admin untuk Negosiasi')
+                <button type="button" id="accButton" class="btn btn-success" onclick="prepareNegosiasi()">Konfirmasi</button>
             @elseif($order->status == 'Negosiasi')
                 <button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus('Diterima')">Update</button>
             @elseif($order->status == 'Diterima')
@@ -143,8 +143,8 @@
                 <button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus('Selesai')">Selesai</button>
             @endif
         @else
-            @if($order->status == 'Menunggu ACC Admin')
-                <button type="button" id="accButton" class="btn btn-success" onclick="updateStatus('Diterima')">ACC</button>
+            @if($order->status == 'Menunggu Konfirmasi Admin')
+                <button type="button" id="accButton" class="btn btn-success" onclick="updateStatus('Diterima')">Konfirmasi</button>
             @elseif($order->status == 'Diterima')
                 <button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus('Packing')">Update</button>
             @elseif($order->status == 'Packing')
@@ -177,7 +177,7 @@
     function prepareNegosiasi() {
         $('#statusInput').val('Negosiasi');
         $('#whatsappGroup').show();
-        $('#accButton').text('Kirim WA dan ACC');
+        $('#accButton').text('Kirim WA dan Konfirmasi');
         $('#accButton').attr('onclick', 'submitForm()');
     }
 
@@ -222,8 +222,8 @@
 
                 let currentStatus = $('#statusInput').val();
                 let nextStatusMap = {
-                    'Menunggu ACC Admin': 'Diterima',
-                    'Menunggu ACC Admin untuk Negosiasi': 'Negosiasi',
+                    'Menunggu Konfirmasi Admin': 'Diterima',
+                    'Menunggu Konfirmasi Admin untuk Negosiasi': 'Negosiasi',
                     'Negosiasi': 'Diterima',
                     'Diterima': 'Packing',
                     'Packing': 'Pengiriman',
@@ -235,13 +235,13 @@
                     $('#statusInput').val(nextStatus);
 
                     // Perubahan tombol secara dinamis berdasarkan status dan nego
-                    if (currentStatus === 'Menunggu ACC Admin') {
+                    if (currentStatus === 'Menunggu Konfirmasi Admin') {
                         if (!{{ $negotiable ? 'true' : 'false' }}) {
                             // Jika produk tidak bisa dinegosiasi
                             updateButton('Update to Diterima', 'Diterima', 'btn-primary');
                         } else {
                             // Jika produk bisa dinegosiasi
-                            updateButton('ACC untuk Negosiasi', 'Negosiasi', 'btn-warning');
+                            updateButton('Konfirmasi untuk Negosiasi', 'Negosiasi', 'btn-warning');
                         }
                     } else if (currentStatus === 'Negosiasi') {
                         updateButton('Update to Diterima', 'Diterima', 'btn-primary');

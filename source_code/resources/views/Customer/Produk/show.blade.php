@@ -61,6 +61,22 @@
                                 {{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}
                             </span>
                         </li>
+                        <li><b>Ekatalog</b> 
+                            <span>
+                                @if ($produk->link_ekatalog)
+                                    @php
+                                        $url = $produk->link_ekatalog;
+                                        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+                                            $url = "http://" . $url;
+                                        }
+                                    @endphp
+                                    <a href="{{ $url }}" target="_blank">{{ $produk->link_ekatalog }}</a>
+                                @else
+                                    N/A
+                                @endif
+                            </span>
+                        </li>
+                                             
                     </ul>
                 </div>
             </div>

@@ -34,7 +34,10 @@ class OrderController extends Controller
     }
     public function history()
     {
-        $orders = auth()->user()->orders; // Assuming you have a relationship set up in the User model
+        $orders = Order::where('user_id', auth()->id())
+        ->orderBy('created_at', 'desc')
+        ->get();
+
         return view('customer.order.riwayat-pesanan', compact('orders'));
     }
 
@@ -75,8 +78,8 @@ class OrderController extends Controller
 {
     $order = Order::findOrFail($id);
 
-    // Allow cancellation if the status is "Menunggu ACC Admin", "Menunggu ACC Admin untuk Negosiasi", "Negosiasi", or "Diterima"
-    if (in_array($order->status, ['Menunggu ACC Admin', 'Menunggu ACC Admin untuk Negosiasi', 'Negosiasi', 'Diterima'])) {
+    // Allow cancellation if the status is "Menunggu Konfirmasi Admin", "Menunggu Konfirmasi Admin untuk Negosiasi", "Negosiasi", or "Diterima"
+    if (in_array($order->status, ['Menunggu Konfirmasi Admin', 'Menunggu Konfirmasi Admin untuk Negosiasi', 'Negosiasi', 'Diterima'])) {
         $order->status = 'Cancelled';
         $order->save();
 

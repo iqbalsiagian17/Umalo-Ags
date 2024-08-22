@@ -26,11 +26,11 @@ class CartController extends Controller
     }
 
     // Determine initial status based on product negotiation availability
-    $initialStatus = 'Menunggu ACC Admin';
+    $initialStatus = 'Menunggu Konfirmasi Admin';
     foreach ($cart as $id => $details) {
         $product = Produk::find($id);
         if ($product && $product->nego == 'ya') {
-            $initialStatus = 'Menunggu ACC Admin untuk Negosiasi';
+            $initialStatus = 'Menunggu Konfirmasi Admin untuk Negosiasi';
             break;
         }
     }
