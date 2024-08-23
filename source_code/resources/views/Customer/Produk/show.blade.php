@@ -29,7 +29,32 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>{{ $produk->nama }}</h3>
-                    <div class="product__details__price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</div>
+                    <div class="product__details__price">
+                        <div class="product__details__price">
+                                @if ($produk->harga_ditampilkan === 'ya')
+                                    @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                        <span style="text-decoration: line-through; color: #ff0000;">
+                                            Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                        </span>
+                                        <br>
+                                        <span style="color: #000000;">
+                                            Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
+                                        </span>
+                                    @else
+                                        <span style="color: #000000;">
+                                            Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                        </span>
+                                    @endif
+                                @else
+                                    Hubungi admin untuk detail harga
+                                @endif
+                            
+                        </div>
+                        
+                        
+                    </div>
+                    
+                                                        
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
@@ -38,9 +63,12 @@
                         </div>
                     </div>
                     <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">Tambahkan Keranjang</a>
-                    @if ($produk->nego === 'ya')
+                    @if ($bigSale)
+                        <span class="nego-badge">Big Sale</span>
+                    @elseif ($produk->nego === 'ya')
                         <span class="nego-badge">Bisa Nego</span>
                     @endif
+
                     <ul>
                         <li><b>Stock</b> <span>{{ $produk->stok }}</span></li>
                     
@@ -302,14 +330,19 @@
                         $imagePath = $item->images->isNotEmpty()
                             ? $item->images->first()->gambar
                             : 'path/to/default/image.jpg';
+                        $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
                     @endphp
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                         <div class="featured__item">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->nego === 'ya')
-                                    <span class="nego-badge">Bisa Nego</span>
-                                @endif
+                                <span class="nego-badge">Bisa Nego</span>
+                            @endif
+                            @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                <span class="nego-badge badge-primary">Big Sale</span>
+                            @endif
+                            
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
@@ -329,11 +362,25 @@
                                 <h6><a href="#">{{ $item->nama }}</a></h6>
                                 <h5>
                                     @if ($item->harga_ditampilkan === 'ya')
-                                        Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                        @if($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                            <span style="text-decoration: line-through; color: #ff0000;">
+                                                Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                            </span>
+                                            <br>
+                                            <span style="color: #000000;">
+                                                Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
+                                            </span>
+                                        @else
+                                            <span style="color: #000000;">
+                                                Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                            </span>
+                                        @endif
                                     @else
                                         Hubungi admin untuk detail harga
                                     @endif
                                 </h5>
+                                
+                                
                             </div>
                         </div>
                     </div>
@@ -350,6 +397,7 @@
         </div>
     </section>
 @endif
+
 
 
     <!-- Notifikasi (Hidden by Default) -->

@@ -77,7 +77,10 @@ class HomeController extends Controller
     ->groupBy('produk.id', 'produk.nama', 'produk.harga_tayang', 'produk.nego', 'produk.harga_ditampilkan')
     ->orderBy('total_sold', 'desc')
     ->where('produk.status', 'publish')
-    ->take(4) // Limit to the top 8 best-sellers
+    ->whereDoesntHave('bigSales', function ($query) {
+        $query->where('status', 'aktif');
+    })
+    ->take(4) // Limit to the top 4 best-sellers
     ->get();
 
 

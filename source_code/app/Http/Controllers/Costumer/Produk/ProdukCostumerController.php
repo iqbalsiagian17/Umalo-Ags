@@ -12,9 +12,16 @@ class ProdukCostumerController extends Controller
 {
     public function userShow($id)
     {
-        $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas'])->findOrFail($id);
+        // Memuat produk beserta relasinya (images, kategori, subKategori, komoditas, dan bigSales)
+        $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales'])->findOrFail($id);
         $images = $produk->images;
-        
+    
+        // Memeriksa apakah produk termasuk dalam Big Sale
+        $bigSale = $produk->bigSales->first(); // Ambil Big Sale pertama jika ada
+
+        $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
+
+    
         // Ambil 5 produk lain yang memiliki komoditas atau kategori yang sama, tetapi bukan produk yang sedang ditampilkan
         $produK = Produk::where('id', '!=', $id)
                         ->where(function ($query) use ($produk) {
@@ -24,9 +31,11 @@ class ProdukCostumerController extends Controller
                         ->has('images')
                         ->limit(5)
                         ->get();
-        
-        return view('customer.produk.show', compact('produk', 'images', 'produK'));
+    
+        return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem'));
     }
+    
+    
     
     
     

@@ -58,13 +58,19 @@ class BigsaleController extends Controller
         // Attach products if any
         if ($request->has('products')) {
             foreach ($request->products as $product_id => $value) {
+                $produk = Produk::findOrFail($product_id);
                 $harga_diskon = $request->input("harga_diskon.{$product_id}");
+    
                 if ($harga_diskon) {
                     $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
                 }
+    
+                // Update nego status to "tidak" if it was "ya"
+                if ($produk->nego === 'ya') {
+                    $produk->update(['nego' => 'tidak']);
+                }
             }
         }
-    
         return redirect()->route('bigsale.index')->with('success', 'Big Sale created successfully.');
     }
     

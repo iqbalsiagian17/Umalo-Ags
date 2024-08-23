@@ -3,7 +3,7 @@
     <div class="sidebar-logo">
       <!-- Logo Header -->
       <div class="logo-header" data-background-color="dark">
-        <a href="index.html" class="logo">
+        <a href="/dashboard" class="logo">
           <img
             src="{{ asset('assets/images/logo.png') }}"
             alt="navbar brand"
@@ -41,10 +41,13 @@
             <h4 class="text-section">transaction</h4>
           </li>
           @php
-              $allOrders = \App\Models\Order::all();
-              $seenOrders = Session::get('seen_orders', []);
-              $unseenCount = $allOrders->whereNotIn('id', $seenOrders)->count();
-          @endphp
+          $userId = Auth::id();
+          $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
+              $query->where('user_id', $userId);
+          })->count();
+      @endphp
+      
+      
           <li class="nav-item">
             <a data-bs-toggle="collapse" href="#tables">
               <i class="fas fa-shopping-cart"></i> 

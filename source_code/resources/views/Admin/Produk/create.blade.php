@@ -50,24 +50,26 @@
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                             <div class="form-group">
                                 <label for="nama">Nama Produk:</label>
-                                <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required>
+                                <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
                                 @if ($errors->has('nama'))
                                     <small class="text-danger">{{ $errors->first('nama') }}</small>
                                 @endif
                             </div>
                             <div class="form-group">
                                 <label for="nego">Bisa Nego:</label>
-                                <select name="nego" class="form-control" required>
-                                    <option value="tidak" {{ old('nego') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                <select name="nego" id="nego" class="form-control" required>
+                                    <option value="" disabled {{ old('nego') ? '' : 'selected' }}>Pilih opsi</option>
                                     <option value="ya" {{ old('nego') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                    <option value="tidak" {{ old('nego') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                 </select>
                                 @if ($errors->has('nego'))
                                     <small class="text-danger">{{ $errors->first('nego') }}</small>
                                 @endif
-                            </div>
+                            </div>                            
                             <div class="form-group">
                                 <label for="harga_ditampilkan">Harga Ditampilkan:</label>
-                                <select name="harga_ditampilkan" class="form-control" required>
+                                <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
+                                    <option value="" disabled {{ old('harga_ditampilkan') ? '' : 'selected' }}>Pilih opsi</option>
                                     <option value="ya" {{ old('harga_ditampilkan') == 'ya' ? 'selected' : '' }}>Ya</option>
                                     <option value="tidak" {{ old('harga_ditampilkan') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                 </select>
@@ -75,9 +77,10 @@
                                     <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
                                 @endif
                             </div>
+                            
                             <div class="form-group">
                                 <label for="harga_tayang">Harga Produk:</label>
-                                <input type="number" step="0.01" name="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
+                                <input type="number" step="0.01" name="harga_tayang" id="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
                                 @if ($errors->has('harga_tayang'))
                                     <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
                                 @endif
@@ -85,7 +88,7 @@
 
                             <div class="form-group">
                                 <label for="spesifikasi_produk">Spesifikasi Produk:</label>
-                                <textarea name="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}</textarea>
+                                <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}</textarea>
                                 @if ($errors->has('spesifikasi_produk'))
                                     <small class="text-danger">{{ $errors->first('spesifikasi_produk') }}</small>
                                 @endif
@@ -93,7 +96,7 @@
 
                             <div class="form-group">
                                 <label for="link_ekatalog">Link E-katalog:</label>
-                                <input type="text" name="link_ekatalog" class="form-control" value="{{ old('link_ekatalog') }}" required>
+                                <input type="text" name="link_ekatalog" id="link_ekatalog" class="form-control" value="{{ old('link_ekatalog') }}" required>
                                 @if ($errors->has('link_ekatalog'))
                                     <small class="text-danger">{{ $errors->first('link_ekatalog') }}</small>
                                 @endif
@@ -103,7 +106,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
-                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
+                                        <input type="date" name="masa_berlaku_produk" id="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
                                         @if ($errors->has('masa_berlaku_produk'))
                                             <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
                                         @endif
@@ -113,7 +116,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="stok">Stok:</label>
-                                        <input type="number" name="stok" class="form-control" value="{{ old('stok') }}" required>
+                                        <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}" required>
                                         @if ($errors->has('stok'))
                                             <small class="text-danger">{{ $errors->first('stok') }}</small>
                                         @endif
@@ -128,6 +131,7 @@
                                     <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
                                 @endif
                             </div>
+                        <button type="submit" id="saveButton" class="btn btn-primary mt-3" style="display: none;">Simpan</button>
                         </div>
     
                         <!-- Categories Tab -->
@@ -136,7 +140,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="komoditas_id">Komoditas:</label>
-                                        <select name="komoditas_id" class="form-control" required>
+                                        <select name="komoditas_id" class="form-control" id="komoditas_id" required>
                                             @foreach($komoditas as $k)
                                                 <option value="{{ $k->id }}" {{ old('komoditas_id') == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
                                             @endforeach
@@ -174,6 +178,7 @@
                                     </div>
                                 </div>
                             </div>
+                        <button type="submit" id="saveButton" class="btn btn-primary mt-3" style="display: none;">Simpan</button>
                         </div>
     
                         <!-- Details Tab -->
@@ -183,6 +188,7 @@
                                     <div class="form-group">
                                         <label for="unit_pengukuran">Unit Pengukuran:</label>
                                         <select name="unit_pengukuran" class="form-control">
+                                            <option value="" disabled {{ old('unit_pengukuran') ? '' : 'selected' }}>Pilih unit pengukuran</option>
                                             <option value="set" {{ old('unit_pengukuran') == 'set' ? 'selected' : '' }}>Set</option>
                                             <option value="paket" {{ old('unit_pengukuran') == 'paket' ? 'selected' : '' }}>Paket</option>
                                         </select>
@@ -190,6 +196,7 @@
                                             <small class="text-danger">{{ $errors->first('unit_pengukuran') }}</small>
                                         @endif
                                     </div>
+                                    
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -230,6 +237,7 @@
                                     <div class="form-group">
                                         <label for="sni">SNI:</label>
                                         <select name="sni" class="form-control">
+                                            <option value="" disabled {{ old('sni') ? '' : 'selected' }}>Pilih status SNI</option>
                                             <option value="ya" {{ old('sni') == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ old('sni') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
@@ -237,7 +245,7 @@
                                             <small class="text-danger">{{ $errors->first('sni') }}</small>
                                         @endif
                                     </div>
-                                </div>
+                                </div>                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no_produk_penyedia">No Produk Penyedia:</label>
@@ -258,19 +266,20 @@
                                             <small class="text-danger">{{ $errors->first('no_sni') }}</small>
                                         @endif
                                     </div>
-                                </div>
+                                </div>                                
     
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="memiliki_svlk">Memiliki SVLK:</label>
                                         <select name="memiliki_svlk" class="form-control">
+                                            <option value="" disabled {{ old('memiliki_svlk') ? '' : 'selected' }}>Pilih status SVLK</option>
                                             <option value="ya" {{ old('memiliki_svlk') == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ old('memiliki_svlk') == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                         @if ($errors->has('memiliki_svlk'))
                                             <small class="text-danger">{{ $errors->first('memiliki_svlk') }}</small>
                                         @endif
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
     
@@ -301,13 +310,14 @@
                                     <div class="form-group">
                                         <label for="jenis_produk">Jenis Produk:</label>
                                         <select name="jenis_produk" class="form-control">
+                                            <option value="" disabled {{ old('jenis_produk') ? '' : 'selected' }}>Pilih jenis produk</option>
                                             <option value="PDN" {{ old('jenis_produk') == 'PDN' ? 'selected' : '' }}>PDN</option>
                                             <option value="Impor" {{ old('jenis_produk') == 'Impor' ? 'selected' : '' }}>Impor</option>
                                         </select>
                                         @if ($errors->has('jenis_produk'))
                                             <small class="text-danger">{{ $errors->first('jenis_produk') }}</small>
                                         @endif
-                                    </div>
+                                    </div>                                    
                                 </div>
     
                                 <div class="col-md-6">
@@ -382,7 +392,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" id="saveButton" class="btn btn-primary mt-3" >Simpan</button>
                         </div>
                     </div>
     
@@ -502,6 +512,59 @@
         // Initial setup
         updateTabs(currentTabIndex);
     });
+</script>
+
+    <style>
+                        .nav-tabs .nav-link {
+                            color: #1a2035;
+                            font-weight: bold;
+                            border-radius: 0;
+                            transition: background-color 0.3s ease;
+                        }
+
+                        .nav-tabs .nav-link:hover {
+                            background-color: #f8f9fa;
+                        }
+
+                        .nav-tabs .nav-link.active {
+                            background-color: #1a2035;
+                            color: #fff;
+                        }
+
+                        .btn {
+                            border-radius: 30px;
+                            padding: 10px 20px;
+                        }
+                    </style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const requiredFields = ['nama', 'harga_ditampilkan', 'komoditas_id', 'kategori_id', 'sub_kategori_id'];
+    const saveButton = document.getElementById('saveButton');
+
+    requiredFields.forEach(field => {
+        document.getElementById(field).addEventListener('input', checkForm);
+    });
+
+    function checkForm() {
+        let allFilled = true;
+
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field);
+            if (!input.value) {
+                allFilled = false;
+            }
+        });
+
+        if (allFilled) {
+            saveButton.style.display = 'block';
+        } else {
+            saveButton.style.display = 'none';
+        }
+    }
+});
+
 </script>
 
 @endsection

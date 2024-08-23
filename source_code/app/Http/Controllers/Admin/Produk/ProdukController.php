@@ -159,6 +159,7 @@ class ProdukController extends Controller
         'jenis_alat' => 'nullable',
         'fungsi' => 'nullable',
         'spesifikasi_produk' => 'required',
+        'harga_ditampilkan' => 'required',
         'harga_tayang' => 'required|numeric',
         'komoditas_id' => 'required|exists:komoditas,id',
         'kategori_id' => 'required|exists:kategori,id',
@@ -172,16 +173,22 @@ class ProdukController extends Controller
     $produk->save();
 
     // Handle image uploads
-    if ($request->hasFile('gambar')) {
-        // Remove old images
-        foreach ($produk->images as $image) {
-            if (file_exists(public_path($image->gambar))) {
-                unlink(public_path($image->gambar));
+    if ($request->deleted_images) {
+        $deletedImages = explode(',', $request->deleted_images);
+        foreach ($deletedImages as $imageId) {
+            $image = ProdukImage::find($imageId);
+            if ($image) {
+                // Hapus file gambar dari storage
+                if (file_exists(public_path($image->gambar))) {
+                    unlink(public_path($image->gambar));
+                }
+                // Hapus record gambar dari database
+                $image->delete();
             }
-            $image->delete();
         }
+    }
 
-        // Upload new images
+    if ($request->hasFile('gambar')) {
         foreach ($request->file('gambar') as $imgProduk) {
             $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
             $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
@@ -194,20 +201,20 @@ class ProdukController extends Controller
         }
     }
 
+
     // Handle detail updates
-    $details = $request->input('detail');
-    if ($details) {
+    if ($request->input('detail')) {
         ProdukList::where('produk_id', $produk->id)->delete();
-        foreach ($details['nama'] as $key => $value) {
+        foreach ($request->input('detail.nama') as $key => $value) {
             $data2 = [
                 'produk_id' => $produk->id,
-                'nama' => $details['nama'][$key],
-                'spesifikasi' => $details['spesifikasi'][$key],
-                'merk' => $details['merk'][$key],
-                'tipe' => $details['tipe'][$key],
-                'jumlah' => $details['jumlah'][$key],
-                'satuan' => $details['satuan'][$key],  
-                'harga_satuan' => $details['harga_satuan'][$key],  
+                'nama' => $request->input('detail.nama')[$key],
+                'spesifikasi' => $request->input('detail.spesifikasi')[$key],
+                'merk' => $request->input('detail.merk')[$key],
+                'tipe' => $request->input('detail.tipe')[$key],
+                'jumlah' => $request->input('detail.jumlah')[$key],
+                'satuan' => $request->input('detail.satuan')[$key],
+                'harga_satuan' => $request->input('detail.harga_satuan')[$key],
             ];
             ProdukList::create($data2);
         }

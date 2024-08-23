@@ -19,9 +19,25 @@
 
         <div class="row">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Edit Produk</div>
+                    <div class="d-flex align-items-center">
+                        <div class="selectgroup w-auto mr-3">
+                            <label class="selectgroup-item">
+                                <input type="radio" name="status" value="arsip" class="selectgroup-input" {{ $produk->status == 'arsip' ? 'checked' : '' }} />
+                                <span class="selectgroup-button">Arsip</span>
+                            </label>
+                            <label class="selectgroup-item">
+                                <input type="radio" name="status" value="publish" class="selectgroup-input" {{ $produk->status == 'publish' ? 'checked' : '' }} />
+                                <span class="selectgroup-button">Publish</span>
+                            </label>
+                        </div>
+                    </div>
+                    @if ($errors->has('status'))
+                        <small class="text-danger">{{ $errors->first('status') }}</small>
+                    @endif
                 </div>
+                
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <ul class="nav nav-tabs" id="productFormTabs" role="tablist">
@@ -35,15 +51,10 @@
                                 <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">Images</a>
+                                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">Produk List</a>
                             </li>
                         </ul>
 
-                        <!-- Navigation Buttons -->
-                        <div class="ml-auto">
-                            <button type="button" class="btn btn-light" id="prevBtn"><i class="fas fa-arrow-left"></i> Back</button>
-                            <button type="button" class="btn btn-light" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
-                        </div>
                     </div>
 
                     <div class="tab-content" id="productFormContent">
@@ -99,7 +110,48 @@
                                     <small class="text-danger">{{ $errors->first('link_ekatalog') }}</small>
                                 @endif
                             </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
+                                    <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ $produk->masa_berlaku_produk }}" required>
+                                    @if ($errors->has('masa_berlaku_produk'))
+                                        <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="stok">Stok:</label>
+                                    <input type="number" name="stok" class="form-control" value="{{ $produk->stok }}" required>
+                                    @if ($errors->has('stok'))
+                                        <small class="text-danger">{{ $errors->first('stok') }}</small>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="gambar">Gambar Produk:</label>
+                            <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
+                        
+                            <div class="mt-2 d-flex flex-wrap">
+                                @foreach($produk->images as $image)
+                                    <div class="position-relative" style="margin-right: 10px;">
+                                        <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" style="width: 100px; height: 100px;">
+                                        <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 0; right: 0;" onclick="removeImage({{ $image->id }})">Hapus</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        
+                            <input type="hidden" name="deleted_images" id="deleted_images">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                    </div>
+
 
                         <!-- Categories Tab -->
                         <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
@@ -146,6 +198,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
                         </div>
 
                         <!-- Details Tab -->
@@ -153,30 +206,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="no_produk_penyedia">No Produk Penyedia:</label>
-                                        <input type="text" name="no_produk_penyedia" class="form-control" value="{{ $produk->no_produk_penyedia }}" required>
-                                        @if ($errors->has('no_produk_penyedia'))
-                                            <small class="text-danger">{{ $errors->first('no_produk_penyedia') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="jenis_alat">Jenis Alat:</label>
-                                        <input type="text" name="jenis_alat" class="form-control" value="{{ $produk->jenis_alat }}" required>
-                                        @if ($errors->has('jenis_alat'))
-                                            <small class="text-danger">{{ $errors->first('jenis_alat') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label for="unit_pengukuran">Unit Pengukuran:</label>
-                                        <select name="unit_pengukuran" class="form-control" >
+                                        <select name="unit_pengukuran" class="form-control">
                                             <option value="set" {{ $produk->unit_pengukuran == 'set' ? 'selected' : '' }}>Set</option>
                                             <option value="paket" {{ $produk->unit_pengukuran == 'paket' ? 'selected' : '' }}>Paket</option>
                                         </select>
@@ -185,19 +216,18 @@
                                         @endif
                                     </div>
                                 </div>
-                                
-
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
-                                        <input type="date" name="masa_berlaku_produk" class="form-control" value="{{ $produk->masa_berlaku_produk }}" required>
-                                        @if ($errors->has('masa_berlaku_produk'))
-                                            <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
+                                        <label for="jenis_alat">Jenis Alat:</label>
+                                        <input type="text" name="jenis_alat" class="form-control" value="{{ $produk->jenis_alat }}">
+                                        @if ($errors->has('jenis_alat'))
+                                            <small class="text-danger">{{ $errors->first('jenis_alat') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -208,33 +238,50 @@
                                         @endif
                                     </div>
                                 </div>
-
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="merk">Merk:</label>
-                                        <input type="text" name="merk" class="form-control" value="{{ $produk->merk }}" required>
+                                        <input type="text" name="merk" class="form-control" value="{{ $produk->merk }}">
                                         @if ($errors->has('merk'))
                                             <small class="text-danger">{{ $errors->first('merk') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="stok">Stok:</label>
-                                        <input type="number" name="stok" class="form-control" value="{{ $produk->stok }}" required>
-                                        @if ($errors->has('stok'))
-                                            <small class="text-danger">{{ $errors->first('stok') }}</small>
+                                        <label for="no_produk_penyedia">No Produk Penyedia:</label>
+                                        <input type="text" name="no_produk_penyedia" class="form-control" value="{{ $produk->no_produk_penyedia }}">
+                                        @if ($errors->has('no_produk_penyedia'))
+                                            <small class="text-danger">{{ $errors->first('no_produk_penyedia') }}</small>
                                         @endif
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="memiliki_svlk">Memiliki SVLK:</label>
+                                        <select name="memiliki_svlk" class="form-control">
+                                            <option value="ya" {{ $produk->memiliki_svlk == 'ya' ? 'selected' : '' }}>Ya</option>
+                                            <option value="tidak" {{ $produk->memiliki_svlk == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                        </select>
+                                        @if ($errors->has('memiliki_svlk'))
+                                            <small class="text-danger">{{ $errors->first('memiliki_svlk') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+                        
+                               
+                            </div>
+                        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="sni">SNI:</label>
-                                        <select name="sni" class="form-control" required>
+                                        <select name="sni" class="form-control">
                                             <option value="ya" {{ $produk->sni == 'ya' ? 'selected' : '' }}>Ya</option>
                                             <option value="tidak" {{ $produk->sni == 'tidak' ? 'selected' : '' }}>Tidak</option>
                                         </select>
@@ -243,9 +290,7 @@
                                         @endif
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no_sni">No SNI:</label>
@@ -255,48 +300,36 @@
                                         @endif
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="memiliki_svlk">Memiliki SVLK:</label>
-                                        <select name="memiliki_svlk" class="form-control" required>
-                                            <option value="ya" {{ $produk->memiliki_svlk == 'ya' ? 'selected' : '' }}>Ya</option>
-                                            <option value="tidak" {{ $produk->memiliki_svlk == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                        </select>
-                                        @if ($errors->has('memiliki_svlk'))
-                                            <small class="text-danger">{{ $errors->first('memiliki_svlk') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
                             </div>
-
+                        
+                        
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="kode_kbki">Kode KBLI:</label>
-                                        <input type="number" name="kode_kbki" class="form-control" value="{{ $produk->kode_kbki }}" required>
+                                        <input type="number" name="kode_kbki" class="form-control" value="{{ $produk->kode_kbki }}">
                                         @if ($errors->has('kode_kbki'))
                                             <small class="text-danger">{{ $errors->first('kode_kbki') }}</small>
                                         @endif
                                     </div>
                                 </div>
-
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="asal_negara">Asal Negara:</label>
-                                        <input type="text" name="asal_negara" class="form-control" value="{{ $produk->asal_negara }}" required>
+                                        <input type="text" name="asal_negara" class="form-control" value="{{ $produk->asal_negara }}">
                                         @if ($errors->has('asal_negara'))
                                             <small class="text-danger">{{ $errors->first('asal_negara') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="jenis_produk">Jenis Produk:</label>
-                                        <select name="jenis_produk" class="form-control" required>
+                                        <select name="jenis_produk" class="form-control">
                                             <option value="PDN" {{ $produk->jenis_produk == 'PDN' ? 'selected' : '' }}>PDN</option>
                                             <option value="Impor" {{ $produk->jenis_produk == 'Impor' ? 'selected' : '' }}>Impor</option>
                                         </select>
@@ -305,51 +338,45 @@
                                         @endif
                                     </div>
                                 </div>
-
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fungsi">Fungsi:</label>
-                                        <input type="text" name="fungsi" class="form-control" value="{{ $produk->fungsi }}" required>
+                                        <input type="text" name="fungsi" class="form-control" value="{{ $produk->fungsi }}">
                                         @if ($errors->has('fungsi'))
                                             <small class="text-danger">{{ $errors->first('fungsi') }}</small>
                                         @endif
                                     </div>
                                 </div>
-
+                            </div>
+                        
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="tipe_barang">Tipe Barang:</label>
-                                        <input type="text" name="tipe_barang" class="form-control" value="{{ $produk->tipe_barang }}" required>
+                                        <input type="text" name="tipe_barang" class="form-control" value="{{ $produk->tipe_barang }}">
                                         @if ($errors->has('tipe_barang'))
                                             <small class="text-danger">{{ $errors->first('tipe_barang') }}</small>
                                         @endif
                                     </div>
                                 </div>
-
+                        
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="garansi_produk">Garansi Produk:</label>
-                                        <input type="text" name="garansi_produk" class="form-control" value="{{ old('garansi_produk', $produk->garansi_produk) }}" required>
+                                        <input type="text" name="garansi_produk" class="form-control" value="{{ old('garansi_produk', $produk->garansi_produk) }}">
                                         @if ($errors->has('garansi_produk'))
                                             <small class="text-danger">{{ $errors->first('garansi_produk') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
                         </div>
+                        
 
                         <!-- Images Tab -->
                         <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
-                            <div class="form-group">
-                                <label for="gambar">Gambar Produk:</label>
-                                <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
-                                <div class="mt-2">
-                                    @foreach($produk->images as $image)
-                                        <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" style="width: 100px; height: 100px; margin-right: 10px;">
-                                    @endforeach
-                                </div>
-                            </div>
-
                             <!-- Detail Produk List -->
                             <h2 class="mt-5">Detail Produk List</h2>
                             <div id="detail-list-container">
@@ -520,4 +547,42 @@
         });
     </script>
 
+<style>
+    .nav-tabs .nav-link {
+        color: #1a2035;
+        font-weight: bold;
+        border-radius: 0;
+        transition: background-color 0.3s ease;
+    }
+
+    .nav-tabs .nav-link:hover {
+        background-color: #f8f9fa;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #1a2035;
+        color: #fff;
+    }
+
+    .btn {
+        border-radius: 30px;
+        padding: 10px 20px;
+    }
+</style>
+
+<script>
+    function removeImage(imageId) {
+    let deletedImages = document.getElementById('deleted_images').value;
+    if (deletedImages) {
+        deletedImages += ',' + imageId;
+    } else {
+        deletedImages = imageId;
+    }
+    document.getElementById('deleted_images').value = deletedImages;
+
+    // Remove the image element from the UI
+    event.target.parentElement.remove();
+}
+
+</script>
 @endsection

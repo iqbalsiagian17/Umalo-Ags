@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Hero Section Begin -->
-    <section class="hero mt-3">
+    <section class="hero mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
