@@ -19,8 +19,9 @@
                 </div>
                 <div>
                     <a href="{{ route('order.detail', $order->id) }}" class="btn btn-primary btn-sm">Lihat Detail</a>
-                    <a href="{{ route('order.transaction_history', $order->id) }}" class="btn btn-info btn-sm">Riwayat Transaksi</a>
-                </div>
+                    @if(in_array($order->status, ['Diterima', 'Selesai']))
+                    <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">Download Invoice</a>
+                @endif                </div>
             </div>
             
             @foreach($order->orderItems as $item)
@@ -42,15 +43,13 @@
                 </div>
             @endforeach
 
-            @if($order->status == 'Pengiriman' && $order->nomor_resi)
-                <p class="mt-2"><strong>Nomor Resi:</strong> {{ $order->nomor_resi }}</p>
-            @endif
+
             <hr>
             <div class="d-flex justify-content-between">
                 <div>
-                    @if(in_array($order->status, ['Diterima', 'Selesai']))
-                        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">Download Invoice</a>
-                    @endif
+                    @if($order->status == 'Pengiriman' && $order->nomor_resi)
+                    <p class="mt-2"><strong>Nomor Resi:</strong> {{ $order->nomor_resi }}</p>
+                @endif
                 </div>
                 <div>
                     <p class="text-danger"><strong>Total Pesanan: Rp{{ number_format($order->harga_total, 0, ',', '.') }}</strong></p>

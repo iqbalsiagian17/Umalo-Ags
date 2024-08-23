@@ -200,12 +200,14 @@
         <div class="content">
             <p style="margin: 0;">Billed To:</p>
             <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
-            <p style="margin: 0;">Bizpark Jababeka, Jl. Industri Sel. Blok QQ No.6, Pasirsari, </p>
-            <p style="margin: 0;">Cikarang Sel., Kabupaten Bekasi, Jawa Barat 17530</p>
+            <p style="margin: 0;">{{ $userDetail->alamat }}{{ $userDetail->kota }}{{ $userDetail->provinsi }}{{ $userDetail->kode_pos }}</p>
             <br>
             <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
-            <p style="margin: 0;">Based on Purchase Order No. 05.028/GSA-PROC/IV/2024, PT. Arkamaya Guna Saharsa submits the invoice:</p>
-        </div>
+            <p style="margin: 0;">
+                Based on Purchase Order No. {{ $order->id }}/GSA-PROC/IV/{{ $order->created_at->format('Y') }}, 
+                PT. Arkamaya Guna Saharsa submits the invoice:
+            </p>
+                    </div>
         
 
         <table class="invoice-table">

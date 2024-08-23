@@ -146,8 +146,8 @@
                                         <!-- Tampilkan alternatif jika pengguna belum login -->
                                     @endif
                                     
-                                        {{ Auth::user()->name }}
-                                    </a>
+                                    {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
+                                </a>
                             
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('user.show') }}">

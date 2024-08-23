@@ -25,9 +25,6 @@
                             <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General Information</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="categories-tab" data-toggle="tab" href="#categories" role="tab" aria-controls="categories" aria-selected="false">Categories</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
                         </li>
                         <li class="nav-item">
@@ -124,18 +121,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="gambar">Gambar Produk:</label>
-                                <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
-                                @if ($errors->has('gambar.*'))
-                                    <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
-                                @endif
-                            </div>
-                        <button type="submit" id="saveButton" class="btn btn-primary mt-3" style="display: none;">Simpan</button>
-                        </div>
-    
-                        <!-- Categories Tab -->
-                        <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -177,6 +162,14 @@
                                         @endif
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gambar">Gambar Produk:</label>
+                                <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
+                                @if ($errors->has('gambar.*'))
+                                    <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
+                                @endif
                             </div>
                         <button type="submit" id="saveButton" class="btn btn-primary mt-3" style="display: none;">Simpan</button>
                         </div>
@@ -400,7 +393,7 @@
             </div>
         </div>
         <small>*Produk, ketika berhasil ditambahkan, maka status akan otomatis menjadi "Arsip" yang artinya anda perlu merubahnya menjadi "Publish" agar muncul di halaman User</small>
-        <small>*General Information, Categories adalah hal yang wajib di isi jika ingin memasukkan barang, dan untuk details dan Produk List dapat di isi belakangan.</small>
+        <small>*General Information adalah hal yang wajib di isi jika ingin memasukkan data produk, dan untuk "details" dan "Produk List" dapat di isi belakangan.</small>
     </div>
 
     <script>
@@ -479,7 +472,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const tabs = ['general', 'categories', 'details', 'produk_lists'];
+        const tabs = ['general', 'details', 'produk_lists'];
         let currentTabIndex = 0;
 
         // Function to update the tabs based on the current index
@@ -540,7 +533,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const requiredFields = ['nama', 'harga_ditampilkan', 'komoditas_id', 'kategori_id', 'sub_kategori_id'];
+    const requiredFields = ['nama', 'harga_ditampilkan', 'komoditas_id', 'kategori_id', 'sub_kategori_id','gambar[]'];
     const saveButton = document.getElementById('saveButton');
 
     requiredFields.forEach(field => {

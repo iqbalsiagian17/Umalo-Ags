@@ -110,7 +110,13 @@ public function generatePdf($id)
     }
 
     $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail'));
-    return $pdf->download('order-details.pdf');
+
+    // Generate the filename
+    $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan); // Sanitize the company name for a filename
+    $year = $order->created_at->format('Y');
+    $fileName = "invoice-{$companyName}-{$year}.pdf";
+
+    return $pdf->download($fileName);
 }
 
 

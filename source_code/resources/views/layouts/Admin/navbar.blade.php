@@ -182,8 +182,10 @@
                   aria-expanded="false"
               >
                   <i class="fa fa-bell"></i>
+                  @if(count($unseenOrders) > 0)
                   <span class="notification">{{ count($unseenOrders) }}</span>
-              </a>
+              @endif
+                            </a>
               <ul
                   class="dropdown-menu notif-box animated fadeIn"
                   aria-labelledby="notifDropdown"
@@ -194,22 +196,23 @@
                       </div>
                   </li>
                   <li>
-                      <div class="notif-scroll scrollbar-outer">
-                          <div class="notif-center">
-                              @foreach($unseenOrders as $order)
-                                  <a href="{{ route('transaksi.show', $order->id) }}">
-                                      <div class="notif-icon notif-primary">
-                                          <i class="fa fa-shopping-cart"></i>
-                                      </div>
-                                      <div class="notif-content">
-                                          <span class="block">New order #{{ $order->id }} received</span>
-                                          <span class="time">{{ $order->created_at->diffForHumans() }}</span>
-                                      </div>
-                                  </a>
-                              @endforeach
-                          </div>
-                      </div>
-                  </li>
+                    <div class="notif-scroll scrollbar-outer">
+                        <div class="notif-center">
+                            @foreach($unseenOrders as $order)
+                                <a href="{{ route('transaksi.show', $order->id) }}">
+                                    <div class="notif-icon notif-primary">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="notif-content">
+                                        <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
+                                        <span class="time">{{ $order->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </li>
+                
                   <li>
                       <a class="see-all" href="{{ route('transaksi.index') }}">
                           See all notifications<i class="fa fa-angle-right"></i>

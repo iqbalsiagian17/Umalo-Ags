@@ -51,10 +51,10 @@
             </div>
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
-                <p class="card-category">Sales</p>
-                <h4 class="card-title">$ 1,345</h4>
+                  <p class="card-category">Income</p>
+                  <h4 class="card-title">Rp {{ number_format($totalSales, 2) }}</h4>
               </div>
-            </div>
+          </div>          
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
             </div>
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
-                <p class="card-category">Order</p>
+                <p class="card-category">Order (Proses)</p>
                 <h4 class="card-title">{{ $orderCount }}</h4> <!-- Display the order count -->
               </div>
             </div>

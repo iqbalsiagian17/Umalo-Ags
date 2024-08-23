@@ -121,6 +121,8 @@ private function updateBigSaleStatus()
     
         // Menghitung jumlah pesanan
         $orderCount = Order::count();
+
+        $totalSales = Order::where('status', 'selesai')->sum('harga_total');
     
         // Menghitung jumlah kunjungan ke halaman home hari ini oleh pengguna biasa
         $visitorCountToday = Visit::whereDate('visited_at', Carbon::today())->count();
@@ -145,7 +147,7 @@ private function updateBigSaleStatus()
         $averageVisitTimeToday = $visitDurations->avg();
     
         // Mengirim variabel ke view
-        return view('dashboard', compact('customerCount', 'orderCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday'));
+        return view('dashboard', compact('customerCount', 'orderCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
     }
     
 }
