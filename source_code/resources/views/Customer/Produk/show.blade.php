@@ -46,7 +46,7 @@
                                         </span>
                                     @endif
                                 @else
-                                    Hubungi admin untuk detail harga
+                                {{ __('messages.contact_admin_for_price') }}
                                 @endif
                             
                         </div>
@@ -62,34 +62,19 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">Tambahkan Keranjang</a>
-                    @if ($bigSale)
-                        <span class="nego-badge">Big Sale</span>
+                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">{{ __('messages.add') }}</a>
+                    @if ($bigSale && $bigSale->status === 'aktif')
+                    <span class="nego-badge">Big Sale</span>
                     @elseif ($produk->nego === 'ya')
-                        <span class="nego-badge">Bisa Nego</span>
+                    <span class="nego-badge">{{ __('messages.negotiable') }}</span>
                     @endif
 
                     <ul>
-                        <li><b>Stock</b> <span>{{ $produk->stok }}</span></li>
-                    
-                        <li><b>Komoditas</b> 
-                            <span>
-                                {{ $produk->komoditas ? $produk->komoditas->nama : 'N/A' }}
-                            </span>
-                        </li>   
-
-                        <li><b>Kategori</b> 
-                            <span>
-                                {{ $produk->kategori ? $produk->kategori->nama : 'N/A' }}
-                            </span>
-                        </li>
-                    
-                        <li><b>Sub Kategori</b> 
-                            <span>
-                                {{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}
-                            </span>
-                        </li>
-                        <li><b>Ekatalog</b> 
+                        <li><b>{{ __('messages.stock') }}</b> <span>{{ $produk->stok }}</span></li>
+                        <li><b>{{ __('messages.commodity') }}</b> <span>{{ $produk->komoditas ? $produk->komoditas->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.category') }}</b> <span>{{ $produk->kategori ? $produk->kategori->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.ecatalog') }}</b> 
                             <span>
                                 @if ($produk->link_ekatalog)
                                     @php
@@ -104,7 +89,6 @@
                                 @endif
                             </span>
                         </li>
-                                             
                     </ul>
                 </div>
             </div>
@@ -113,18 +97,18 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
-                                aria-selected="true">Spesifikasi</a>
+                            aria-selected="true">{{ __('messages.specifications') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
-                                aria-selected="false">Informasi Lanjutan</a>
+                            aria-selected="false">{{ __('messages.additional_information') }}</a>
                         </li>
                         
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
+                                <h6>{{ __('messages.product_information') }}</h6>
                                 <p>{{ $produk->spesifikasi_produk }}</p>
                             </div>
                         </div>
@@ -134,7 +118,7 @@
                                     <tbody>
                                         @if($produk->tipe_barang)
                                         <tr>
-                                            <th scope="row"><strong>Tipe Barang:</strong></th>
+                                            <th scope="row"><strong>{{ __('messages.product_type') }}:</strong></th>
                                             <td>{{ $produk->tipe_barang }}</td>
                                         </tr>
                                         @endif
@@ -148,7 +132,7 @@
                         
                                         @if($produk->masa_berlaku_produk)
                                         <tr>
-                                            <th scope="row"><strong>Masa Berlaku Produk:</strong></th>
+                                            <th scope="row"><strong>{{ __('messages.stock') }}:</strong></th>
                                             <td>{{ $produk->masa_berlaku_produk }}</td>
                                         </tr>
                                         @endif
@@ -319,7 +303,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>Produk Lainnya !!</h2>
+                        <h2>{{ __('messages.other_products') }} !!</h2>
                     </div>
                 </div>
             </div>
@@ -337,7 +321,7 @@
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->nego === 'ya')
-                                <span class="nego-badge">Bisa Nego</span>
+                                <span class="nego-badge">{{ __('messages.negotiable') }}</span>
                             @endif
                             @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
                                 <span class="nego-badge badge-primary">Big Sale</span>
@@ -376,7 +360,7 @@
                                             </span>
                                         @endif
                                     @else
-                                        Hubungi admin untuk detail harga
+                                    {{ __('messages.contact_admin_for_price') }}
                                     @endif
                                 </h5>
                                 
@@ -387,7 +371,7 @@
 
                     @if ($index == 3 && $produK->count() > 4)
                         <div class="col-lg-12 text-center mt-3">
-                            <a href="/shop" class="primary-btn rounded">Selengkapnya</a>
+                            <a href="/shop" class="primary-btn rounded">{{ __('messages.view_more') }}</a>
                         </div>
                         @break
                     @endif
@@ -404,7 +388,7 @@
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
-            <div class="notification-text">Produk telah ditambahkan ke keranjang belanja</div>
+        <div class="notification-text">{{ __('messages.product_added_to_cart') }}</div>
         </div>
     </div>
 

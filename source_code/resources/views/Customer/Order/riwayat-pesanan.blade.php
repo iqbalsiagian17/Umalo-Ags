@@ -52,25 +52,25 @@
         <!-- Tab Navigation -->
         <ul class="nav nav-tabs mb-2" id="orderTabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">Semua</a>
+                <a class="nav-link active" id="all-tab" data-bs-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">{{ __('messages.all') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="waiting-confirmation-tab" data-bs-toggle="tab" href="#waiting-confirmation" role="tab" aria-controls="waiting-confirmation" aria-selected="false">Menunggu Konfirmasi</a>
+                <a class="nav-link" id="waiting-confirmation-tab" data-bs-toggle="tab" href="#waiting-confirmation" role="tab" aria-controls="waiting-confirmation" aria-selected="false">{{ __('messages.wait_acc') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="negotiation-tab" data-bs-toggle="tab" href="#negotiation" role="tab" aria-controls="negotiation" aria-selected="false">Negosiasi</a>
+                <a class="nav-link" id="negotiation-tab" data-bs-toggle="tab" href="#negotiation" role="tab" aria-controls="negotiation" aria-selected="false">{{ __('messages.negosing') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="being-packed-tab" data-bs-toggle="tab" href="#being-packed" role="tab" aria-controls="being-packed" aria-selected="false">Sedang Dikemas</a>
+                <a class="nav-link" id="being-packed-tab" data-bs-toggle="tab" href="#being-packed" role="tab" aria-controls="being-packed" aria-selected="false">{{ __('messages.packing') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="shipped-tab" data-bs-toggle="tab" href="#shipped" role="tab" aria-controls="shipped" aria-selected="false">Dikirim</a>
+                <a class="nav-link" id="shipped-tab" data-bs-toggle="tab" href="#shipped" role="tab" aria-controls="shipped" aria-selected="false">{{ __('messages.send') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Selesai</a>
+                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">{{ __('messages.finish') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="canceled-tab" data-bs-toggle="tab" href="#canceled" role="tab" aria-controls="canceled" aria-selected="false">Dibatalkan</a>
+                <a class="nav-link" id="canceled-tab" data-bs-toggle="tab" href="#canceled" role="tab" aria-controls="canceled" aria-selected="false">{{ __('messages.cancel') }}</a>
             </li>
         </ul>
 

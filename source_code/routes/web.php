@@ -23,6 +23,8 @@ use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
 use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
+use App\Http\Controllers\LanguageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -129,6 +131,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     });
 });
+
+
+
+
+//switch language
+Route::get('lang/{lang}', [LanguageController::class, 'switchLang'])->name('lang.switch');
 
 
 

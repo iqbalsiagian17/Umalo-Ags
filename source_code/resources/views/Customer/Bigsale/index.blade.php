@@ -7,7 +7,7 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4 style="color: #416bbf;">Komoditas</h4>
+                        <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
                         <ul>
                             @foreach ($komoditas as $komoditasi)
                                 <li><a href="#">{{ $komoditasi->nama }}</a></li>
@@ -15,7 +15,7 @@
                         </ul>
                     </div>
                     <div class="sidebar__item">
-                        <h4 style="color:#416bbf;">Kategori</h4>
+                        <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
                         <ul>
                             @foreach ($kategori as $kategoris)
                                 <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ $kategoris->nama }}</a>
@@ -35,28 +35,26 @@
                             <div class="col clockinner1 clockinner"
                                 style="border-radius: 20px; background-color: rgb(224, 224, 224);">
                                 <h1 id="days" class="days" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">Hari</span>
+                                <span class="smalltext" style="color: black;">{{ __('messages.days') }}</span>
                             </div>
                             <div class="col clockinner1 clockinner"
                                 style="border-radius: 20px; background-color: rgb(224, 224, 224);">
                                 <h1 id="hours" class="hours" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">Jam</span>
+                                <span class="smalltext" style="color: black;">{{ __('messages.hours') }}</span>
                             </div>
                             <div class="col clockinner1 clockinner"
                                 style="border-radius: 20px; background-color: rgb(224, 224, 224);">
                                 <h1 id="minutes" class="minutes" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">Menit</span>
+                                <span class="smalltext" style="color: black;">{{ __('messages.minutes') }}</span>
                             </div>
                             <div class="col clockinner1 clockinner"
                                 style="border-radius: 20px; background-color: rgb(224, 224, 224);">
                                 <h1 id="seconds" class="seconds" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">Detik</span>
+                                <span class="smalltext" style="color: black;">{{ __('messages.seconds') }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                
                 @endif
                 <!-- Countdown Timer End -->
 
@@ -79,7 +77,7 @@
                                 <div class="product__item__pic"
                                     style="background-image: url('{{ asset($imagePath) }}') ; border-radius: 10px;">
                                     @if ($product->nego === 'ya')
-                                        <span class="nego-badge">Bisa Nego</span>
+                                        <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                     @endif
                                     <ul class="product__item__pic__hover">
                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
@@ -95,10 +93,9 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a
-                                            href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
+                                    <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
                                     </h6>
-                                    <span style="text-decoration: line-through; color: #ff0000; ">
+                                    <span style="text-decoration: line-through; color: #ff0000;">
                                         <b>Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}</b>
                                     </span>
                                     <br>
@@ -116,7 +113,7 @@
 <!-- Notification for adding to cart -->
 <div id="cart-notification" class="cart-notification" style="display: none;">
     <i class="fa fa-check notification-icon"></i>
-    <span class="notification-text">Product added to cart!</span>
+    <span class="notification-text">{{ __('messages.added_to_cart') }}</span>
 </div>
 
 <!-- CSS for Notification -->

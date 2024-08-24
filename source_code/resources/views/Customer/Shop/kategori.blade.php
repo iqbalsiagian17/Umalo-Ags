@@ -9,7 +9,7 @@
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
                         <div class="sidebar__item">
-                            <h4 style="color: #416bbf;">Komoditas</h4>
+                            <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
                             <ul>
                                 @foreach ($komoditas as $komoditasi)
                                     <li><a href="#">{{ $komoditasi->nama }}</a></li>
@@ -17,7 +17,7 @@
                             </ul>
                         </div>
                         <div class="sidebar__item">
-                            <h4 style="color:#416bbf;">Kategori</h4>
+                            <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
                             <ul>
                                 @foreach ($kategori as $kategoris)
                                     <li><a
@@ -26,23 +26,6 @@
                                 @endforeach
                             </ul>
                         </div>
-                        {{-- <div class="sidebar__item">
-                        <h4 style="color: #416bbf;">Price</h4>
-                        <div class="price-range-wrap">
-                            <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content text-primary"
-                                data-min="10" data-max="540">
-                                <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
-                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
-                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
-                            </div>
-                            <div class="range-slider">
-                                <div class="price-input">
-                                    <input type="text" id="minamount">
-                                    <input type="text" id="maxamount">
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">
@@ -50,18 +33,20 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
                                 <div class="filter__sort">
-                                    <span>Sort By</span>
+                                    <span>{{ __('messages.sort_by') }}</span>
                                     <select id="sort-by" onchange="sortProducts()">
-                                        <option value="default" {{ request('sort') == 'default' ? 'selected' : '' }}>Default
+                                        <option value="default" {{ request('sort') == 'default' ? 'selected' : '' }}>
+                                            {{ __('messages.default') }}
                                         </option>
-                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru
+                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>
+                                            {{ __('messages.newest') }}
                                         </option>
-                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama
+                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>
+                                            {{ __('messages.oldest') }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
-
 
                             <script>
                                 function sortProducts() {
@@ -79,17 +64,16 @@
                                 });
                             </script>
 
-
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span>{{ $productCount }}</span> Produk</h6>
+                                    <h6><span>{{ $productCount }}</span> {{ __('messages.produk_ditemukan') }}</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
                                     @if (isset($currentCategory))
-                                        <span style="font-size: 10px;">Kategori: <b>{{ $currentCategory->nama }}</b></span>
+                                        <span style="font-size: 10px;">{{ __('messages.kategori') }}: <b>{{ $currentCategory->nama }}</b></span>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +91,7 @@
                                         <div class="product__item__pic"
                                             style="background-image: url('{{ asset($imagePath) }}');">
                                             @if ($product->nego === 'ya')
-                                                <span class="nego-badge">Bisa Nego</span>
+                                                <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                             @endif
                                             <ul class="product__item__pic__hover">
                                                 <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
@@ -134,7 +118,7 @@
                                 </div>
 
                             @empty
-                                <p>Tidak ada produk dalam kategori ini.</p>
+                                <p>{{ __('messages.tidak_ada_produk') }}</p>
                             @endforelse
                         </div>
                     @else
@@ -193,7 +177,7 @@
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
-            <div class="notification-text">Produk telah ditambahkan ke keranjang belanja</div>
+            <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
         </div>
     </div>
 

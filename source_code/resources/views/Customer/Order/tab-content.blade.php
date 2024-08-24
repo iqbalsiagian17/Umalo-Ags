@@ -13,15 +13,16 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h5 class="mb-1"><strong>No Pesanan:</strong> {{ $order->id }}</h5>
-                    <p class="mb-1"><strong>Tanggal Pesanan:</strong> {{ $order->created_at->format('d M Y') }}</p>
-                    <p class="mb-1"><strong>Status:</strong> {{ $order->status }}</p>
+                    <h5 class="mb-1"><strong>{{ __('messages.order_no') }}:</strong> {{ $order->id }}</h5>
+                    <p class="mb-1"><strong>{{ __('messages.order_date') }}:</strong> {{ $order->created_at->format('d M Y') }}</p>
+                    <p class="mb-1"><strong>{{ __('messages.status') }}:</strong> {{ $order->status }}</p>
                 </div>
                 <div>
-                    <a href="{{ route('order.detail', $order->id) }}" class="btn btn-primary btn-sm">Lihat Detail</a>
+                    <a href="{{ route('order.detail', $order->id) }}" class="btn btn-primary btn-sm">{{ __('messages.view_detail') }}</a>
                     @if(in_array($order->status, ['Diterima', 'Selesai']))
-                    <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">Download Invoice</a>
-                @endif                </div>
+                    <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">{{ __('messages.download_invoice') }}</a>
+                    @endif                
+                </div>
             </div>
             
             @foreach($order->orderItems as $item)
@@ -48,11 +49,11 @@
             <div class="d-flex justify-content-between">
                 <div>
                     @if($order->status == 'Pengiriman' && $order->nomor_resi)
-                    <p class="mt-2"><strong>Nomor Resi:</strong> {{ $order->nomor_resi }}</p>
-                @endif
+                    <p class="mt-2"><strong>{{ __('messages.tracking_number') }}:</strong> {{ $order->nomor_resi }}</p>
+                    @endif
                 </div>
                 <div>
-                    <p class="text-danger"><strong>Total Pesanan: Rp{{ number_format($order->harga_total, 0, ',', '.') }}</strong></p>
+                    <p class="text-danger"><strong>{{ __('messages.total_order') }}: Rp{{ number_format($order->harga_total, 0, ',', '.') }}</strong></p>
                 </div>
             </div>
         </div>

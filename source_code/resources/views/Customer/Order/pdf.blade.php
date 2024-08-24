@@ -200,7 +200,7 @@
         <div class="content">
             <p style="margin: 0;">Billed To:</p>
             <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
-            <p style="margin: 0;">{{ $userDetail->alamat }}{{ $userDetail->kota }}{{ $userDetail->provinsi }}{{ $userDetail->kode_pos }}</p>
+            <p style="margin: 0;">{{ $userDetail->alamat }}{{ $userDetail->kota }}{{ $userDetail->provinsi }} {{ $userDetail->kode_pos }}</p>
             <br>
             <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
             <p style="margin: 0;">

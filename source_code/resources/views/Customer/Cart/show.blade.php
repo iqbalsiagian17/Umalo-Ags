@@ -1,17 +1,17 @@
 @extends('layouts.customer.master')
 
 @section('content')
-   
+
 <!-- Breadcrumb Section Begin -->
 {{-- <section class="breadcrumb-section set-bg" data-setbg="{{ asset('assets/images/cart.jpg') }}">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Shopping Cart</h2>
+                    <h2>{{ __('messages.shopping_cart') }}</h2>
                     <div class="breadcrumb__option">
-                        <a href="">Home</a>
-                        <span>Shopping Cart</span>
+                        <a href="/">{{ __('messages.home') }}</a>
+                        <span>{{ __('messages.shopping_cart') }}</span>
                     </div>
                 </div>
             </div>
@@ -19,6 +19,7 @@
     </div>
 </section> --}}
 <!-- Breadcrumb Section End -->
+
 <section class="shoping-cart spad">
     <div class="container">
         <div class="row">
@@ -40,12 +41,12 @@
             <table>
                 <thead class="thead-light">
                     <tr>
-                        <th class="text-center">Produk</th>
-                        <th class="text-center">Gambar</th>
-                        <th class="text-center">Harga Tayang</th>
-                        <th class="text-center">Kuantitas</th>
-                        <th class="text-center">Sub Total</th>
-                        <th class="text-center">Aksi</th>
+                        <th class="text-center">{{ __('messages.product') }}</th>
+                        <th class="text-center">{{ __('messages.image') }}</th>
+                        <th class="text-center">{{ __('messages.price') }}</th>
+                        <th class="text-center">{{ __('messages.quantity') }}</th>
+                        <th class="text-center">{{ __('messages.subtotal') }}</th>
+                        <th class="text-center">{{ __('messages.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,10 +54,10 @@
                     @foreach($cart as $id => $details)
                     <tr>
                         <td class="shoping__cart__item align-middle text-center ">
-                            {{ $details['name'] ?? 'Nama Produk Tidak Tersedia' }}
+                            {{ $details['name'] ?? __('messages.product_name_unavailable') }}
                         </td>
                         <td class="shoping__cart__item align-middle text-center">
-                            <img src="{{ asset($details['image'] ?? 'default.png') }}" alt="{{ $details['name'] ?? 'Gambar Produk' }}" class="img-thumbnail" style="max-width: 100px;">
+                            <img src="{{ asset($details['image'] ?? 'default.png') }}" alt="{{ $details['name'] ?? __('messages.product_image') }}" class="img-thumbnail" style="max-width: 100px;">
                         </td>
                         <td class="shoping__cart__price align-middle text-center">
                             Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
@@ -72,7 +73,7 @@
                             <form action="{{ route('cart.remove', $id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-danger">{{ __('messages.remove') }}</button>
                             </form>
                         </td>
                     </tr>
@@ -85,19 +86,19 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="shoping__checkout">
-                        <h5>Cart Total</h5>
+                        <h5>{{ __('messages.cart_total') }}</h5>
                         <ul>
-                            <li>Total <span id="total">{{ $total }}</li>
+                            <li>{{ __('messages.total') }} <span id="total">Rp {{ number_format($total, 0, ',', '.') }}</li>
                         </ul>
     
                         @if(auth()->user()->userDetail)
                             <form action="{{ route('cart.checkout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="primary-btn">PROCEED TO CHECKOUT</button>
+                                <button type="submit" class="primary-btn">{{ __('messages.proceed_to_checkout') }}</button>
                             </form>
                         @else
-                            <p class="text-danger">Anda harus melengkapi data pribadi Anda sebelum melanjutkan ke checkout.</p>
-                            <a href="{{ route('user.create') }}" class="btn btn-primary">Isi Data Pribadi</a>
+                            <p class="text-danger">{{ __('messages.complete_personal_data') }}</p>
+                            <a href="{{ route('user.create') }}" class="btn btn-primary">{{ __('messages.fill_personal_data') }}</a>
                         @endif
                     </div>
                 </div>
@@ -106,8 +107,8 @@
         @else
         <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
             <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
-                <h5 class="mb-1">Belum Produk dalam Kerajan anda</h5>
-                <a href="/" class="btn btn-primary mt-3">Belanja Sekarang</a>
+                <h5 class="mb-1">{{ __('messages.cart_empty') }}</h5>
+                <a href="/" class="btn btn-primary mt-3">{{ __('messages.shop_now') }}</a>
             </div>
         </div>
                 @endif
@@ -140,8 +141,8 @@
                       subtotalElement.innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
                       updateTotal();
                   } else {
-                      alert('Kuantitas melebihi stok yang tersedia!');
-                      this.value = this.getAttribute('max');  // Reset kuantitas ke stok maksimum
+                      alert('{{ __('messages.quantity_exceeds_stock') }}');
+                      this.value = this.getAttribute('max');  // Reset quantity to max stock
                   }
               });
         });
@@ -158,5 +159,3 @@
 </script>
 
 @endsection
-
-

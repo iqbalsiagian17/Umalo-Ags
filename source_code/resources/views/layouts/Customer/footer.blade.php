@@ -5,22 +5,30 @@
             <!-- Contact Info Section -->
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="footer__about">
-                    <h3 style="font-weight: bold; font-size: 24px;">Contact Info</h3><br>
+                    <h3 style="font-weight: bold; font-size: 24px;">{{ __('messages.contact_info') }}</h3><br>
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-home" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
-                        <span class="address info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">Jl. Matraman Raya No.148, RT.1/RW.4, Kab. Manggis, Kec. Matraman, Kota Jakarta Timur, DKI Jakarta 13150 (Ruko Mitra Matraman A2 No.3)</span>
+                        <span class="address info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
+                            {{ __('messages.address') }}
+                        </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-phone-alt" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
-                        <span class="phone info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">(021) 2204 3144</span>
+                        <span class="phone info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
+                            (021) 2204 3144
+                        </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
-                        <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">info@labtek.id</span>
+                        <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
+                            info@labtek.id
+                        </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
-                        <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">sales@labtek.id</span>
+                        <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
+                            sales@labtek.id
+                        </span>
                     </div>
                 </div>
             </div>
@@ -30,20 +38,20 @@
                 <div class="footer__widget">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                            <h6>HELP & RESOURCES</h6>
+                            <h6>{{ __('messages.help_resources') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/product">Find a product</a></li>
-                                <li><a href="/sign-up">Login member</a></li>
-                                <li><a href="/cart">Shopping Cart</a></li>
-                                <li><a href="/">Home</a></li>
+                                <li><a href="/product">{{ __('messages.find_product') }}</a></li>
+                                <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li>
+                                <li><a href="/cart">{{ __('messages.shopping_cart') }}</a></li>
+                                <li><a href="/">{{ __('messages.home') }}</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                            <h6>ABOUT</h6>
+                            <h6>{{ __('messages.about') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/company">About Us</a></li>
-                                <li><a href="/company">Our Brand</a></li>
-                                <li><a href="/company">Contact Us</a></li>
+                                <li><a href="/company">{{ __('messages.about_us') }}</a></li>
+                                <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
+                                <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -71,7 +79,7 @@
                         &copy;
                         <script>
                             document.write(new Date().getFullYear());
-                        </script> Created by PT Arkamaya Guna Saharsa
+                        </script> {{ __('messages.created_by') }} PT Arkamaya Guna Saharsa
                     </div>
                     <div class="footer__copyright__payment mt-2">
                         <img src="img/payment-item.png" alt="">

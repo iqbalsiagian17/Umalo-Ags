@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             KategoriSeeder::class,
             SubKategoriSeeder::class,
             KomoditasSeeder::class,
+            PPNSeeder::class,
         ]);
     }
 }

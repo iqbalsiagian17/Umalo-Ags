@@ -79,13 +79,24 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__language">
-                                <img id="language-flag" src="{{ asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
-                                    alt="" data-lang="id">
-                                <div id="language-text">Bahasa</div>
+                                <img id="language-flag" 
+                                        src="{{ app()->getLocale() == 'en' 
+                                                ? asset('kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
+                                                : asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
+                                        alt="{{ app()->getLocale() == 'en' ? 'English' : 'Indonesia' }}" 
+                                        data-lang="{{ app()->getLocale() }}">
+                                    <div id="language-text">
+                                        @if(app()->getLocale() == 'id')
+                                            Bahasa
+                                        @else
+                                            English
+                                        @endif
+                                    </div>
+
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#" data-lang="id">Indonesia</a></li>
-                                    <li><a href="#" data-lang="en">English</a></li>
+                                    <li><a href="{{ route('lang.switch', 'id') }}">Indonesia</a></li>
+                                    <li><a href="{{ route('lang.switch', 'en') }}">English</a></li>
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
@@ -109,8 +120,8 @@
                     <div class="hero__search mb-3">
                         <div class="hero__search__form">
                             <form action="{{ route('produk.search') }}" method="GET">
-                                <input type="text" name="query" placeholder="Search" value="{{ request('query') }}">
-                                <button type="submit" class="site-btn rounded">SEARCH</button>
+                                <input type="text" name="query" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
+                                <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                             </form>
                         </div>
                     </div>
@@ -127,7 +138,7 @@
                                 <li>
                                     @if (Route::has('login'))
                                         <a class="site-btn rounded" href="{{ route('login') }}">
-                                            {{ __('Login') }}
+                                            {{ __('messages.login') }}
                                         </a>
                                     @endif
                                 </li>
@@ -151,14 +162,14 @@
                             
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('user.show') }}">
-                                            {{ __('Settings') }}
+                                            {{ __('messages.settings') }}
                                         </a>
                                         <a class="dropdown-item" href="{{ route('order.history') }}">
-                                            {{ __('Pesanan') }}
+                                            {{ __('messages.purchase') }}                                        
                                         </a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
+                                            {{ __('messages.logout') }}
                                         </a>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                             @csrf

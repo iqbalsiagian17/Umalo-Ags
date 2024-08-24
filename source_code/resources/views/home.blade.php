@@ -16,9 +16,9 @@
                                         data-setbg="{{ asset('assets/images/default_slider.jpg') }}">
                                         <div class="hero__text">
                                             <span></span>
-                                            <h2 class="">Welcome</h2>
+                                            <h2>{{ __('messages.welcome') }}</h2>
                                             <p></p>
-                                            <a href="/shop" class="primary-btn rounded">SHOP NOW</a>
+                                            <a href="/shop" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -28,7 +28,7 @@
                                         <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
                                             <div class="hero__text">
                                                 <h2>{{ $sliders->deskripsi }}</h2>
-                                                <a href="{{ $sliders->url }}" class="primary-btn rounded">SHOP</a>
+                                                <a href="{{ $sliders->url }}" class="primary-btn rounded">{{ __('messages.shop') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -75,29 +75,28 @@
                                                             <div class="col clockinner1 clockinner"
                                                                 style="border-radius: 20px; background-color: rgb(255, 255, 255);">
                                                                 <h1 id="days" class="days" style="color: black;">00</h1>
-                                                                <span class="smalltext" style="color: black;">Days</span>
+                                                                <span class="smalltext" style="color: black;">{{ __('messages.days') }}</span>
                                                             </div>
                                                             <div class="col clockinner clockinner1"
                                                                 style="border-radius: 20px; background-color: rgb(255, 255, 255);">
                                                                 <h1 id="hours" class="hours" style="color: black;">00</h1>
-                                                                <span class="smalltext" style="color: black;">Hours</span>
+                                                                <span class="smalltext" style="color: black;">{{ __('messages.hours') }}</span>
                                                             </div>
                                                             <div class="col clockinner clockinner1"
                                                                 style="border-radius: 20px; background-color: rgb(255, 255, 255);">
                                                                 <h1 id="minutes" class="minutes" style="color: black;">00</h1>
-                                                                <span class="smalltext" style="color: black;">Minutes</span>
+                                                                <span class="smalltext" style="color: black;">{{ __('messages.minutes') }}</span>
                                                             </div>
                                                             <div class="col clockinner clockinner1"
                                                                 style="border-radius: 20px; background-color: rgb(255, 255, 255);">
                                                                 <h1 id="seconds" class="seconds" style="color: black;">00</h1>
-                                                                <span class="smalltext" style="color: black;">Seconds</span>
+                                                                <span class="smalltext" style="color: black;">{{ __('messages.seconds') }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div><br><br>
                                                 <a href="{{ route('bigsale.now.index') }}" class="primary-btn text-center"
-                                                    style="color: black; background-color: rgba(255, 255, 255); padding: 10px 20px; border-radius: 5px; display: block; width: fit-content; margin: 0 auto;">Shop
-                                                    Now</a><br><br>
+                                                    style="color: black; background-color: rgba(255, 255, 255); padding: 10px 20px; border-radius: 5px; display: block; width: fit-content; margin: 0 auto;">{{ __('messages.shop_now') }}</a><br><br>
                                             </div>
                                         </div>
                                     </div>
@@ -234,7 +233,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="section-title">
-                                <h2>Produk Terlaris !!</h2>
+                                <h2>{{ __('messages.produk_terlaris') }}</h2>
                             </div>
                         </div>
                     </div>
@@ -251,7 +250,7 @@
                                     <div class="featured__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                         @if ($item->nego === 'ya')
-                                            <span class="nego-badge">Bisa Nego</span>
+                                            <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                         @endif
                                         <ul class="featured__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
@@ -274,7 +273,7 @@
                                             @if ($item->harga_ditampilkan === 'ya')
                                                 Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
                                             @else
-                                                Hubungi admin untuk detail harga
+                                            {{ __('messages.hubungi_admin') }}                                            
                                             @endif
                                         </h5>
                                     </div>
@@ -295,7 +294,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>Produk Terbaru !!</h2>
+                        <h2>{{ __('messages.produk_terbaru') }}</h2>
                     </div>
                 </div>
             </div>
@@ -312,7 +311,7 @@
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->nego === 'ya')
-                                    <span class="nego-badge">Bisa Nego</span>
+                                    <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                 @endif
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
@@ -335,7 +334,7 @@
                                     @if ($item->harga_ditampilkan === 'ya')
                                         Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
                                     @else
-                                        Hubungi admin untuk detail harga
+                                    {{ __('messages.hubungi_admin') }}
                                     @endif
                                 </h5>
                             </div>
@@ -344,7 +343,7 @@
 
                     @if ($index == 7 && $produk->count() > 8)
                         <div class="col-lg-12 text-center mt-3">
-                            <a href="/shop" class="primary-btn rounded">Selengkapnya</a>
+                            <a href="/shop" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>
                         @break
                     @endif
@@ -362,7 +361,7 @@
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
-            <div class="notification-text">Produk telah ditambahkan ke keranjang belanja</div>
+            <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
         </div>
     </div>
 
