@@ -83,7 +83,8 @@
                                             $url = "http://" . $url;
                                         }
                                     @endphp
-                                    <a href="{{ $url }}" target="_blank">{{ $produk->link_ekatalog }}</a>
+
+                                <a href="{{ $url }}" target="_blank">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
                                 @else
                                     N/A
                                 @endif

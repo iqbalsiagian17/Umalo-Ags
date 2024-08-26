@@ -82,6 +82,7 @@ return [
     'sub_category' => 'Sub Category',
     'ecatalog' => 'E-catalog',
     'other_products' => 'Other Products',
+    'negotiable' => 'Negotiable',
 
     //purchase
     'all' => 'All',
@@ -120,6 +121,9 @@ return [
     'pengiriman' => 'Shipping',
     'selesai' => 'Completed',
     'cancelled' => 'Cancelled',
+    'or_you_can_contact_admin' => 'or you can contact the admin via the following',
+    'here' => 'here',
+
 
 
     // Pengaturan

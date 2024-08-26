@@ -19,8 +19,6 @@
                                             <h2>{{ __('messages.welcome') }}</h2>
                                             <p></p>
                                             <a href="/shop" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
-                                            <a href="/chatify"class="primary-btn rounded">Chat With Admin</a>
-
                                         </div>
                                     </div>
                                 </div>
@@ -442,43 +440,4 @@
     </script>
 
 
-    <!--Start of Tawk.to Script-->
-    @if (auth()->check())
-        <script type="text/javascript">
-            var Tawk_API = Tawk_API || {},
-                Tawk_LoadStart = new Date();
-            (function() {
-                var s1 = document.createElement("script"),
-                    s0 = document.getElementsByTagName("script")[0];
-                s1.async = true;
-                s1.src = 'https://embed.tawk.to/66b98f50146b7af4a4392fd9/1i52dfl1n';
-                s1.charset = 'UTF-8';
-                s1.setAttribute('crossorigin', '*');
-                s0.parentNode.insertBefore(s1, s0);
-            })();
-
-            // Custom Tawk.to Configuration
-            Tawk_API.onLoad = function() {
-                Tawk_API.setAttributes({
-                    'email': "{{ auth()->user()->email }}",
-                }, function(error) {});
-            };
-
-            // Function to clear cookies on logout
-            function clearTawkCookies() {
-                Tawk_API.endChat(); // Ends the active chat session, if any
-                document.cookie = 'TawkConnectionTime=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                document.cookie = 'Tawk_66b98f50146b7af4a4392fd9=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            }
-
-            // Attach the clearTawkCookies function to the logout process
-            document.getElementById('logout-button').addEventListener('click', function() {
-                clearTawkCookies();
-            });
-        </script>
-    @endif
-
-
-
-    <!--End of Tawk.to Script-->
 @endsection

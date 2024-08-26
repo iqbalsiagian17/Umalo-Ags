@@ -14,6 +14,20 @@ class SubKategoriSeeder extends Seeder
      */
     public function run()
     {
+        $kategoriPendidikan1 = Kategori::where('nama', 'Peralatan Pendidikan SMK')->first();
+
+        SubKategori::create([
+            'nama' => 'Teknologi Kontruksi dan Properti',
+            'kategori_id' => $kategoriPendidikan1->id,
+            'flag' => 'yes',
+        ]);
+
+        SubKategori::create([
+            'nama' => 'Teknologi Manufaktur dan Rekayasa',
+            'kategori_id' => $kategoriPendidikan1->id,
+            'flag' => 'yes',
+        ]);
+
         $kategoriPendidikan = Kategori::where('nama', 'Peralatan Pendidikan Sangar Kegiatan Belajar')->first();
 
         SubKategori::create([
@@ -21,6 +35,7 @@ class SubKategoriSeeder extends Seeder
             'kategori_id' => $kategoriPendidikan->id,
             'flag' => 'yes',
         ]);
+        
 
 
         // Tambahkan lebih banyak subkategori sesuai kebutuhan

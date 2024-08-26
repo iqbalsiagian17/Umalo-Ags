@@ -68,9 +68,11 @@
             <div class="mt-4">
                 @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))
                     @if($order->status == 'Negosiasi' && $order->whatsapp_number)
-                        <div class="alert alert-info">
-                            <strong>{{ __('messages.whatsapp_number_for_negotiation') }}:</strong> {{ $order->whatsapp_number }}
-                        </div>
+                    <div class="alert alert-info">
+                        <strong>{{ __('messages.whatsapp_number_for_negotiation') }}:</strong> {{ $order->whatsapp_number }}<br>
+                        {{ __('messages.or_you_can_contact_admin') }} <a href="/chatify">{{ __('messages.here') }}</a>.
+                    </div>
+                    
                     @endif
                 @endif
 

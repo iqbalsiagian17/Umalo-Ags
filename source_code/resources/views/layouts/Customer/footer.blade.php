@@ -91,6 +91,38 @@
 </footer>
 <!-- Footer Section End -->
 
+<a href="/chatify" id="chatBubble" class="chat-bubble">
+    <i class="fas fa-comments"></i>
+</a>
+
+<style>
+    .chat-bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #416bbf;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.chat-bubble:hover {
+    background-color: #334e86;
+}
+
+.chat-bubble i {
+    font-size: 24px;
+}
+
+</style>
 
     <!-- Js Plugins -->
     <script src="{{ asset('ogani/js/jquery-3.3.1.min.js') }}"></script>

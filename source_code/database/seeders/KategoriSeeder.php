@@ -14,9 +14,23 @@ class KategoriSeeder extends Seeder
     public function run()
     {
         Kategori::create([
+            'nama' => 'Peralatan Pendidikan SMK',
+            'flag' => 'yes',
+        ]);
+
+        Kategori::create([
+            'nama' => 'Perguruan Tinggi Vokasi',
+            'flag' => 'yes',
+        ]);
+
+        Kategori::create([
+            'nama' => 'Perguruan Tinggi Negeri',
+            'flag' => 'yes',
+        ]);
+
+        Kategori::create([
             'nama' => 'Peralatan Pendidikan Sangar Kegiatan Belajar',
             'flag' => 'yes',
         ]);
-        // Tambahkan lebih banyak kategori sesuai kebutuhan
     }
 }

@@ -82,42 +82,50 @@
     </div>
   </div>
 
-        <!-- Statistik Pengunjung Hari Ini -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Jumlah Pengunjung Hari Ini</h4>
-                </div>
-                <div class="card-body">
-                    <h3>{{ $visitorCountToday }}</h3>
-                </div>
+  <div class="row">
+    <!-- Grafik Kunjungan Harian Berdasarkan Jam -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Statistik Kunjungan Harian Berdasarkan Jam</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="hourlyVisitChart"></canvas>
             </div>
         </div>
+    </div>
 
-        <!-- Grafik Kunjungan Harian Berdasarkan Jam -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Statistik Kunjungan Harian Berdasarkan Jam</h4>
-                </div>
-                <div class="card-body">
-                    <canvas id="hourlyVisitChart"></canvas>
+    <!-- Statistik Pengunjung Hari Ini and Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Jumlah Pengunjung Hari Ini</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <h3>{{ $visitorCountToday }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Waktu Kunjungan Rata-rata -->
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Waktu Kunjungan Rata-rata Hari Ini</h4>
-                </div>
-                <div class="card-body">
-                    <h3>{{ gmdate('H:i:s', $averageVisitTimeToday) }}</h3>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Waktu Kunjungan Rata-rata Hari Ini</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <h3>{{ gmdate('H:i:s', $averageVisitTimeToday) }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+
+
+        
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

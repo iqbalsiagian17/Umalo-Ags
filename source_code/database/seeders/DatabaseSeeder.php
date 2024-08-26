@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SubKategoriSeeder::class,
             KomoditasSeeder::class,
             PPNSeeder::class,
+            ProdukSeeder::class,
         ]);
     }
 }

@@ -101,7 +101,7 @@
                     </div>
                 </div>
     
-                <button type="submit" class="btn btn-primary">{{ __('messages.simpan') }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>

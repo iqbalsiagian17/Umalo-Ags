@@ -80,6 +80,7 @@ return [
     'sub_category' => 'Sub Kategori',
     'ecatalog' => 'E-katalog',
     'other_products' => 'Produk Lainnya',
+    'negotiable' => 'Nego',
 
     //Purchase
     'all' => 'Semua',
@@ -118,6 +119,8 @@ return [
     'pengiriman' => 'Pengiriman',
     'selesai' => 'Selesai',
     'cancelled' => 'Dibatalkan',
+    'or_you_can_contact_admin' => 'atau Anda bisa menghubungi admin melalui berikut',
+    'here' => 'di sini',
 
     //Pengaturan
     'personal_profile' => 'Profil Pribadi',
