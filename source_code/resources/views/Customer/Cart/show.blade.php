@@ -111,7 +111,7 @@
                 <a href="/" class="btn btn-primary mt-3">{{ __('messages.shop_now') }}</a>
             </div>
         </div>
-                @endif
+        @endif
     </div>
     </div>
         </div>

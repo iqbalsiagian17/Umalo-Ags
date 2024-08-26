@@ -40,8 +40,8 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h6>{{ __('messages.help_resources') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/product">{{ __('messages.find_product') }}</a></li>
-                                <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li>
+                                <li><a href="/shop">{{ __('messages.find_product') }}</a></li>
+{{--                                 <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li> --}}
                                 <li><a href="/cart">{{ __('messages.shopping_cart') }}</a></li>
                                 <li><a href="/">{{ __('messages.home') }}</a></li>
                             </ul>
@@ -52,6 +52,7 @@
                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
+                                <li><a href="/faq">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>

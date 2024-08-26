@@ -1,8 +1,9 @@
 <?php
 
 return [
-    'welcome' => 'Welcome',
-    'shop_now' => 'SHOP NOW',
+    'slider_title' => 'Level Up Your Output With Labtek',
+    'slider_desc' => 'Everything you need to optimize your output to provide results that are more effective, efficient, of quality, and have added value.We deliver the solution through innovation by new technology products or services or deliver existing technology products or services in new ways.',
+    'shop_now' => 'Shop Now',
     'shop' => 'SHOP',
     'bisa_nego' => 'Negotiable',
     'produk_terlaris' => 'Best Sellers !!',
@@ -51,6 +52,8 @@ return [
     'our_brand' => 'Our Brand',
     'contact_us' => 'Contact Us',
     'created_by' => 'Created by',
+    'qna' => 'FAQ',
+
 
     //cart
     'product' => 'Product',
@@ -83,6 +86,7 @@ return [
     'ecatalog' => 'E-catalog',
     'other_products' => 'Other Products',
     'negotiable' => 'Negotiable',
+    'tidak_ada_produk' => 'No Products Found',
 
     //purchase
     'all' => 'All',
@@ -160,6 +164,7 @@ return [
     'update' => 'Update',
     'success_update' => 'Your profile has been successfully updated.',
     'save' => 'Save',
+    'verified' => 'Verified',
 
     //login
     'already_verified' => 'Already Verified',

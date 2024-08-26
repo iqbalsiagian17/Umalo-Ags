@@ -85,7 +85,7 @@ class HomeController extends Controller
 
 
 
-    return view('home', compact('produk', 'bigSale', 'slider','topSellingProducts' ));
+    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts' ));
 }
 
 
@@ -147,7 +147,7 @@ private function updateBigSaleStatus()
         $averageVisitTimeToday = $visitDurations->avg();
     
         // Mengirim variabel ke view
-        return view('dashboard', compact('customerCount', 'orderCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
+        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
     }
     
 }

@@ -140,6 +140,27 @@
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
           </span>
+          <h4 class="text-section">FAQ</h4>
+        </li>
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#faq">
+            <i class="fas fa-question-circle"></i> <!-- Mengganti ikon menjadi ikon FAQ (question circle) -->
+            <p>FAQ</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="faq">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{{ route('qas.index') }}">
+                  <span class="sub-item">FAQ</span>
+                </a>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-section">
+          <span class="sidebar-mini-icon">
+            <i class="fa fa-ellipsis-h"></i>
+          </span>
           <h4 class="text-section">Master Data</h4>
         </li>
           <li class="nav-item">

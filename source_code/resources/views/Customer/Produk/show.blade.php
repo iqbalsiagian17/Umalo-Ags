@@ -372,7 +372,7 @@
 
                     @if ($index == 3 && $produK->count() > 4)
                         <div class="col-lg-12 text-center mt-3">
-                            <a href="/shop" class="primary-btn rounded">{{ __('messages.view_more') }}</a>
+                            <a href="/shop" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>
                         @break
                     @endif

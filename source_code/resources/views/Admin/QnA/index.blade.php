@@ -1,19 +1,23 @@
 @extends('layouts.admin.master')
 
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Daftar Q&A</h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-title"><h1>FAQ</h1></div>
+            <a href="{{ route('qas.create') }}" class="btn btn-primary mb-3">Tambah Q&A</a>
+            </div>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <a href="{{ route('qas.create') }}" class="btn btn-primary mb-4">Tambah Q&A</a>
-
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead>
+    <div class="card-body">
+        <div class="row">
+    <table class="table table-striped table-responsive table-hover">
+        <thead class="thead-dark">
             <tr>
                 <th>No</th>
                 <th>Pertanyaan</th>
@@ -29,13 +33,13 @@
                 <td>{{ $qa->jawaban }}</td>
                 <td>
                     <form action="{{ route('qas.destroy', $qa->id) }}" method="POST">
-                        <a class="btn btn-info" href="{{ route('qas.show', $qa->id) }}">Show</a>
-                        <a class="btn btn-primary" href="{{ route('qas.edit', $qa->id) }}">Edit</a>
+                        <a class="btn btn-info btn-sm" href="{{ route('qas.show', $qa->id) }}">Show</a>
+                        <a class="btn btn-primary btn-sm" href="{{ route('qas.edit', $qa->id) }}">Edit</a>
 
                         @csrf
                         @method('DELETE')
 
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -43,4 +47,8 @@
         </tbody>
     </table>
 </div>
+    </div>
+        </div>
+</div>
+
 @endsection

@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'welcome' => 'Selamat Datang',
+    'slider_title' => 'Tingkatkan Output Anda dengan Labtek',
+    'slider_desc' => 'Segala sesuatu yang Anda butuhkan untuk mengoptimalkan output Anda guna memberikan hasil yang lebih efektif, efisien, berkualitas, dan memiliki nilai tambah. Kami menyediakan solusi melalui inovasi dengan produk atau layanan teknologi baru atau menyampaikan produk atau layanan teknologi yang sudah ada dengan cara baru.',
     'shop_now' => 'BELANJA SEKARANG',
     'shop' => 'BELANJA',
     'bisa_nego' => 'Bisa Nego',
@@ -49,6 +50,7 @@ return [
     'our_brand' => 'Merek Kami',
     'contact_us' => 'Hubungi Kami',
     'created_by' => 'Dibuat oleh',
+    'qna' => 'FAQ',
 
     //cart
     'product' => 'Produk',
@@ -81,6 +83,7 @@ return [
     'ecatalog' => 'E-katalog',
     'other_products' => 'Produk Lainnya',
     'negotiable' => 'Nego',
+    'tidak_ada_produk' => 'Tidak Ada Produk Ditemukan',
 
     //Purchase
     'all' => 'Semua',
@@ -156,6 +159,8 @@ return [
     'update' => 'Perbarui',
     'success_update' => 'Profil Anda telah berhasil diperbarui.',
     'save' => 'Simpan',
+    'verified' => 'Verified',
+
 
     //login
     'already_verified' => 'Telah Di Verifikasi',

@@ -159,13 +159,16 @@
 
                         <div class="product__pagination text-center">
                             <!-- Pagination Elements -->
-                            @for ($i = 1; $i <= $produk->lastPage(); $i++)
-                                @if ($i == $produk->currentPage())
-                                    <span class="">{{ $i }}</span>
-                                @else
-                                    <a href="{{ $produk->url($i) }}">{{ $i }}</a>
-                                @endif
-                            @endfor
+                            @if ($produk->lastPage() > 1)
+                                @for ($i = 1; $i <= $produk->lastPage(); $i++)
+                                    @if ($i == $produk->currentPage())
+                                        <span class="">{{ $i }}</span>
+                                    @else
+                                        <a href="{{ $produk->url($i) }}">{{ $i }}</a>
+                                    @endif
+                                @endfor
+                            @endif
+
                         </div>
                     </div>
                 </div>

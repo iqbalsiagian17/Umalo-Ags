@@ -12,39 +12,71 @@
         </div>
         <div class="humberger__menu__cart">
             <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                @if (Auth::check())
+                <li>
+                    <a href="{{ route('cart.view') }}"><i class="fa fa-shopping-cart"></i></a>
+                </li>
+            @endif
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
-                <img src="{{ asset('assets/img/flags/al.png') }}" alt="">
-                <div>English</div>
+                <img id="language-flag" 
+                        src="{{ app()->getLocale() == 'en' 
+                                ? asset('kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
+                                : asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
+                        alt="{{ app()->getLocale() == 'en' ? 'English' : 'Indonesia' }}" 
+                        data-lang="{{ app()->getLocale() }}">
+                    <div id="language-text">
+                        @if(app()->getLocale() == 'id')
+                            Bahasa
+                        @else
+                            English
+                        @endif
+                    </div>
+
                 <span class="arrow_carrot-down"></span>
                 <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
+                    <li><a href="{{ route('lang.switch', 'id') }}">Indonesia</a></li>
+                    <li><a href="{{ route('lang.switch', 'en') }}">English</a></li>
                 </ul>
             </div>
             <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
+                @if (Auth::check())
+                    <div class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
+                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}" 
+                                 alt="Avatar"
+                                 style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
+                            {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('user.show') }}">
+                                {{ __('messages.settings') }}
+                            </a>
+                            <a class="dropdown-item" href="{{ route('order.history') }}">
+                                {{ __('messages.purchase') }}                                        
+                            </a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                {{ __('messages.logout') }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}"><i class="fa fa-user"></i> Login</a>
+                @endif
             </div>
+            
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
-                <li class="active"><a href="./index.html">Home</a></li>
-                <li><a href="./shop-grid.html">Shop</a></li>
-                <li><a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -56,8 +88,8 @@
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                <li>Simplifying Industries</li>
+                <li><i class="fa fa-envelope"></i> info@labtek.id</li>
+                <li>Level-Up Your Output With LABTEK</li>
             </ul>
         </div>
     </div>
@@ -108,7 +140,7 @@
             </div>
         </div>
 
-        <div class="container-fluid shadow">
+    <div class="container-fluid shadow">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3">
@@ -149,7 +181,7 @@
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
                                         <!-- Avatar Gambar -->
-                                        @if (Auth::check())
+                                    @if (Auth::check())
                                         <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}" 
                                              alt="Avatar"
                                              style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
@@ -190,6 +222,51 @@
             </div>
         </div>
         </div>
-
+    </div>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var header = document.querySelector('.container-fluid.shadow');
+            var placeholder = document.createElement('div');
+            placeholder.className = 'header__placeholder';
+        
+            // Insert the placeholder before the header
+            header.parentNode.insertBefore(placeholder, header);
+        
+            var headerOffset = header.offsetTop;
+        
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > headerOffset) {
+                    header.classList.add('header__fixed');
+                    header.classList.add('header__shrink'); // Tambahkan kelas shrink saat scroll
+                    placeholder.style.display = 'block';
+                } else {
+                    header.classList.remove('header__fixed');
+                    header.classList.remove('header__shrink'); // Hapus kelas shrink saat tidak scroll
+                    placeholder.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    
+    
+
+    <style>
+        .header__fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header__placeholder {
+    height: 120px; /* Adjust the height to match the height of the fixed header */
+    display: none; /* Hidden by default */
+}
+
+    </style>
     <!-- Header Section End -->

@@ -49,9 +49,11 @@ class ProdukCostumerController extends Controller
     
         // Search products by name or any other fields you want
         $produk = Produk::where('nama', 'LIKE', "%{$query}%")
-            ->orWhere('spesifikasi_produk', 'LIKE', "%{$query}%")
-            ->orWhere('merk', 'LIKE', "%{$query}%")
-            ->get();
+        ->orderByRaw("CASE WHEN nama LIKE ? THEN 1 ELSE 2 END", ["%{$query}%"])
+        ->orWhere('spesifikasi_produk', 'LIKE', "%{$query}%")
+        ->orWhere('merk', 'LIKE', "%{$query}%")
+        ->get();
+
     
         // Count the number of products found
         $productCount = $produk->count();

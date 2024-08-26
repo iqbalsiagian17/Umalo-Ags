@@ -22,6 +22,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
 use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
+use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\LanguageController;
 
@@ -45,6 +46,7 @@ Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, '
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
 Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
+Route::get('/faq', [QnaController::class, 'index'])->name('faq');
 
 
 //Normal Users Routes List

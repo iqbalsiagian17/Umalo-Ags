@@ -40,100 +40,100 @@
                     <tbody>
                         <tr>
                             <td>Nama</td>
-                            <td>{{ $produk->nama }}</td>
+                            <td>{{ $produk->nama ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Link E-katalog</td>
-                            <td>{{ $produk->link_ekatalog }}</td>
+                            <td>{{ $produk->link_ekatalog ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Tipe Barang</td>
-                            <td>{{ $produk->tipe_barang }}</td>
+                            <td>{{ $produk->tipe_barang ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Stok</td>
-                            <td>{{ $produk->stok }}</td>
+                            <td>{{ $produk->stok ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Masa Berlaku Produk</td>
-                            <td>{{ $produk->masa_berlaku_produk }}</td>
+                            <td>{{ $produk->masa_berlaku_produk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Merk</td>
-                            <td>{{ $produk->merk }}</td>
+                            <td>{{ $produk->merk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>No Produk Penyedia</td>
-                            <td>{{ $produk->no_produk_penyedia }}</td>
+                            <td>{{ $produk->no_produk_penyedia ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Unit Pengukuran</td>
-                            <td>{{ $produk->unit_pengukuran }}</td>
+                            <td>{{ $produk->unit_pengukuran ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Jenis Produk</td>
-                            <td>{{ $produk->jenis_produk }}</td>
+                            <td>{{ $produk->jenis_produk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Kode KBKI</td>
-                            <td>{{ $produk->kode_kbki }}</td>
+                            <td>{{ $produk->kode_kbki ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Asal Negara</td>
-                            <td>{{ $produk->asal_negara }}</td>
+                            <td>{{ $produk->asal_negara ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Nilai TKDN</td>
-                            <td>{{ $produk->nilai_tkdn }}</td>
+                            <td>{{ $produk->nilai_tkdn ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>No SNI</td>
-                            <td>{{ $produk->no_sni }}</td>
+                            <td>{{ $produk->no_sni ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Garansi Produk</td>
-                            <td>{{ $produk->garansi_produk }}</td>
+                            <td>{{ $produk->garansi_produk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Uji Fungsi</td>
-                            <td>{{ $produk->uji_fungsi }}</td>
+                            <td>{{ $produk->uji_fungsi ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>SNI</td>
-                            <td>{{ $produk->sni }}</td>
+                            <td>{{ $produk->sni ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Memiliki SVLK</td>
-                            <td>{{ $produk->memiliki_svlk }}</td>
+                            <td>{{ $produk->memiliki_svlk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Jenis Alat</td>
-                            <td>{{ $produk->jenis_alat }}</td>
+                            <td>{{ $produk->jenis_alat ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Fungsi</td>
-                            <td>{{ $produk->fungsi }}</td>
+                            <td>{{ $produk->fungsi ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Spesifikasi Produk</td>
-                            <td>{{ $produk->spesifikasi_produk }}</td>
+                            <td>{{ $produk->spesifikasi_produk ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Harga Tayang</td>
-                            <td>{{ 'Rp ' . number_format($produk->harga_tayang, 0, ',', '.') }}</td>
+                            <td>{{ $produk->harga_tayang ? 'Rp ' . number_format($produk->harga_tayang, 0, ',', '.') : '-' }}</td>
                         </tr>
                         <tr>
                             <td>Komoditas</td>
-                            <td>{{ $produk->komoditas->nama }}</td>
+                            <td>{{ $produk->komoditas->nama ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Kategori</td>
-                            <td>{{ $produk->kategori->nama }}</td>
+                            <td>{{ $produk->kategori->nama ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td>Sub Kategori</td>
-                            <td>{{ $produk->subkategori->nama }}</td>
-                        </tr>
+                            <td>{{ $produk->subkategori->nama ?: '-' }}</td>
+                        </tr>                        
                     </tbody>
                 </table>
             </div>
