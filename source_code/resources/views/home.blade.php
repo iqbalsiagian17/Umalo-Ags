@@ -19,6 +19,8 @@
                                             <h2>{{ __('messages.welcome') }}</h2>
                                             <p></p>
                                             <a href="/shop" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                            <a href="/chatify"class="primary-btn rounded">Chat With Admin</a>
+
                                         </div>
                                     </div>
                                 </div>

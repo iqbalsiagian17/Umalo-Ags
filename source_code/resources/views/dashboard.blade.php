@@ -1,6 +1,8 @@
 @extends('layouts.admin.master')
 
 @section('content')
+<a href="/chatify"class="primary-btn rounded">Chat With User</a>
+
     <div class="row">
     <div class="col-sm-6 col-md-3">
       <div class="card card-stats card-round">
