@@ -90,12 +90,20 @@ class OrderController extends Controller
 }
 public function generatePdf($id)
 {
+    // Retrieve the order along with related items and user details
     $order = Order::with(['orderItems.produk', 'user.userDetail'])->findOrFail($id);
-    $ppn = PPN::latest()->first();
-    $materai = Materai::all(); // Retrieve all Materai records
 
+    // Retrieve the latest PPN record
+    $ppn = PPN::latest()->first();
+
+    // Retrieve all Materai records
+    $materai = Materai::all(); 
+
+    // Calculate the total price including PPN
     $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
-    $userDetail = $order->user->userDetail; // Retrieve the UserDetail from the Order's user relationship
+    
+    // Retrieve the UserDetail from the Order's user relationship
+    $userDetail = $order->user->userDetail; 
 
     // Convert Materai images to base64
     $materaiImages = [];
@@ -109,15 +117,18 @@ public function generatePdf($id)
         }
     }
 
+    // Load the view and pass the necessary data to it
     $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail'));
 
-    // Generate the filename
-    $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan); // Sanitize the company name for a filename
+    // Sanitize the company name to create a valid filename
+    $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan); 
     $year = $order->created_at->format('Y');
     $fileName = "invoice-{$companyName}-{$year}.pdf";
 
+    // Return the generated PDF for download
     return $pdf->download($fileName);
 }
+
 
 
 

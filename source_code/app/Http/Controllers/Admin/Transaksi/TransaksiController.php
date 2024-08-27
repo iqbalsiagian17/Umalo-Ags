@@ -64,6 +64,11 @@ class TransaksiController extends Controller
 
     // Update the order status
     $order->status = $request->status;
+
+    // Update the subtotal if provided
+    if ($request->has('subtotal')) {
+        $order->harga_total = $request->input('subtotal');
+    }
     $order->save();
 
     // Log the status change with any additional info

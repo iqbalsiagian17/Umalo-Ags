@@ -109,6 +109,13 @@
         @csrf
         @method('PUT')
         <input type="hidden" name="status" id="statusInput" value="{{ $order->status }}">
+
+        <!-- Subtotal Input -->
+        <div class="form-group" id="subtotalGroup">
+            <label for="subtotal">Edit Subtotal</label>
+            <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_total }}">
+        </div>
+
         <!-- Tracking Number Input -->
         @if($order->status == 'Packing')
             <div class="form-group">
@@ -183,8 +190,16 @@
 
     function updateStatus(newStatus) {
         $('#statusInput').val(newStatus);
+        if (newStatus === 'Diterima') {
+            // Show subtotal input when status is 'Diterima'
+            $('#subtotalGroup').show();
+            $('#subtotal').focus();
+        } else {
+            $('#subtotalGroup').hide();
+        }
 
         if (newStatus === 'Pengiriman') {
+            
             // Check if the tracking number input already exists to prevent duplicates
             if ($('#resiGroup').length === 0) {
                 // Append the tracking number input field
@@ -219,6 +234,11 @@
         success: function(response) {
             if (response.success) {
                 alert(response.message);
+                  // Update subtotal if the form contains it
+                  if ($('#subtotalGroup').is(':visible')) {
+                        let updatedSubtotal = $('#subtotal').val();
+                        $('#subtotal').val(updatedSubtotal);
+                    }
 
                 let currentStatus = $('#statusInput').val();
                 let nextStatusMap = {

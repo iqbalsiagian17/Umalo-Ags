@@ -242,6 +242,7 @@
                     <td colspan="4" style="text-align:right;"><strong>Total Price Include PPN</strong></td>
                     <td>Rp {{ number_format($totalPriceWithPPN, 0, ',', '.') }}</td>
                 </tr>
+                
             </tbody>
         </table>
 
