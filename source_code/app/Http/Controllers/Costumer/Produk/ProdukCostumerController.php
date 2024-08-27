@@ -7,33 +7,39 @@ use App\Models\Kategori;
 use App\Models\Komoditas;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use App\Models\Order;
+
 
 class ProdukCostumerController extends Controller
 {
     public function userShow($id)
-    {
-        // Memuat produk beserta relasinya (images, kategori, subKategori, komoditas, dan bigSales)
-        $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales'])->findOrFail($id);
-        $images = $produk->images;
+{
+    $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
+    $images = $produk->images;
     
-        // Memeriksa apakah produk termasuk dalam Big Sale
-        $bigSale = $produk->bigSales->first(); // Ambil Big Sale pertama jika ada
+    $bigSale = $produk->bigSales->first();
+    $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
+    
+    $produK = Produk::where('id', '!=', $id)
+                    ->where(function ($query) use ($produk) {
+                        $query->where('komoditas_id', $produk->komoditas_id)
+                              ->orWhere('kategori_id', $produk->kategori_id);
+                    })
+                    ->has('images')
+                    ->limit(5)
+                    ->get();
 
-        $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
-
+    // Get the latest completed order for this product by the logged-in user
+    $order = Order::where('user_id', auth()->id())
+                  ->whereHas('orderItems', function ($query) use ($id) {
+                      $query->where('produk_id', $id);
+                  })
+                  ->where('status', 'Selesai')
+                  ->latest()
+                  ->first();
     
-        // Ambil 5 produk lain yang memiliki komoditas atau kategori yang sama, tetapi bukan produk yang sedang ditampilkan
-        $produK = Produk::where('id', '!=', $id)
-                        ->where(function ($query) use ($produk) {
-                            $query->where('komoditas_id', $produk->komoditas_id)
-                                  ->orWhere('kategori_id', $produk->kategori_id);
-                        })
-                        ->has('images')
-                        ->limit(5)
-                        ->get();
-    
-        return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem'));
-    }
+    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order'));
+}
     
     
     

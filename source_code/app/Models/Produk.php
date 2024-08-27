@@ -81,6 +81,10 @@ class Produk extends Model
                     ->withPivot('harga_diskon')
                     ->withTimestamps();
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 
  
 }

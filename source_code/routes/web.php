@@ -46,6 +46,7 @@ Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, '
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
 Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
+Route::get('/product/{id}', [ProdukCostumerController::class, 'userShow'])->name('product.show');
 Route::get('/faq', [QnaController::class, 'index'])->name('faq');
 
 
@@ -87,6 +88,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/order/{id}/transaction-history', [OrderController::class, 'transactionHistory'])->name('order.transaction_history');
     Route::get('/order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
     Route::post('/order/{id}/upload_bukti_pembayaran', [OrderController::class, 'uploadBuktiPembayaran'])->name('order.upload_bukti_pembayaran');
+    Route::post('/order/{id}/review', [OrderController::class, 'submitReview'])->name('order.submitReview');
+
 
 
 

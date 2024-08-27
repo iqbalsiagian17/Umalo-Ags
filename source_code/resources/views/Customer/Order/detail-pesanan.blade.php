@@ -148,6 +148,14 @@
                 </div>
             </div>
             @endif
+            <!-- Link to Review Section -->
+            @if($order->status == 'Selesai')
+                <div class="mt-4 text-center">
+                    <a href="{{ route('product.show', $order->orderItems->first()->produk->id) }}#tabs-3" class="btn btn-success">
+                        {{ __('messages.leave_a_review') }}
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 </div>

@@ -148,7 +148,31 @@ public function uploadBuktiPembayaran(Request $request, $id)
 
     return redirect()->route('order.show', $id)->with('success', 'Bukti pembayaran berhasil diunggah.');
 }
+public function submitReview(Request $request, $id)
+{
+    $order = Order::with('orderItems.produk')->findOrFail($id); // Ensure the order and related products are loaded
 
+    if ($order->status !== 'Selesai') {
+        return redirect()->route('order.show', $id)->with('error', 'Anda hanya dapat mengulas setelah pesanan selesai.');
+    }
+
+    $request->validate([
+        'review' => 'required|string|max:1000',
+    ]);
+
+    // Assuming the user is submitting a review for the first product in the order
+    $orderItem = $order->orderItems->first();
+    if ($orderItem) {
+        $orderItem->produk->reviews()->create([
+            'user_id' => auth()->id(),
+            'content' => $request->input('review'),
+        ]);
+
+        return redirect()->route('product.show', $orderItem->produk->id)->with('success', 'Ulasan berhasil dikirim.');
+    }
+
+    return redirect()->route('order.show', $id)->with('error', 'Terjadi kesalahan saat mengirim ulasan.');
+}
 
                 
     
