@@ -89,7 +89,7 @@
         <div class="humberger__menu__contact">
             <ul>
                 <li><i class="fa fa-envelope"></i> info@labtek.id</li>
-                <li>Level-Up Your Output With LABTEK</li>
+                <li>Level-Up Your Output With <LABTEK></LABTEK></li>
             </ul>
         </div>
     </div>
@@ -163,7 +163,10 @@
                         <ul>
                                 @if (Auth::check())
                                     <li>
-                                        <a href="{{ route('cart.view') }}"><i class="fa fa-shopping-cart"></i></a>
+                                        <a href="{{ route('cart.view') }}">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            <span class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
+                                        </a>
                                     </li>
                                 @endif
                                 @guest
@@ -250,6 +253,42 @@
         });
     </script>
     
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const productId = this.dataset.productId;
+            const url = `/cart/add/${productId}`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quantity: 1 // or the quantity from an input field
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the cart notification span
+                    const cartNotification = document.querySelector('.notification');
+                    cartNotification.textContent = data.totalQuantity;
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    });
+});
+
+    </script>
     
 
     <style>

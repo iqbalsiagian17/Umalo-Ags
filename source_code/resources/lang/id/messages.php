@@ -160,7 +160,7 @@ return [
     'success_update' => 'Profil Anda telah berhasil diperbarui.',
     'save' => 'Simpan',
     'verified' => 'Verified',
-
+    'review' => 'Ulasan',
 
     //login
     'already_verified' => 'Telah Di Verifikasi',

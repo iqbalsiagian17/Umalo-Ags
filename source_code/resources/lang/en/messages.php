@@ -23,6 +23,7 @@ return [
     'newest' => 'Newest',
     'oldest' => 'Oldest',
     'produk_ditemukan' => 'Products Found',
+    'review' => 'Review',
 
     //header 
     'login' => 'Login',

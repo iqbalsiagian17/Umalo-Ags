@@ -106,7 +106,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
-                               aria-selected="false">Ulasan</a>
+                               aria-selected="false">{{ __('messages.review') }}</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -275,25 +275,43 @@
                                 <!-- Display existing reviews or a message if no reviews are available -->
                                 @if($produk->reviews->isNotEmpty())
                                     @foreach($produk->reviews as $review)
-                                        <p><strong>{{ $review->user->name }}:</strong> {{ $review->content }}</p>
+                                        <div class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
+                                            <div class="review-avatar mr-3">
+                                                <img src="{{ $review->user->foto_profile ? asset($review->user->foto_profile) : asset('assets/images/logo.png') }}"                     
+                                                alt="Avatar" class="rounded-circle border" width="60" height="60" style="object-fit: cover;"> 
+                                            </div>
+                                            <div class="review-content">
+                                                <h6 class="mb-1 font-weight-bold text-primary">{{ $review->user->name }} 
+                                                    @if($review->user->userDetail && $review->user->userDetail->perusahaan)
+                                                        <small class="text-muted">- {{ $review->user->userDetail->perusahaan }}</small>
+                                                    @endif
+                                                </h6>
+                                                <p class="text-secondary mb-2">{{ $review->content }}</p>
+                                                <small class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 @else
-                                    <p>Belum ada ulasan untuk produk ini</p>
+                                    <p class="text-muted">Belum ada ulasan untuk produk ini</p>
                                 @endif
-            
+
+
                                 <!-- Review Form -->
                                 @if($order && $order->status === 'Selesai')
-                                    <form action="{{ route('order.submitReview', $order->id) }}" method="POST">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="review">Tinggalkan Ulasan</label>
-                                            <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Kirim</button>
-                                    </form>
-                                @else
-                                    <p>Selesaikan pesanan untuk memberikan ulasan</p>
+                                    @if($produk->reviews->where('user_id', auth()->id())->isEmpty())
+                                        <form action="{{ route('order.submitReview', $order->id) }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="review">Tinggalkan Ulasan</label>
+                                                <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Kirim</button>
+                                        </form>
+                                    @else
+                                        <p>Anda telah memberikan ulasan untuk produk ini.</p>
+                                    @endif
                                 @endif
+
                             </div>
                         </div>
                     </div>
@@ -397,7 +415,7 @@
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
-        <div class="notification-text">{{ __('messages.product_added_to_cart') }}</div>
+        <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
         </div>
     </div>
 

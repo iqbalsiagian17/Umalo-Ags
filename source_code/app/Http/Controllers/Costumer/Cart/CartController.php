@@ -115,8 +115,10 @@ class CartController extends Controller
         }
     
         session()->put('cart', $cart);
-    
-        return response()->json(['success' => true]);
+
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
+        return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
     }
     
 

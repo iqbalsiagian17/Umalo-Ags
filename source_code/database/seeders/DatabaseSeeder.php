@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             KomoditasSeeder::class,
             PPNSeeder::class,
             ProdukSeeder::class,
+            QaSeeder::class,
         ]);
     }
 }
