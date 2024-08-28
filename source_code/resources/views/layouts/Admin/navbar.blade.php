@@ -30,22 +30,6 @@
         class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
       >
         <div class="container-fluid">
-          <nav
-            class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
-          >
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <button type="submit" class="btn btn-search pe-1">
-                  <i class="fa fa-search search-icon"></i>
-                </button>
-              </div>
-              <input
-                type="text"
-                placeholder="Search ..."
-                class="form-control"
-              />
-            </div>
-          </nav>
 
           <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
             <li
@@ -166,60 +150,77 @@
             </li> --}}
 
             @php
-                      $unseenOrders = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) {
-                          $query->where('user_id', Auth::id());
-                      })->get();
-                  @endphp
+    $unseenOrders = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) {
+        $query->where('user_id', Auth::id());
+    })->get();
 
-            <li class="nav-item topbar-icon dropdown hidden-caret">
-              <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="notifDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-              >
-                  <i class="fa fa-bell"></i>
-                  @if(count($unseenOrders) > 0)
-                  <span class="notification">{{ count($unseenOrders) }}</span>
-              @endif
-                            </a>
-              <ul
-                  class="dropdown-menu notif-box animated fadeIn"
-                  aria-labelledby="notifDropdown"
-              >              
-                  <li>
-                      <div class="dropdown-title">
-                          You have {{ count($unseenOrders) }} new notifications
-                      </div>
-                  </li>
-                  <li>
-                    <div class="notif-scroll scrollbar-outer">
-                        <div class="notif-center">
-                            @foreach($unseenOrders as $order)
-                                <a href="{{ route('transaksi.show', $order->id) }}">
-                                    <div class="notif-icon notif-primary">
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </div>
-                                    <div class="notif-content">
-                                        <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
-                                        <span class="time">{{ $order->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </li>
-                
-                  <li>
-                      <a class="see-all" href="{{ route('transaksi.index') }}">
-                          See all notifications<i class="fa fa-angle-right"></i>
-                      </a>
-                  </li>
-              </ul>
-          </li>
+    $unseenUsers = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
+        ->whereDoesntHave('seenByAdmins', function($query) {
+            $query->where('admin_id', Auth::id());
+        })
+        ->get();
+@endphp
+
+<li class="nav-item topbar-icon dropdown hidden-caret">
+    <a
+        class="nav-link dropdown-toggle"
+        href="#"
+        id="notifDropdown"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+    >
+        <i class="fa fa-bell"></i>
+        @if(count($unseenOrders) > 0 || count($unseenUsers) > 0)
+            <span class="notification">{{ count($unseenOrders) + count($unseenUsers) }}</span>
+        @endif
+    </a>
+    <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+        <li>
+            <div class="dropdown-title">
+                You have {{ count($unseenOrders) + count($unseenUsers) }} new notifications
+            </div>
+        </li>
+        <li>
+            <div class="notif-scroll scrollbar-outer">
+                <div class="notif-center">
+                    <!-- Unseen Orders -->
+                    @foreach($unseenOrders as $order)
+                        <a href="{{ route('transaksi.show', $order->id) }}">
+                            <div class="notif-icon notif-primary">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+                            <div class="notif-content">
+                                <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
+                                <span class="time">{{ $order->created_at->diffForHumans() }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+
+                    <!-- Unseen User Registrations -->
+                    @foreach($unseenUsers as $user)
+                        <a href="{{ route('users.show', $user->id) }}">
+                            <div class="notif-icon notif-primary">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="notif-content">
+                                <span class="block">New User: {{ $user->name }} - {{ $user->userDetail->perusahaan ?? 'Unknown Company' }}</span>
+                                <span class="time">{{ $user->created_at->diffForHumans() }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </li>
+        <li>
+            <a class="see-all" href="{{ route('transaksi.index') }}">
+                See all notifications<i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+    </ul>
+</li>
+
           
             <li class="nav-item topbar-icon dropdown hidden-caret">
               <a
@@ -245,56 +246,52 @@
                             </div>
                             <span class="text">Chat</span>
                         </div>
+                      </a>
+                    
+                      <a class="col-6 col-md-4 p-0" href="{{ route('transaksi.index') }}">
+                        <div class="quick-actions-item">
+                            <div class="avatar-item bg-warning rounded-circle">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <span class="text">Transaksi</span>
+                        </div>
+                    </a>                    
+                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.create') }}">
+                      <div class="quick-actions-item">
+                          <div class="avatar-item bg-info rounded-circle">
+                              <i class="fas fa-plus-circle"></i>
+                          </div>
+                          <span class="text">Create Produk</span>
+                      </div>
+                  </a>
+                  
+                  <a class="col-6 col-md-4 p-0" href="{{ route('bigsale.index') }}">
+                    <div class="quick-actions-item">
+                        <div class="avatar-item bg-success rounded-circle">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <span class="text">Big Sale</span>
+                    </div>
+                </a>
+                
+                      <a class="col-6 col-md-4 p-0" href="{{ route('users.index') }}">
+                        <div class="quick-actions-item">
+                            <div class="avatar-item bg-primary rounded-circle">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <span class="text">Cek User</span>
+                        </div>
                     </a>
                     
-                      <a class="col-6 col-md-4 p-0" href="#">
-                        <div class="quick-actions-item">
-                          <div
-                            class="avatar-item bg-warning rounded-circle"
-                          >
-                            <i class="fas fa-map"></i>
+                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.index') }}">
+                      <div class="quick-actions-item">
+                          <div class="avatar-item bg-secondary rounded-circle">
+                              <i class="fas fa-boxes"></i>
                           </div>
-                          <span class="text">Maps</span>
-                        </div>
-                      </a>
-                      <a class="col-6 col-md-4 p-0" href="#">
-                        <div class="quick-actions-item">
-                          <div class="avatar-item bg-info rounded-circle">
-                            <i class="fas fa-file-excel"></i>
-                          </div>
-                          <span class="text">Reports</span>
-                        </div>
-                      </a>
-                      <a class="col-6 col-md-4 p-0" href="#">
-                        <div class="quick-actions-item">
-                          <div
-                            class="avatar-item bg-success rounded-circle"
-                          >
-                            <i class="fas fa-envelope"></i>
-                          </div>
-                          <span class="text">Emails</span>
-                        </div>
-                      </a>
-                      <a class="col-6 col-md-4 p-0" href="#">
-                        <div class="quick-actions-item">
-                          <div
-                            class="avatar-item bg-primary rounded-circle"
-                          >
-                            <i class="fas fa-file-invoice-dollar"></i>
-                          </div>
-                          <span class="text">Invoice</span>
-                        </div>
-                      </a>
-                      <a class="col-6 col-md-4 p-0" href="#">
-                        <div class="quick-actions-item">
-                          <div
-                            class="avatar-item bg-secondary rounded-circle"
-                          >
-                            <i class="fas fa-credit-card"></i>
-                          </div>
-                          <span class="text">Payments</span>
-                        </div>
-                      </a>
+                          <span class="text">Produk</span>
+                      </div>
+                  </a>
+                  
                     </div>
                   </div>
                 </div>

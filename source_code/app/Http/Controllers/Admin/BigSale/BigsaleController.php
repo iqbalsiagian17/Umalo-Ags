@@ -17,7 +17,7 @@ class BigsaleController extends Controller
      */
     public function index()
     {
-        $bigSales = BigSale::with('produk')->get();
+        $bigSales = BigSale::with('produk')->orderBy('created_at', 'asc')->paginate(10);
         return view('admin.bigsale.index', compact('bigSales'));
     }
 

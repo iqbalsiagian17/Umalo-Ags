@@ -17,12 +17,34 @@ class ProdukController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produks = Produk::all();
-        $images = ProdukImage::all(); 
-        return view('admin.produk.index', compact('produks','images'));
+        $query = Produk::query();
+    
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+    
+            // Order by exact match first, then by closest match
+            $query->where('nama', 'like', '%' . $search . '%')
+                  ->orderByRaw("CASE 
+                                    WHEN nama LIKE ? THEN 1 
+                                    WHEN nama LIKE ? THEN 2 
+                                    ELSE 3 
+                                END", ["$search", "$search%"]);
+        }
+    
+        $produks = $query->orderBy('created_at', 'asc')->paginate(5);
+    
+        if ($request->ajax()) {
+            return view('admin.produk.partials._produk_table', compact('produks'))->render();
+        }
+    
+        return view('admin.produk.index', compact('produks'));
     }
+    
+    
+    
+
 
 
     /**

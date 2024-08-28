@@ -69,4 +69,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    // User.php
+    public function seenByAdmins()
+    {
+        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'user_id', 'admin_id')->withTimestamps();
+    }
+
+    public function newUsersSeenByAdmin()
+    {
+        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'admin_id', 'user_id')->withTimestamps();
+    }
+
 }

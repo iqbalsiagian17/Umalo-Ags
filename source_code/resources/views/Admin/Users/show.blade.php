@@ -32,42 +32,54 @@
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Phone Number:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->no_telepone }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->no_telepone ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Address:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->alamat }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->alamat ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>City:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->kota }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->kota ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Province:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->provinsi }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->provinsi ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Perusahaan:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->perusahaan }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->perusahaan ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Postal Code:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->kode_pos }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->kode_pos ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
@@ -78,14 +90,22 @@
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Date of Birth:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ \Carbon\Carbon::parse($user->userDetail->lahir)->format('d M Y') }}</p>
+                        <p class="form-control-plaintext">
+                            @if(optional($user->userDetail)->lahir)
+                                {{ \Carbon\Carbon::parse(optional($user->userDetail)->lahir)->format('d M Y') }}
+                            @else
+                                User belum mengisi data diri dengan lengkap
+                            @endif
+                        </p>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
                     <label class="col-sm-3 col-form-label"><strong>Gender:</strong></label>
                     <div class="col-sm-9">
-                        <p class="form-control-plaintext">{{ $user->userDetail->jenis_kelamin }}</p>
+                        <p class="form-control-plaintext">
+                            {{ optional($user->userDetail)->jenis_kelamin ?? 'User belum mengisi data diri dengan lengkap' }}
+                        </p>
                     </div>
                 </div>
 
@@ -94,4 +114,3 @@
         </div>
     </div>
 @endsection
-

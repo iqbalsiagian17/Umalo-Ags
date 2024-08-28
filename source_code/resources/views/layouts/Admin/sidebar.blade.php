@@ -45,6 +45,12 @@
           $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
               $query->where('user_id', $userId);
           })->count();
+
+          $unseenUserCount = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
+          ->whereDoesntHave('seenByAdmins', function($query) use ($userId) {
+              $query->where('admin_id', $userId);
+          })
+          ->count();
       @endphp
       
       
@@ -125,6 +131,9 @@
           <a data-bs-toggle="collapse" href="#customer">
             <i class="fas fa-user"></i> <!-- Mengganti ikon menjadi ikon pengguna (user) -->
             <p>Costumer</p>
+            @if($unseenUserCount > 0)
+                            <span class="badge badge-success">{{ $unseenUserCount }}</span>
+                        @endif
             <span class="caret"></span>
           </a>
           <div class="collapse" id="customer">

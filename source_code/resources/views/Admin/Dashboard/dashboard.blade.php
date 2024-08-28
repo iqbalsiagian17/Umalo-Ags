@@ -1,8 +1,6 @@
 @extends('layouts.admin.master')
 
 @section('content')
-<a href="/chatify"class="primary-btn rounded">Chat With User</a>
-
     <div class="row">
     <div class="col-sm-6 col-md-3">
       <div class="card card-stats card-round">
@@ -85,36 +83,90 @@
   <div class="row">
     <!-- Grafik Kunjungan Harian Berdasarkan Jam -->
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Statistik Kunjungan Harian Berdasarkan Jam</h4>
-            </div>
-            <div class="card-body">
-                <canvas id="hourlyVisitChart"></canvas>
-            </div>
-        </div>
-    </div>
+      <div class="card shadow-sm">
+          <div class="card-header text-white">
+              <h4 class="card-title">
+                  <i class="fas fa-chart-bar me-2"></i> Statistik Kunjungan Harian Berdasarkan Jam (Horizontal)
+              </h4>
+          </div>
+          <div class="card-body">
+              <canvas id="hourlyVisitHorizontalBarChart"></canvas>
+          </div>
+      </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          var ctx = document.getElementById('hourlyVisitHorizontalBarChart').getContext('2d');
+          var hourlyVisitHorizontalBarChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: [
+                      // Labels untuk setiap jam
+                      @foreach ($hourlyVisits->keys() as $hour)
+                          "{{ $hour }}:00",
+                      @endforeach
+                  ],
+                  datasets: [{
+                      label: 'Jumlah Kunjungan',
+                      data: [
+                          @foreach ($hourlyVisits as $visits)
+                              {{ $visits }},
+                          @endforeach
+                      ],
+                      backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                      borderColor: 'rgba(153, 102, 255, 1)',
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  indexAxis: 'y', // This property changes the chart to a horizontal bar chart
+                  scales: {
+                      x: {
+                          beginAtZero: true,
+                          title: {
+                              display: true,
+                              text: 'Jumlah Kunjungan'
+                          }
+                      },
+                      y: {
+                          title: {
+                              display: true,
+                              text: 'Jam'
+                          }
+                      }
+                  }
+              }
+          });
+      });
+  </script>
+  
 
-    <!-- Statistik Pengunjung Hari Ini and Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
+    <!-- Statistik Pengunjung Hari Ini dan Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
     <div class="col-md-4">
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Jumlah Pengunjung Hari Ini</h4>
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-header text-white">
+                        <h4 class="card-title">
+                            <i class="fas fa-users me-2"></i> Jumlah Pengunjung Hari Ini
+                        </h4>
                     </div>
-                    <div class="card-body text-center">
-                        <h3>{{ $visitorCountToday }}</h3>
+                    <div class="card-body">
+                        <h2 class="display-4">{{ $visitorCountToday }}</h2>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Waktu Kunjungan Rata-rata Hari Ini</h4>
+                <div class="card shadow-sm text-center">
+                    <div class="card-header text-white">
+                        <h4 class="card-title">
+                            <i class="fas fa-clock me-2"></i> Waktu Kunjungan Rata-rata Hari Ini
+                        </h4>
                     </div>
-                    <div class="card-body text-center">
-                        <h3>{{ gmdate('H:i:s', $averageVisitTimeToday) }}</h3>
+                    <div class="card-body">
+                        <h2 class="display-4">{{ gmdate('H:i:s', $averageVisitTimeToday) }}</h2>
                     </div>
                 </div>
             </div>
@@ -122,54 +174,4 @@
     </div>
 </div>
 
-
-
-
-        
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var ctx = document.getElementById('hourlyVisitChart').getContext('2d');
-            var hourlyVisitChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [
-                        // Labels untuk setiap jam
-                        @foreach ($hourlyVisits->keys() as $hour)
-                            "{{ $hour }}:00",
-                        @endforeach
-                    ],
-                    datasets: [{
-                        label: 'Jumlah Kunjungan',
-                        data: [
-                            @foreach ($hourlyVisits as $visits)
-                                {{ $visits }},
-                            @endforeach
-                        ],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Jam'
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Jumlah Kunjungan'
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
 @endsection

@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('userDetail')->where('role', 0)->get();
+        $users = User::with('userDetail')->where('role', 0)->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
@@ -49,9 +50,16 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with('userDetail')->findOrFail($id);
+        $user = User::findOrFail($id);
+    
+        // Mark the user as seen by the current admin
+        if(!$user->seenByAdmins()->where('admin_id', Auth::id())->exists()) {
+            $user->seenByAdmins()->attach(Auth::id());
+        }
+    
         return view('admin.users.show', compact('user'));
     }
+    
 
     public function edit($id)
     {
@@ -61,6 +69,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
 {
+    // Validate the input data
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $id,
@@ -68,6 +77,7 @@ class UserController extends Controller
         'role' => 'required|in:0,1', // 0 for customer, 1 for admin
     ]);
 
+    // Find the user
     $user = User::findOrFail($id);
 
     // Check if a new password is being set and hash it
@@ -78,21 +88,26 @@ class UserController extends Controller
         unset($validatedData['password']);
     }
 
+    // Update the user's data
     $user->update($validatedData);
 
-    $userDetail = UserDetail::where('user_id', $id)->first();
-    $userDetail->update([
-        'no_telepone' => $request->no_telepone,
-        'alamat' => $request->alamat,
-        'kota' => $request->kota,
-        'provinsi' => $request->provinsi,
-        'kode_pos' => $request->kode_pos,
-        'lahir' => $request->lahir,
-        'jenis_kelamin' => $request->jenis_kelamin,
-    ]);
+    // Find or create the UserDetail record
+    $userDetail = UserDetail::firstOrNew(['user_id' => $id]);
+
+    // Update the UserDetail data
+    $userDetail->no_telepone = $request->no_telepone;
+    $userDetail->alamat = $request->alamat;
+    $userDetail->kota = $request->kota;
+    $userDetail->provinsi = $request->provinsi;
+    $userDetail->perusahaan = $request->perusahaan;
+    $userDetail->kode_pos = $request->kode_pos;
+    $userDetail->lahir = $request->lahir;
+    $userDetail->jenis_kelamin = $request->jenis_kelamin;
+    $userDetail->save(); // Save the record (create or update)
 
     return redirect()->route('users.index')->with('success', 'User updated successfully.');
 }
+
 
 
 

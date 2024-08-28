@@ -97,11 +97,34 @@
 
                             <div class="form-group">
                                 <label for="spesifikasi_produk">Spesifikasi Produk:</label>
-                                <textarea name="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk', $produk->spesifikasi_produk) }}</textarea>
+                                <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>
+                                    {{ old('spesifikasi_produk', $produk->spesifikasi_produk) }}
+                                </textarea>
                                 @if ($errors->has('spesifikasi_produk'))
                                     <small class="text-danger">{{ $errors->first('spesifikasi_produk') }}</small>
                                 @endif
                             </div>
+                            
+                            <script>
+                                $(document).ready(function() {
+                                    $('#spesifikasi_produk').summernote({
+                                        height: 200, // Set tinggi editor
+                                        placeholder: 'Masukkan spesifikasi produk...',
+                                        toolbar: [
+                                            // Sesuaikan toolbar sesuai kebutuhan
+                                            ['style', ['style']],
+                                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                                            ['fontname', ['fontname']],
+                                            ['color', ['color']],
+                                            ['para', ['ul', 'ol', 'paragraph']],
+                                            ['table', ['table']],
+                                            ['insert', ['link', 'picture', 'video']],
+                                            ['view', ['fullscreen', 'codeview', 'help']],
+                                        ]
+                                    });
+                                });
+                            </script>
+                            
 
                             <div class="form-group">
                                 <label for="link_ekatalog">Link E-katalog:</label>

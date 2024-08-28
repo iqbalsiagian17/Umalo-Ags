@@ -258,6 +258,10 @@
 <script src="{{asset('kaiadmin-lite-1.2.0/assets/js/setting-demo.js')}}"></script>
 {{-- <script src="{{asset('kaiadmin-lite-1.2.0/assets/js/demo.js')}}"></script>
  --}}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
+
 <script>
   $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
     type: "line",

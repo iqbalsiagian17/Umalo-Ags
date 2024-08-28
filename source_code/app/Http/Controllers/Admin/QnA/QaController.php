@@ -13,7 +13,7 @@ class QaController extends Controller
      */
     public function index()
     {
-        $qas = Qa::all();
+        $qas = Qa::paginate(10);
         return view('admin.QnA.index', compact('qas'));
     }
 

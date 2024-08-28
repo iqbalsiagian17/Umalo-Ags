@@ -113,7 +113,7 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>{{ __('messages.product_information') }}</h6>
-                                <p>{{ $produk->spesifikasi_produk }}</p>
+                                <p>{!! $produk->spesifikasi_produk !!}</p>
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">

@@ -19,21 +19,21 @@
                 <table class="table table-striped table-hover table-responsive">
                     <thead class="thead-dark">
                         <tr>
-                            <th>ID</th>
-                            <th>Image</th>
-                            <th>Description</th>
+                            <th>No</th>
+                            <th>Gambar</th>
+                            <th>Deskripsi</th>
                             <th>URL</th>
-                            <th>Action</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($sliders as $slider)
+                        @foreach ($sliders as $index => $slider)
                             <tr>
-                                <td>{{ $slider->id }}</td>
-                                <td><img src="{{ asset($slider->image) }}" width="100" class="img-fluid img-thumbnail"></td>
-                                <td>{{ $slider->deskripsi }}</td>
-                                <td>{{ $slider->url }}</td>
-                                <td>
+                                <td>{{ $index + 1 }}</td> <!-- Nomor urut -->
+                                <td><img src="{{ asset($slider->image) }}" width="100" class="img-fluid img-thumbnail"></td> <!-- Gambar -->
+                                <td>{{ $slider->deskripsi }}</td> <!-- Deskripsi -->
+                                <td>{{ $slider->url }}</td> <!-- URL -->
+                                <td> <!-- Aksi -->
                                     <a href="{{ route('slider.show', $slider->id) }}" class="btn btn-info btn-sm">Show</a>
                                     <a href="{{ route('slider.edit', $slider->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                     <form action="{{ route('slider.destroy', $slider->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this slider?');">
@@ -46,6 +46,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center">
+                    {{ $sliders->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>

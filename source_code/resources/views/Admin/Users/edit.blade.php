@@ -75,7 +75,7 @@
 
                     <div class="mb-3">
                         <label for="no_telepone" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="no_telepone" name="no_telepone" value="{{ $user->userDetail->no_telepone }}" required>
+                        <input type="text" class="form-control" id="no_telepone" name="no_telepone" value="{{ optional($user->userDetail)->no_telepone }}">
                         @if ($errors->has('no_telepone'))
                             <small class="text-danger">{{ $errors->first('no_telepone') }}</small>
                         @endif
@@ -83,7 +83,7 @@
 
                     <div class="mb-3">
                         <label for="alamat" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ $user->userDetail->alamat }}" required>
+                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ optional($user->userDetail)->alamat }}">
                         @if ($errors->has('alamat'))
                             <small class="text-danger">{{ $errors->first('alamat') }}</small>
                         @endif
@@ -91,7 +91,7 @@
 
                     <div class="mb-3">
                         <label for="kota" class="form-label">City</label>
-                        <input type="text" class="form-control" id="kota" name="kota" value="{{ $user->userDetail->kota }}" required>
+                        <input type="text" class="form-control" id="kota" name="kota" value="{{ optional($user->userDetail)->kota }}">
                         @if ($errors->has('kota'))
                             <small class="text-danger">{{ $errors->first('kota') }}</small>
                         @endif
@@ -99,21 +99,23 @@
 
                     <div class="mb-3">
                         <label for="provinsi" class="form-label">Province</label>
-                        <input type="text" class="form-control" id="provinsi" name="provinsi" value="{{ $user->userDetail->provinsi }}" required>
+                        <input type="text" class="form-control" id="provinsi" name="provinsi" value="{{ optional($user->userDetail)->provinsi }}">
                         @if ($errors->has('provinsi'))
                             <small class="text-danger">{{ $errors->first('provinsi') }}</small>
                         @endif
                     </div>
+
                     <div class="mb-3">
                         <label for="perusahaan" class="form-label">Perusahaan</label>
-                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ $user->userDetail->perusahaan }}" required>
+                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ optional($user->userDetail)->perusahaan }}">
                         @if ($errors->has('perusahaan'))
                             <small class="text-danger">{{ $errors->first('perusahaan') }}</small>
                         @endif
                     </div>
+
                     <div class="mb-3">
                         <label for="kode_pos" class="form-label">Postal Code</label>
-                        <input type="text" class="form-control" id="kode_pos" name="kode_pos" value="{{ $user->userDetail->kode_pos }}" required>
+                        <input type="text" class="form-control" id="kode_pos" name="kode_pos" value="{{ optional($user->userDetail)->kode_pos }}">
                         @if ($errors->has('kode_pos'))
                             <small class="text-danger">{{ $errors->first('kode_pos') }}</small>
                         @endif
@@ -126,7 +128,7 @@
 
                     <div class="mb-3">
                         <label for="lahir" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" id="lahir" name="lahir" value="{{ $user->userDetail->lahir }}" required>
+                        <input type="date" class="form-control" id="lahir" name="lahir" value="{{ optional($user->userDetail)->lahir }}">
                         @if ($errors->has('lahir'))
                             <small class="text-danger">{{ $errors->first('lahir') }}</small>
                         @endif
@@ -135,8 +137,8 @@
                     <div class="mb-3">
                         <label for="jenis_kelamin" class="form-label">Gender</label>
                         <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
-                            <option value="Laki-Laki" {{ $user->userDetail->jenis_kelamin === 'Laki-Laki' ? 'selected' : '' }}>Male</option>
-                            <option value="Perempuan" {{ $user->userDetail->jenis_kelamin === 'Perempuan' ? 'selected' : '' }}>Female</option>
+                            <option value="Laki-Laki" {{ optional($user->userDetail)->jenis_kelamin === 'Laki-Laki' ? 'selected' : '' }}>Male</option>
+                            <option value="Perempuan" {{ optional($user->userDetail)->jenis_kelamin === 'Perempuan' ? 'selected' : '' }}>Female</option>
                         </select>
                         @if ($errors->has('jenis_kelamin'))
                             <small class="text-danger">{{ $errors->first('jenis_kelamin') }}</small>
