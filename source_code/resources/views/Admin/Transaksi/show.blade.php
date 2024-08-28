@@ -133,8 +133,10 @@
             @endif
         </div>
 
-        <!-- Cancel Button -->
-        <button type="button" name="action" value="cancel" class="btn btn-danger" onclick="cancelOrder()">Cancel</button>
+         <!-- Cancel Button -->
+         @if($order->status !== 'Selesai' && $order->status !== 'Cancelled')
+         <button type="button" name="action" value="cancel" class="btn btn-danger" onclick="cancelOrder()">Cancel</button>
+     @endif
 
         <!-- Dynamic Buttons -->
         @if($negotiable)
@@ -216,6 +218,18 @@
 
         submitForm();
     }
+    function cancelOrder() {
+        // Set status to Cancelled
+        $('#statusInput').val('Cancelled');
+        
+        // Submit the form with the updated status
+        submitForm(function() {
+            alert('Order has been cancelled successfully.');
+            // Optional: Redirect or reset the form if needed
+            window.location.href = '{{ route("transaksi.index") }}'; // Redirect to the transaction index page
+        });
+    }
+
 
     function submitForm(callback = null) {
         $.ajax({
@@ -269,6 +283,7 @@
                             $('#resiGroup').remove();
                         }
                     }
+
                 } else {
                     alert('Failed to update the status. Please try again.');
                 }
@@ -279,7 +294,6 @@
             }
         });
     }
-
     function updateButton(text, nextStatus, btnClass) {
         $('#accButton, #nextButton').text(text)
             .attr('onclick', `updateStatus('${nextStatus}')`)
