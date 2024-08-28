@@ -274,11 +274,22 @@
                                     <div class="featured__item__text">
                                         <h6><a href="#">{{ $item->nama }}</a></h6>
                                         <h5>
-                                            @if ($item->harga_ditampilkan === 'ya')
-                                                Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                            @if ($item->harga_potong)
+                                                <span style="text-decoration: line-through;">
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                </span>
+                                                <br>
+                                                <span>
+                                                    Rp{{ number_format($item->harga_potong, 0, ',', '.') }}
+                                                </span>
                                             @else
-                                            {{ __('messages.hubungi_admin') }}                                            
+                                                @if ($item->harga_ditampilkan === 'ya')
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                @else
+                                                    {{ __('messages.hubungi_admin') }}                                            
+                                                @endif
                                             @endif
+
                                         </h5>
                                     </div>
                                 </div>
@@ -314,9 +325,12 @@
                         <div class="featured__item">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                @if ($item->nego === 'ya')
+                                @if ($item->harga_potongan)
+                                    <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
+                                @elseif ($item->nego === 'ya')
                                     <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                 @endif
+
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
@@ -335,11 +349,21 @@
                             <div class="featured__item__text">
                                 <h6><a href="#">{{ $item->nama }}</a></h6>
                                 <h5>
-                                    @if ($item->harga_ditampilkan === 'ya')
-                                        Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                    @else
-                                    {{ __('messages.hubungi_admin') }}
-                                    @endif
+                                    @if ($item->harga_potongan)
+                                                <span style="text-decoration: line-through; color:red;">
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                </span>
+                                                <br>
+                                                <span>
+                                                    Rp{{ number_format($item->harga_potongan, 0, ',', '.') }}
+                                                </span>
+                                            @else
+                                                @if ($item->harga_ditampilkan === 'ya')
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                @else
+                                                    {{ __('messages.hubungi_admin') }}                                            
+                                                @endif
+                                            @endif
                                 </h5>
                             </div>
                         </div>

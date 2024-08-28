@@ -49,10 +49,10 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h6>{{ __('messages.about') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/company">{{ __('messages.about_us') }}</a></li>
+{{--                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
-                                <li><a href="/faq">{{ __('messages.qna') }}</a></li>
+ --}}                                <li><a href="/faq">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>

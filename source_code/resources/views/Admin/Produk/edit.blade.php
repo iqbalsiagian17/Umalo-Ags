@@ -94,6 +94,43 @@
                                     <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
                                 @endif
                             </div>
+                            <div class="form-group">
+                                <label for="harga_potongan">Harga Diskon:</label>
+                                <input type="number" step="0.01" name="harga_potongan" class="form-control"
+                                       value="{{ old('harga_potongan', $produk->harga_potongan) }}" id="harga_potongan" 
+                                       {{ old('allow_discount', $produk->harga_potongan ? true : false) ? '' : 'disabled' }}>
+                                @if ($errors->has('harga_potongan'))
+                                    <small class="text-danger">{{ $errors->first('harga_potongan') }}</small>
+                                @endif
+                            </div>
+                            
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"
+                                       {{ old('allow_discount', $produk->harga_potongan ? 'checked' : '') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
+                            </div>
+                            
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const allowDiscountCheckbox = document.getElementById('allow_discount');
+                                    const hargaDiskonInput = document.getElementById('harga_potongan');
+                            
+                                    // Toggle the disabled state of the input field based on the checkbox state
+                                    allowDiscountCheckbox.addEventListener('change', function() {
+                                        if (this.checked) {
+                                            hargaDiskonInput.disabled = false;
+                                        } else {
+                                            hargaDiskonInput.disabled = true;
+                                            hargaDiskonInput.value = ''; // Clear the input if unchecked
+                                        }
+                                    });
+                            
+                                    // Trigger the change event on page load to set the initial state
+                                    allowDiscountCheckbox.dispatchEvent(new Event('change'));
+                                });
+                            </script>
+                            
+                            
 
                             <div class="form-group">
                                 <label for="spesifikasi_produk">Spesifikasi Produk:</label>

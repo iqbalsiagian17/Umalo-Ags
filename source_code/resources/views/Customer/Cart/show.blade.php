@@ -25,6 +25,8 @@
         <div class="row">
             <div class="col-lg-12">
 
+
+
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -115,6 +117,9 @@
     </div>
     </div>
         </div>
+    </div>
+    <div class="alert alert-warning">
+        {{ __('Untuk menghindari potensi kesalahan pada sistem, disarankan agar produk diskon, produk Big Sale, dan produk reguler dipisahkan dalam keranjang yang berbeda.') }}
     </div>
 </div>
 </section>

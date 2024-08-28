@@ -159,91 +159,97 @@ class ProdukController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    // Validate the request data
-    $request->validate([
-        'nama' => 'required',
-        'tipe_barang' => 'nullable',
-        'stok' => 'required|integer',
-        'masa_berlaku_produk' => 'nullable|date',
-        'merk' => 'nullable',
-        'no_produk_penyedia' => 'nullable',
-        'unit_pengukuran' => 'nullable',
-        'jenis_produk' => 'nullable',
-        'kode_kbki' => 'nullable|integer',
-        'asal_negara' => 'nullable',
-        'nilai_tkdn' => 'nullable|numeric',
-        'no_sni' => 'nullable',
-        'garansi_produk' => 'nullable',
-        'uji_fungsi' => 'nullable',
-        'sni' => 'nullable',
-        'memiliki_svlk' => 'nullable',
-        'jenis_alat' => 'nullable',
-        'fungsi' => 'nullable',
-        'spesifikasi_produk' => 'required',
-        'harga_ditampilkan' => 'required',
-        'harga_tayang' => 'required|numeric',
-        'komoditas_id' => 'required|exists:komoditas,id',
-        'kategori_id' => 'required|exists:kategori,id',
-        'sub_kategori_id' => 'required|exists:sub_kategori,id',
-        'gambar.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:15000',
-    ]);
-
-    // Find the product by ID
-    $produk = Produk::findOrFail($id);
-    $produk->fill($request->all());
-    $produk->save();
-
-    // Handle image uploads
-    if ($request->deleted_images) {
-        $deletedImages = explode(',', $request->deleted_images);
-        foreach ($deletedImages as $imageId) {
-            $image = ProdukImage::find($imageId);
-            if ($image) {
-                // Hapus file gambar dari storage
-                if (file_exists(public_path($image->gambar))) {
-                    unlink(public_path($image->gambar));
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'nama' => 'required',
+            'tipe_barang' => 'nullable',
+            'stok' => 'required|integer',
+            'masa_berlaku_produk' => 'nullable|date',
+            'merk' => 'nullable',
+            'no_produk_penyedia' => 'nullable',
+            'unit_pengukuran' => 'nullable',
+            'jenis_produk' => 'nullable',
+            'kode_kbki' => 'nullable|integer',
+            'asal_negara' => 'nullable',
+            'nilai_tkdn' => 'nullable|numeric',
+            'no_sni' => 'nullable',
+            'garansi_produk' => 'nullable',
+            'uji_fungsi' => 'nullable',
+            'sni' => 'nullable',
+            'memiliki_svlk' => 'nullable',
+            'jenis_alat' => 'nullable',
+            'fungsi' => 'nullable',
+            'spesifikasi_produk' => 'required',
+            'harga_ditampilkan' => 'required',
+            'harga_tayang' => 'required|numeric',
+            'harga_potongan' => 'nullable|numeric|min:0',
+            'komoditas_id' => 'required|exists:komoditas,id',
+            'kategori_id' => 'required|exists:kategori,id',
+            'sub_kategori_id' => 'required|exists:sub_kategori,id',
+            'gambar.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:15000',
+        ]);
+    
+        // Check if the 'allow_discount' checkbox is checked
+        if (!$request->has('allow_discount')) {
+            // If not checked, remove 'harga_diskon' from the validated data
+            unset($validatedData['harga_potongan']);
+        }
+    
+        // Find the product by ID and update with the validated data
+        $produk = Produk::findOrFail($id);
+        $produk->update($validatedData);
+    
+        // Handle image uploads
+        if ($request->deleted_images) {
+            $deletedImages = explode(',', $request->deleted_images);
+            foreach ($deletedImages as $imageId) {
+                $image = ProdukImage::find($imageId);
+                if ($image) {
+                    // Hapus file gambar dari storage
+                    if (file_exists(public_path($image->gambar))) {
+                        unlink(public_path($image->gambar));
+                    }
+                    // Hapus record gambar dari database
+                    $image->delete();
                 }
-                // Hapus record gambar dari database
-                $image->delete();
             }
         }
-    }
-
-    if ($request->hasFile('gambar')) {
-        foreach ($request->file('gambar') as $imgProduk) {
-            $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
-            $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
-            $imgProduk->move('uploads/produk/', $newImageName);
-
-            $produkImage = new ProdukImage;
-            $produkImage->produk_id = $produk->id;
-            $produkImage->gambar = 'uploads/produk/' . $newImageName;
-            $produkImage->save();
+    
+        if ($request->hasFile('gambar')) {
+            foreach ($request->file('gambar') as $imgProduk) {
+                $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
+                $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
+                $imgProduk->move('uploads/produk/', $newImageName);
+    
+                $produkImage = new ProdukImage;
+                $produkImage->produk_id = $produk->id;
+                $produkImage->gambar = 'uploads/produk/' . $newImageName;
+                $produkImage->save();
+            }
         }
-    }
-
-
-    // Handle detail updates
-    if ($request->input('detail')) {
-        ProdukList::where('produk_id', $produk->id)->delete();
-        foreach ($request->input('detail.nama') as $key => $value) {
-            $data2 = [
-                'produk_id' => $produk->id,
-                'nama' => $request->input('detail.nama')[$key],
-                'spesifikasi' => $request->input('detail.spesifikasi')[$key],
-                'merk' => $request->input('detail.merk')[$key],
-                'tipe' => $request->input('detail.tipe')[$key],
-                'jumlah' => $request->input('detail.jumlah')[$key],
-                'satuan' => $request->input('detail.satuan')[$key],
-                'harga_satuan' => $request->input('detail.harga_satuan')[$key],
-            ];
-            ProdukList::create($data2);
+    
+        // Handle detail updates
+        if ($request->input('detail')) {
+            ProdukList::where('produk_id', $produk->id)->delete();
+            foreach ($request->input('detail.nama') as $key => $value) {
+                $data2 = [
+                    'produk_id' => $produk->id,
+                    'nama' => $request->input('detail.nama')[$key],
+                    'spesifikasi' => $request->input('detail.spesifikasi')[$key],
+                    'merk' => $request->input('detail.merk')[$key],
+                    'tipe' => $request->input('detail.tipe')[$key],
+                    'jumlah' => $request->input('detail.jumlah')[$key],
+                    'satuan' => $request->input('detail.satuan')[$key],
+                    'harga_satuan' => $request->input('detail.harga_satuan')[$key],
+                ];
+                ProdukList::create($data2);
+            }
         }
+    
+        return redirect()->route('produk.index')->with('success', 'Produk updated successfully.');
     }
-
-    return redirect()->route('produk.index')->with('success', 'Produk updated successfully.');
-}
+    
 
 
 

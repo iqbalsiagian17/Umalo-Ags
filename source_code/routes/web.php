@@ -97,6 +97,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     //Bigsale
     Route::get('/bigsale/now', [BigSaleCustomerController::class, 'index'])->name('bigsale.now.index');
     Route::post('/bigsale/{id}/update-status', [BigSaleCustomerController::class, 'updateStatus'])->name('bigsale.updateStatus');
+    Route::get('/category/{id}/discounted', [ShopController::class, 'showDiscountedCategoryProducts'])->name('shop.category.discounted');
+
 
 
 

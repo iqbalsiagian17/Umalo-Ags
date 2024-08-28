@@ -35,7 +35,7 @@ return new class extends Migration
             $table->enum('status', ['publish', 'arsip'])->default('arsip'); 
             $table->enum('nego', ['ya', 'tidak'])->default('tidak');
             $table->enum('harga_ditampilkan', ['ya', 'tidak']); 
-            $table->decimal('harga_diskon', 15, 2)->nullable();
+            $table->decimal('harga_potongan', 15, 2)->nullable();
             $table->decimal('harga_tayang', 15, 2);
             $table->string('link_ekatalog');
             $table->timestamps();

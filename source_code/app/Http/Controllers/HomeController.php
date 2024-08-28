@@ -120,7 +120,10 @@ private function updateBigSaleStatus()
         $customerCount = User::where('role', 'customer')->count();
     
         // Menghitung jumlah pesanan
-        $orderCount = Order::count();
+        $orderCount = Order::where('status', 'selesai')->count();
+
+        $orderNotFinishCount = Order::where('status', '!=', 'selesai')->count();
+
 
         $totalSales = Order::where('status', 'selesai')->sum('harga_total');
     
@@ -147,7 +150,7 @@ private function updateBigSaleStatus()
         $averageVisitTimeToday = $visitDurations->avg();
     
         // Mengirim variabel ke view
-        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
+        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
     }
     
 }

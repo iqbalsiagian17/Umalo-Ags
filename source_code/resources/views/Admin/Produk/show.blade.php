@@ -43,6 +43,14 @@
                             <td>{{ $produk->nama ?: '-' }}</td>
                         </tr>
                         <tr>
+                            <td>Harga Tayang</td>
+                            <td>{{ $produk->harga_tayang ? 'Rp ' . number_format($produk->harga_tayang, 0, ',', '.') : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Harga Diskon</td>
+                            <td>{{ $produk->harga_potongan ? 'Rp ' . number_format($produk->harga_potongan, 0, ',', '.') : '-' }}</td>
+                        </tr>
+                        <tr>
                             <td>Link E-katalog</td>
                             <td>{{ $produk->link_ekatalog ?: '-' }}</td>
                         </tr>
@@ -117,10 +125,6 @@
                         <tr>
                             <td>Spesifikasi Produk</td>
                             <td>{{ $produk->spesifikasi_produk ?: '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Harga Tayang</td>
-                            <td>{{ $produk->harga_tayang ? 'Rp ' . number_format($produk->harga_tayang, 0, ',', '.') : '-' }}</td>
                         </tr>
                         <tr>
                             <td>Komoditas</td>

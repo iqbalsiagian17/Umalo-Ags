@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Costumer\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
 use App\Models\Kategori;
 use App\Models\Komoditas;
 use App\Models\Produk;
@@ -75,6 +76,38 @@ class ShopController extends Controller
         // Pastikan untuk mengirimkan variabel $productCount ke view
         return view('customer.shop.kategori', compact('produk', 'kategori', 'currentCategory', 'komoditas', 'productCount'));
     }
+
+    public function showDiscountedCategoryProducts($categoryId)
+{
+    $komoditas = Komoditas::all();
+
+    // Get the active Big Sale
+    $bigSale = BigSale::with('produk')
+        ->where('status', true)
+        ->whereDate('mulai', '<=', now())
+        ->whereDate('berakhir', '>=', now())
+        ->first();
+
+    if (!$bigSale) {
+        return redirect()->back()->with('error', 'No active Big Sale found.');
+    }
+
+    // Filter products by the selected category
+    $products = $bigSale->produk->filter(function($product) use ($categoryId) {
+        return $product->kategori_id == $categoryId;
+    });
+
+    // Get categories related to Big Sale products
+    $kategori = Kategori::whereHas('produk', function ($query) use ($bigSale) {
+        $query->whereHas('bigSales', function ($query) use ($bigSale) {
+            $query->where('big_sale_id', $bigSale->id);
+        });
+    })->get();
+
+    return view('customer.bigsale.kategori', compact('products', 'kategori', 'bigSale','komoditas'));
+}
+
+
     
     
     

@@ -23,7 +23,13 @@ class BigSaleCustomerController extends Controller
     $products = $bigSale ? $bigSale->produk : collect(); 
 
     $komoditas = Komoditas::all();
-    $kategori = Kategori::all();
+
+    $kategori = Kategori::whereHas('produk', function ($query) use ($bigSale) {
+        $query->whereHas('bigSales', function ($query) use ($bigSale) {
+            $query->where('big_sale_id', $bigSale->id);
+        });
+    })->get();
+
     $sort = $request->get('sort');
     $kategoriId = $request->get('kategori_id');
 
@@ -56,6 +62,28 @@ public function updateStatus($id)
         return response()->json(['message' => 'Failed to update status'], 500);
     }
 }
+
+public function showBigSaleCategories()
+{
+    $bigSale = BigSale::active()->first(); // Assuming 'active' is a scope or method that returns the active Big Sale
+
+    if (!$bigSale) {
+        return redirect()->back()->with('error', 'No active Big Sale found.');
+    }
+
+    $kategori = Kategori::whereHas('products', function ($query) use ($bigSale) {
+        $query->whereHas('bigSales', function ($query) use ($bigSale) {
+            $query->where('big_sale_id', $bigSale->id);
+        });
+    })->get();
+
+    $products = Produk::whereHas('bigSales', function ($query) use ($bigSale) {
+        $query->where('big_sale_id', $bigSale->id);
+    })->get();
+
+    return view('shop.index', compact('kategori', 'products', 'bigSale'));
+}
+
 
 
 }
