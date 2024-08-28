@@ -110,8 +110,8 @@
         @method('PUT')
         <input type="hidden" name="status" id="statusInput" value="{{ $order->status }}">
 
-        <!-- Subtotal Input -->
-        <div class="form-group" id="subtotalGroup">
+          <!-- Subtotal Input -->
+          <div class="form-group" id="subtotalGroup" style="display: none;">
             <label for="subtotal">Edit Subtotal</label>
             <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_total }}">
         </div>
@@ -185,131 +185,110 @@
         $('#statusInput').val('Negosiasi');
         $('#whatsappGroup').show();
         $('#accButton').text('Kirim WA dan Konfirmasi');
-        $('#accButton').attr('onclick', 'submitForm()');
+        $('#accButton').attr('onclick', 'submitAndUpdateNegosiasi()');
+    }
+
+    function submitAndUpdateNegosiasi() {
+        // Set status to Negosiasi
+        $('#statusInput').val('Negosiasi');
+
+        // Submit the form with the updated status
+        submitForm(function() {
+            // After form submission and status update
+            alert('Status updated to Negosiasi successfully.');
+            
+            // Show the subtotal input form after the alert
+            $('#subtotalGroup').show();
+            $('#whatsappGroup').hide();
+
+            // Update the button to allow updating status to "Diterima"
+            updateButton('Update to Diterima', 'Diterima', 'btn-primary');
+        });
     }
 
     function updateStatus(newStatus) {
         $('#statusInput').val(newStatus);
-        if (newStatus === 'Diterima') {
-            // Show subtotal input when status is 'Diterima'
-            $('#subtotalGroup').show();
-            $('#subtotal').focus();
-        } else {
+
+        // Hide subtotal form for other statuses
+        if (newStatus === 'Packing' || newStatus === 'Pengiriman' || newStatus === 'Selesai') {
             $('#subtotalGroup').hide();
         }
 
-        if (newStatus === 'Pengiriman') {
-            
-            // Check if the tracking number input already exists to prevent duplicates
-            if ($('#resiGroup').length === 0) {
-                // Append the tracking number input field
-                let nomorResiInput = `<div class="form-group" id="resiGroup">
+        submitForm();
+    }
+
+    function submitForm(callback = null) {
+        $.ajax({
+            url: '{{ route("transaksi.update", $order->id) }}',
+            method: 'PUT',
+            data: $('#statusForm').serialize(),
+            success: function(response) {
+                if (response.success) {
+                    // Show success alert
+                    alert(response.message);
+
+                    // Execute the callback function if provided
+                    if (callback) callback();
+
+                    let currentStatus = $('#statusInput').val();
+                    let nextStatusMap = {
+                        'Menunggu Konfirmasi Admin': 'Diterima',
+                        'Menunggu Konfirmasi Admin untuk Negosiasi': 'Negosiasi',
+                        'Negosiasi': 'Diterima',
+                        'Diterima': 'Packing',
+                        'Packing': 'Pengiriman',
+                        'Pengiriman': 'Selesai'
+                    };
+
+                    if (nextStatusMap[currentStatus]) {
+                        let nextStatus = nextStatusMap[currentStatus];
+                        $('#statusInput').val(nextStatus);
+
+                        if (currentStatus === 'Diterima') {
+                            updateButton('Update to Packing', 'Packing', 'btn-primary');
+                        } else if (currentStatus === 'Packing') {
+                            updateButton('Update to Pengiriman', 'Pengiriman', 'btn-primary');
+                        } else if (currentStatus === 'Pengiriman') {
+                            updateButton('Selesai', 'Selesai', 'btn-primary');
+                        } else if (currentStatus === 'Selesai') {
+                            $('#nextButton').remove();
+                            alert('Order has been completed.');
+                        }
+
+                        if (nextStatus === 'Pengiriman') {
+                            if ($('#resiGroup').length === 0) {
+                                let nomorResiInput = `
+                                    <div class="form-group" id="resiGroup">
                                         <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
                                         <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" placeholder="Enter Tracking Number">
-                                      </div>`;
-                $('#statusForm').append(nomorResiInput);
-
-                // Automatically focus on the input field
-                $('#nomor_resi').focus();
-            }
-        } else {
-            // Hide the tracking number input if the status is changed to something else
-            $('#resiGroup').remove();
-        }
-
-        // Submit the form after showing the input field
-        submitForm();
-    }
-
-    function cancelOrder() {
-        $('#statusInput').val('Cancelled');
-        submitForm();
-    }
-
-    function submitForm() {
-    $.ajax({
-        url: '{{ route("transaksi.update", $order->id) }}',
-        method: 'PUT',
-        data: $('#statusForm').serialize(),
-        success: function(response) {
-            if (response.success) {
-                alert(response.message);
-                  // Update subtotal if the form contains it
-                  if ($('#subtotalGroup').is(':visible')) {
-                        let updatedSubtotal = $('#subtotal').val();
-                        $('#subtotal').val(updatedSubtotal);
-                    }
-
-                let currentStatus = $('#statusInput').val();
-                let nextStatusMap = {
-                    'Menunggu Konfirmasi Admin': 'Diterima',
-                    'Menunggu Konfirmasi Admin untuk Negosiasi': 'Negosiasi',
-                    'Negosiasi': 'Diterima',
-                    'Diterima': 'Packing',
-                    'Packing': 'Pengiriman',
-                    'Pengiriman': 'Selesai'
-                };
-
-                if (nextStatusMap[currentStatus]) {
-                    let nextStatus = nextStatusMap[currentStatus];
-                    $('#statusInput').val(nextStatus);
-
-                    // Perubahan tombol secara dinamis berdasarkan status dan nego
-                    if (currentStatus === 'Menunggu Konfirmasi Admin') {
-                        if (!{{ $negotiable ? 'true' : 'false' }}) {
-                            // Jika produk tidak bisa dinegosiasi
-                            updateButton('Update to Diterima', 'Diterima', 'btn-primary');
+                                    </div>`;
+                                $('#statusForm').append(nomorResiInput);
+                                $('#nomor_resi').focus();
+                            }
                         } else {
-                            // Jika produk bisa dinegosiasi
-                            updateButton('Konfirmasi untuk Negosiasi', 'Negosiasi', 'btn-warning');
+                            $('#resiGroup').remove();
                         }
-                    } else if (currentStatus === 'Negosiasi') {
-                        updateButton('Update to Diterima', 'Diterima', 'btn-primary');
-                    } else if (currentStatus === 'Diterima') {
-                        updateButton('Update to Packing', 'Packing', 'btn-primary');
-                    } else if (currentStatus === 'Packing') {
-                        updateButton('Update to Pengiriman', 'Pengiriman', 'btn-primary');
-                    } else if (currentStatus === 'Pengiriman') {
-                        updateButton('Selesai', 'Selesai', 'btn-primary');
-                    } else if (currentStatus === 'Selesai') {
-                        $('#nextButton').remove();
-                        alert('Order has been completed.');
                     }
-
-                    // Menambahkan input tracking number jika diperlukan
-                    if (nextStatus === 'Pengiriman') {
-                        if ($('#resiGroup').length === 0) {
-                            let nomorResiInput = `
-                                <div class="form-group" id="resiGroup">
-                                    <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
-                                    <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" placeholder="Enter Tracking Number">
-                                </div>`;
-                            $('#statusForm').append(nomorResiInput);
-                            $('#nomor_resi').focus();
-                        }
-                    } else {
-                        $('#resiGroup').remove();
-                    }
+                } else {
+                    alert('Failed to update the status. Please try again.');
                 }
-            } else {
-                alert('Failed to update the status. Please try again.');
+            },
+            error: function(xhr) {
+                let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while updating the status. Please try again.';
+                alert(errorMessage);
             }
-        },
-        error: function(xhr) {
-            let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred while updating the status. Please try again.';
-            alert(errorMessage);
-        }
-    });
-}
+        });
+    }
 
-function updateButton(text, nextStatus, btnClass) {
-    $('#accButton, #nextButton').text(text)
-        .attr('onclick', `updateStatus('${nextStatus}')`)
-        .removeClass('btn-success btn-warning btn-primary')
-        .addClass(btnClass)
-        .attr('id', 'nextButton');
-}
+    function updateButton(text, nextStatus, btnClass) {
+        $('#accButton, #nextButton').text(text)
+            .attr('onclick', `updateStatus('${nextStatus}')`)
+            .removeClass('btn-success btn-warning btn-primary')
+            .addClass(btnClass)
+            .attr('id', 'nextButton');
+    }
 
 </script>
+
 
 @endsection
