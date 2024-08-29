@@ -110,10 +110,10 @@
         @method('PUT')
         <input type="hidden" name="status" id="statusInput" value="{{ $order->status }}">
 
-          <!-- Subtotal Input -->
-          <div class="form-group" id="subtotalGroup" style="display: none;">
+        <div class="form-group" id="subtotalGroup" style="display: none;">
             <label for="subtotal">Edit Subtotal</label>
-            <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_total }}">
+            <!-- The value here is displayed initially as harga_total but will save as harga_setelah_nego -->
+            <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_setelah_nego ?? $order->harga_total }}">
         </div>
 
         <!-- Tracking Number Input -->

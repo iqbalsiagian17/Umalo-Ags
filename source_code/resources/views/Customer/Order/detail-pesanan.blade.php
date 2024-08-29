@@ -21,8 +21,29 @@
                 <div class="col-md-6">
                     <h4 class="mb-3">{{ __('messages.order_number') }}: <strong>{{ $order->id }}</strong></h4>
                     <p><strong>{{ __('messages.status') }}:</strong> <span class="badge bg-info text-dark">{{ $order->status }}</span></p>
-                    <p><strong>{{ __('messages.total_price') }}:</strong> <span class="text-success">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</span></p>
+                    
+                    <p>
+                        <strong>{{ __('messages.total_price') }}:</strong>
+                        @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) && $order->harga_setelah_nego && $order->harga_setelah_nego != $order->harga_total)
+                            <!-- Display the original total price with a strikethrough only if harga_setelah_nego is set and different from harga_total -->
+                            <span class="text-danger" style="text-decoration: line-through;">
+                                {{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}
+                            </span>
+                            <!-- Display the new negotiated price next to it -->
+                            <span class="text-success">
+                                {{ 'Rp ' . number_format($order->harga_setelah_nego, 0, ',', '.') }}
+                            </span>
+                        @else
+                            <!-- If harga_setelah_nego is not set or is the same as harga_total, just display the total price -->
+                            <span class="text-success">
+                                {{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}
+                            </span>
+                        @endif
+                    </p>
                 </div>
+                
+                
+                
                 <div class="col-md-6 text-md-right">
                     <a href="{{ route('order.history') }}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i> {{ __('messages.back_to_order_history') }}
@@ -36,36 +57,58 @@
             </div>
 
             <h4 class="mt-4">{{ __('messages.order_items') }}:</h4>
-<div class="table-responsive">
-    <table class="table table-hover table-striped">
-        <thead class="bg-primary text-white">
-            <tr>
-                <th>{{ __('messages.product') }}</th>
-                <th class="text-center">{{ __('messages.quantity') }}</th>
-                <th class="text-right">{{ __('messages.price') }}</th>
-                <th class="text-right">{{ __('messages.negotiated_price') }}</th>
-                <th class="text-right">{{ __('messages.subtotal') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($order->orderItems as $item)
-                <tr>
-                    <td>{{ $item->produk->nama }}</td>
-                    <td class="text-center">{{ $item->jumlah }}</td>
-                    <td class="text-right">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
-                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</td>
-                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_total * $item->jumlah, 0, ',', '.') }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-        <tfoot class="bg-light">
-            <tr>
-                <th colspan="4" class="text-right">{{ __('messages.total') }}</th>
-                <th class="text-right">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</th>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th>{{ __('messages.product') }}</th>
+                            <th class="text-center">{{ __('messages.quantity') }}</th>
+                            <th class="text-right">{{ __('messages.price') }}</th>
+                            <!-- Conditionally display the negotiated price column if any product is negotiable -->
+                            @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))
+                                <th class="text-right">{{ __('messages.negotiated_price') }}</th>
+                            @endif
+                            <th class="text-right">{{ __('messages.subtotal') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($order->orderItems as $item)
+                            <tr>
+                                <td>{{ $item->produk->nama }}</td>
+                                <td class="text-center">{{ $item->jumlah }}</td>
+                                <!-- Display original price; strikethrough only if negotiated price exists -->
+                                <td class="text-right">
+                                    @if($item->produk->nego == 'ya' && $order->harga_setelah_nego)
+                                        <span class="text-danger" style="text-decoration: line-through;">
+                                            {{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}
+                                        </span>
+                                    @else
+                                        {{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}
+                                    @endif
+                                </td>
+                                <!-- Display negotiated price only if the product is negotiable and the price has been updated -->
+                                @if($item->produk->nego == 'ya' && $order->harga_setelah_nego)
+                                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_setelah_nego, 0, ',', '.') }}</td>
+                                @endif
+                                <!-- Calculate and display the subtotal -->
+                                <td class="text-right">
+                                    {{ 'Rp ' . number_format(($order->harga_setelah_nego && $item->produk->nego == 'ya') ? $order->harga_setelah_nego * $item->jumlah : $item->harga * $item->jumlah, 0, ',', '.') }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="bg-light">
+                        <tr>
+                            <th colspan="{{ $order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) ? 4 : 3 }}" class="text-right">{{ __('messages.total') }}</th>
+                            <th class="text-right">
+                                <!-- Display the total using negotiated price if applicable -->
+                                {{ 'Rp ' . number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
       
             <div class="mt-4">
                 @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))

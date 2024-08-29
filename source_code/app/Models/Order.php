@@ -12,6 +12,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'harga_total',
+        'harga_setelah_nego',
         'status',
         'whatsapp_number'
     ];
