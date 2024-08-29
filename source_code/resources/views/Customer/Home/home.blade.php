@@ -334,7 +334,6 @@
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
-
                                     @auth
                                         <!-- Jika pengguna sudah login -->
                                         <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i

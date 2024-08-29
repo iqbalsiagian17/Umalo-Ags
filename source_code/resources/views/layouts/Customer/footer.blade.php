@@ -92,9 +92,12 @@
 </footer>
 <!-- Footer Section End -->
 
-<a href="/chatify" id="chatBubble" class="chat-bubble">
-    <i class="fas fa-comments"></i>
-</a>
+@auth
+    <a href="/chatify" id="chatBubble" class="chat-bubble">
+        <i class="fas fa-comments"></i>
+    </a>
+@endauth
+
 
 <style>
     .chat-bubble {

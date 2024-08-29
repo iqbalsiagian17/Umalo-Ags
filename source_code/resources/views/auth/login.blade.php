@@ -17,6 +17,13 @@
             </div>
             <!----------------------------- Right Box ---------------------------->
             <div class="col-md-6 right-box">
+                <!-- Alert for invalid credentials -->
+                @if(session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="row align-items-center">
@@ -119,4 +126,48 @@
             }
         }
     </style>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .alert-danger {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @media only screen and (max-width: 768px) {
+    .left-box {
+        height: auto;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .inner-box {
+        width: auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* Hide the text elements */
+    .left-box .inner-box p {
+        display: none;
+    }
+
+    /* Adjust the logo size */
+    .left-box .featured-image img {
+        width: 150px;
+    }
+}
+
+</style>
+
 @endsection

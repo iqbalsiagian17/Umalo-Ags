@@ -57,21 +57,34 @@
                     <tr>
                         <td class="shoping__cart__item align-middle text-center ">
                             {{ $details['name'] ?? __('messages.product_name_unavailable') }}
-                        </td>
+
+                            @if (isset($details['harga_potongan']) && $details['harga_potongan'] > 0)
+                                <span class="badge bg-danger text-white ml-2">{{ __('Diskon') }}</span>
+                            @endif
+                                                    </td>
                         <td class="shoping__cart__item align-middle text-center">
                             <img src="{{ asset($details['image'] ?? 'default.png') }}" alt="{{ $details['name'] ?? __('messages.product_image') }}" class="img-thumbnail" style="max-width: 100px;">
                         </td>
                         <td class="shoping__cart__price align-middle text-center">
-                            Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
-                        </td>
-                        <td class="shoping__cart__quantity align-middle text-center">
-                            <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1" style="width: 60px; padding: 5px; text-align: center; margin: 0 auto;">
-                        </td>
+                            @if (isset($details['harga_potongan']) && $details['harga_potongan'] > 0)
+                                Rp {{ number_format($details['harga_potongan'], 0, ',', '.') }}
+                            @else
+                                Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
+                            @endif
+                        </td>                        
+                                                <td class="shoping__cart__quantity align-middle text-center">
+                                                    <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1" style="width: 70px; padding: 8px; text-align: center; margin: 0 auto; border-radius: 8px; border: 1px solid #ced4da; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+                                                </td>
                         
                         <td class="shoping__cart__total subtotal align-middle text-center" data-id="{{ $id }}">
-                            Rp {{ number_format($subtotal = ($details['harga_tayang'] ?? 0) * $details['quantity'], 0, ',', '.') }}
+                            @php
+                                $price = isset($details['harga_potongan']) && $details['harga_potongan'] > 0 ? $details['harga_potongan'] : ($details['harga_tayang'] ?? 0);
+                                $subtotal = $price * $details['quantity'];
+                            @endphp
+                            Rp {{ number_format($subtotal, 0, ',', '.') }}
                         </td>
-                        <td>
+                        
+                                                <td>
                             <form action="{{ route('cart.remove', $id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
@@ -116,10 +129,10 @@
         @endif
     </div>
     </div>
-        </div>
-    </div>
     <div class="alert alert-warning">
         {{ __('Untuk menghindari potensi kesalahan pada sistem, disarankan agar produk diskon, produk Big Sale, dan produk reguler dipisahkan dalam keranjang yang berbeda.') }}
+    </div>
+        </div>
     </div>
 </div>
 </section>

@@ -31,24 +31,32 @@
                     <h3>{{ $produk->nama }}</h3>
                     <div class="product__details__price">
                         <div class="product__details__price">
-                                @if ($produk->harga_ditampilkan === 'ya')
-                                    @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                        <span style="text-decoration: line-through; color: #ff0000;">
-                                            Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
-                                        </span>
-                                        <br>
-                                        <span style="color: #000000;">
-                                            Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
-                                        </span>
-                                    @else
-                                        <span style="color: #000000;">
-                                            Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
-                                        </span>
-                                    @endif
-                                @else
-                                {{ __('messages.contact_admin_for_price') }}
-                                @endif
-                            
+                            @if ($produk->harga_ditampilkan === 'ya')
+                            @if ($produk->harga_potongan > 0)
+                                <span style="text-decoration: line-through; color: #ff0000;">
+                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                </span>
+                                <br>
+                                <span style="color: #000000;">
+                                    Rp{{ number_format($produk->harga_potongan, 0, ',', '.') }}
+                                </span>
+                            @elseif ($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                <span style="text-decoration: line-through; color: #ff0000;">
+                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                </span>
+                                <br>
+                                <span style="color: #000000;">
+                                    Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
+                                </span>
+                            @else
+                                <span style="color: #000000;">
+                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                </span>
+                            @endif
+                        @else
+                            {{ __('messages.contact_admin_for_price') }}
+                        @endif
+                                                    
                         </div>
                         
                         
@@ -62,8 +70,14 @@
                             </div>
                         </div>
                     </div>
+                    @auth
                     <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">{{ __('messages.add') }}</a>
-                    @if ($bigSale && $bigSale->status === 'aktif')
+                    @else
+                    <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
+                    @endauth
+                
+
+                @if ($bigSale && $bigSale->status === 'aktif')
                     <span class="nego-badge">Big Sale</span>
                     @elseif ($produk->nego === 'ya')
                     <span class="nego-badge">{{ __('messages.negotiable') }}</span>
@@ -452,6 +466,14 @@
         document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
             button.addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent default action
+
+                var isAuthenticated = '{{ Auth::check() }}';
+        
+        if (!isAuthenticated) {
+            // Redirect to login page if the user is not authenticated
+            window.location.href = '{{ route('login') }}';
+            return;
+        }
 
                 var productId = this.dataset.id;
                 var token = '{{ csrf_token() }}';

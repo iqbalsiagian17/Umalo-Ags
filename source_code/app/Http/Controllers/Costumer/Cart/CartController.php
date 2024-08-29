@@ -37,7 +37,10 @@ class CartController extends Controller
 
     $totalHarga = 0;
     foreach ($cart as $id => $details) {
-        $totalHarga += $details['harga_tayang'] * $details['quantity'];
+        $harga = isset($details['harga_potongan']) && $details['harga_potongan'] > 0 
+            ? $details['harga_potongan'] 
+            : $details['harga_tayang'];
+        $totalHarga += $harga * $details['quantity'];
     }
 
     $order = Order::create([
@@ -51,7 +54,9 @@ class CartController extends Controller
             'order_id' => $order->id,
             'produk_id' => $id,
             'jumlah' => $details['quantity'],
-            'harga' => $details['harga_tayang'],
+            'harga' => isset($details['harga_potongan']) && $details['harga_potongan'] > 0 
+                ? $details['harga_potongan'] 
+                : $details['harga_tayang'],
         ]);
 
         $product = Produk::find($id);
@@ -66,60 +71,54 @@ class CartController extends Controller
     return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat! Menunggu konfirmasi dari admin.');
 }
 
+
     
     
     
 
-    public function add(Request $request, $id)
-    {
-        $product = Produk::with('bigSales')->find($id);
-    
-        if (!$product) {
-            return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
-        }
-    
-        $quantity = $request->input('quantity', 1);
-    
-        // Cek apakah kuantitas melebihi stok
-        if ($quantity > $product->stok) {
-            return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
-        }
-    
-        $bigSale = $product->bigSales()
-                            ->where('status', 1)
-                            ->whereDate('mulai', '<=', now())
-                            ->whereDate('berakhir', '>=', now())
-                            ->first();
-    
-        $harga = $product->harga_tayang;
-        if ($bigSale) {
-            $harga = $bigSale->pivot->harga_diskon;
-        }
-    
-        $cart = session()->get('cart', []);
-    
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $quantity;
-    
-            // Cek apakah kuantitas total melebihi stok setelah penambahan
-            if ($cart[$id]['quantity'] > $product->stok) {
-                return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
-            }
-        } else {
-            $cart[$id] = [
-                "name" => $product->nama,
-                "quantity" => $quantity,
-                "harga_tayang" => $harga,
-                "image" => $product->images->first()->gambar ?? 'default.png'
-            ];
-        }
-    
-        session()->put('cart', $cart);
+public function add(Request $request, $id)
+{
+    $product = Produk::find($id);
 
-        $totalQuantity = array_sum(array_column($cart, 'quantity'));
-
-        return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
+    if (!$product) {
+        return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
     }
+
+    $quantity = $request->input('quantity', 1);
+
+    // Cek apakah kuantitas melebihi stok
+    if ($quantity > $product->stok) {
+        return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
+    }
+
+    $harga = $product->harga_potongan ?: $product->harga_tayang;
+
+    $cart = session()->get('cart', []);
+
+    if (isset($cart[$id])) {
+        $cart[$id]['quantity'] += $quantity;
+
+        // Cek apakah kuantitas total melebihi stok setelah penambahan
+        if ($cart[$id]['quantity'] > $product->stok) {
+            return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
+        }
+    } else {
+        $cart[$id] = [
+            "name" => $product->nama,
+            "quantity" => $quantity,
+            "harga_tayang" => $product->harga_tayang,
+            "harga_potongan" => $product->harga_potongan,
+            "image" => $product->images->first()->gambar ?? 'default.png'
+        ];
+    }
+
+    session()->put('cart', $cart);
+
+    $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
+    return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
+}
+
     
 
 
