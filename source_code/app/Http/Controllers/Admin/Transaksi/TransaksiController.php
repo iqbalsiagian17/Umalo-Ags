@@ -67,8 +67,23 @@ class TransaksiController extends Controller
 
     // Update the subtotal if provided
     if ($request->has('subtotal')) {
-        $order->harga_total = $request->input('subtotal');
+        $newSubtotal = $request->input('subtotal');
+        $order->harga_total = $newSubtotal;
+
+        // Calculate the price per item if there's more than one item
+        $totalOriginalPrice = $order->orderItems->sum(function ($item) {
+            return $item->harga * $item->jumlah;
+        });
+
+        // Update harga_setelah_nego for each order item proportionally
+        foreach ($order->orderItems as $item) {
+            // Calculate the proportion of the original item price to the new subtotal
+            $proportion = ($item->harga * $item->jumlah) / $totalOriginalPrice;
+            $item->harga_setelah_nego = $proportion * $newSubtotal / $item->jumlah;
+            $item->save();
+        }
     }
+
     $order->save();
 
     // Log the status change with any additional info
@@ -80,6 +95,7 @@ class TransaksiController extends Controller
 
     return response()->json(['success' => true, 'message' => 'Status updated successfully!']);
 }
+
 
     
 

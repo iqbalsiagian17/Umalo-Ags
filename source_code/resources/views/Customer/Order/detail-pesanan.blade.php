@@ -36,35 +36,37 @@
             </div>
 
             <h4 class="mt-4">{{ __('messages.order_items') }}:</h4>
-            <div class="table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th>{{ __('messages.product') }}</th>
-                            <th class="text-center">{{ __('messages.quantity') }}</th>
-                            <th class="text-right">{{ __('messages.price') }}</th>
-                            <th class="text-right">{{ __('messages.subtotal') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($order->orderItems as $item)
-                            <tr>
-                                <td>{{ $item->produk->nama }}</td>
-                                <td class="text-center">{{ $item->jumlah }}</td>
-                                <td class="text-right">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
-                                <td class="text-right">{{ 'Rp ' . number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="bg-light">
-                        <tr>
-                            <th colspan="3" class="text-right">{{ __('messages.total') }}</th>
-                            <th class="text-right">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>{{ __('messages.product') }}</th>
+                <th class="text-center">{{ __('messages.quantity') }}</th>
+                <th class="text-right">{{ __('messages.price') }}</th>
+                <th class="text-right">{{ __('messages.negotiated_price') }}</th>
+                <th class="text-right">{{ __('messages.subtotal') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($order->orderItems as $item)
+                <tr>
+                    <td>{{ $item->produk->nama }}</td>
+                    <td class="text-center">{{ $item->jumlah }}</td>
+                    <td class="text-right">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_total * $item->jumlah, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot class="bg-light">
+            <tr>
+                <th colspan="4" class="text-right">{{ __('messages.total') }}</th>
+                <th class="text-right">{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+      
             <div class="mt-4">
                 @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))
                     @if($order->status == 'Negosiasi' && $order->whatsapp_number)

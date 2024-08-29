@@ -217,9 +217,13 @@
                     <th>Description</th>
                     <th>Qty</th>
                     <th>Unit Price</th>
+                    @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))
+                        <th>Harga Setelah Nego</th>
+                    @endif
                     <th>Total Price</th>
                 </tr>
             </thead>
+            
             <tbody>
                 @foreach ($order->orderItems as $index => $item)
                 <tr>
@@ -227,22 +231,24 @@
                     <td>{{ $item->produk->nama }}</td>
                     <td>{{ $item->jumlah }}</td>
                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
+                    @if($item->produk->nego == 'ya')
+                        <td>Rp {{  number_format($order->harga_total, 0, ',', '.') }}</td>
+                    @endif
+                    <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
                 </tr>
                 @endforeach
                 <tr>
-                    <td colspan="4" style="text-align:right;"><strong>Subtotal</strong></td>
+                    <td colspan="{{ $order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) ? 5 : 4 }}" style="text-align:right;"><strong>Subtotal</strong></td>
                     <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align:right;"><strong>PPN ({{ $ppn->ppn }}%)</strong></td>
+                    <td colspan="{{ $order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) ? 5 : 4 }}" style="text-align:right;"><strong>PPN ({{ $ppn->ppn }}%)</strong></td>
                     <td>Rp {{ number_format($order->harga_total * ($ppn->ppn / 100), 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align:right;"><strong>Total Price Include PPN</strong></td>
+                    <td colspan="{{ $order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) ? 5 : 4 }}" style="text-align:right;"><strong>Total Price Include PPN</strong></td>
                     <td>Rp {{ number_format($totalPriceWithPPN, 0, ',', '.') }}</td>
                 </tr>
-                
             </tbody>
         </table>
 
