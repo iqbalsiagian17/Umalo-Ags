@@ -40,6 +40,51 @@
                             @endif
                         </div>
 
+                        <style>
+                            .carousel-inner .hero__text h2 {
+                                font-size: 48px; /* Default size */
+                            }
+                        
+                            .carousel-inner .hero__text p {
+                                font-size: 18px; /* Default size */
+                            }
+                        
+                            .carousel-inner .primary-btn {
+                                font-size: 16px; /* Default size */
+                            }
+                        
+                            /* Media Query for smaller devices (e.g., mobile phones) */
+                            @media (max-width: 767px) {
+                                .carousel-inner .hero__text h2 {
+                                    font-size: 28px; /* Smaller font size for mobile */
+                                }
+                        
+                                .carousel-inner .hero__text p {
+                                    font-size: 14px; /* Smaller font size for mobile */
+                                }
+                        
+                                .carousel-inner .primary-btn {
+                                    font-size: 14px; /* Smaller font size for mobile */
+                                }
+                            }
+                        
+                            /* Media Query for medium-sized devices (e.g., tablets) */
+                            @media (min-width: 768px) and (max-width: 991px) {
+                                .carousel-inner .hero__text h2 {
+                                    font-size: 36px; /* Medium font size */
+                                }
+                        
+                                .carousel-inner .hero__text p {
+                                    font-size: 16px; /* Medium font size */
+                                }
+                        
+                                .carousel-inner .primary-btn {
+                                    font-size: 15px; /* Medium font size */
+                                }
+                            }
+                        </style>
+                        
+
                         @if ($slider->count() > 1)
                             <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>

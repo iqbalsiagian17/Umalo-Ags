@@ -126,6 +126,12 @@
     font-size: 24px;
 }
 
+@media (max-width: 767px) {
+    .chat-bubble {
+        margin-bottom: 80px;
+    }
+}
+
 </style>
 
     <!-- Js Plugins -->

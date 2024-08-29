@@ -14,10 +14,6 @@ class UserDetail extends Model
     protected $fillable = [
         'user_id',
         'no_telepone',
-        'alamat',
-        'kota',
-        'provinsi',
-        'kode_pos',
         'perusahaan',
         'lahir',
         'jenis_kelamin',

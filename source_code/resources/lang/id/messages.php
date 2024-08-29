@@ -161,6 +161,11 @@ return [
     'save' => 'Simpan',
     'verified' => 'Verified',
     'review' => 'Ulasan',
+    'alamat' => 'Alamat',
+    'additional_info' => 'Informasi Tambahan',
+    'deactivate' => 'Tidak aktif',
+    'activate' => 'Aktif',
+    'add_new_address' => 'Tambahkan Alamat',
 
     //login
     'already_verified' => 'Telah Di Verifikasi',

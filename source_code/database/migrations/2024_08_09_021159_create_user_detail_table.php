@@ -15,10 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id'); // Matching the type of the users.id
             $table->string('no_telepone');
-            $table->text('alamat');
-            $table->string('kota');
-            $table->string('provinsi');
-            $table->string('kode_pos');
             $table->string('perusahaan');
             $table->date('lahir');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);

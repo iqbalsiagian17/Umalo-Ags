@@ -166,6 +166,11 @@ return [
     'success_update' => 'Your profile has been successfully updated.',
     'save' => 'Save',
     'verified' => 'Verified',
+    'alamat' => 'Address',
+    'additional_info' => 'Additional Information',
+    'deactivate' => 'Deactivate',
+    'activate' => 'Activate',
+    'add_new_address' => 'Add New Address',
 
     //login
     'already_verified' => 'Already Verified',

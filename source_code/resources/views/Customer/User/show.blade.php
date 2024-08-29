@@ -136,13 +136,19 @@
         <div class="tab-pane fade" id="address-list" role="tabpanel" aria-labelledby="address-list-tab">
             <div class="card mb-5 shadow rounded border-0">
                 <div class="card-body">
-                    <div class="card p-3 mb-3" style="border: 1px solid #28a745; background-color: #f0fff4;">
+                    @foreach($userAddresses as $index => $userAddress)
+                    <div class="card p-3 mb-3" style="border: 1px solid {{ $userAddress->status == 'aktif' ? '#28a745' : '#dc3545' }}; background-color: {{ $userAddress->status == 'aktif' ? '#f0fff4' : '#f8d7da' }};">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="card-title"><strong>{{ __('messages.home') }}</strong> <span class="badge bg-light text-dark">{{ __('messages.default') }}</span></h5>
+                                <h5 class="card-title">
+                                    <strong>Alamat {{ $index + 1 }}</strong> 
+                                    <span class="badge {{ $userAddress->status == 'aktif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                        {{ $userAddress->status }}
+                                    </span>
+                                </h5>
                                 <p class="mb-0">{{ $user->name }}, {{ $userDetail->perusahaan }}</p>
                                 <p class="mb-0">{{ $userDetail->no_telepone }}</p>
-                                <p class="mb-0">{{ $userDetail->alamat }}, {{ $userDetail->kota }}, {{ $userDetail->provinsi }} {{ $userDetail->kode_pos }}</p>
+                                <p class="mb-0">{{ $userAddress->alamat }}, {{ $userAddress->kota }}, {{ $userAddress->provinsi }} {{ $userAddress->kode_pos }}, {{ $userAddress->tambahan }}</p>
                             </div>
                             <div>
                                 <i class="bi bi-check-circle" style="color: #28a745; font-size: 1.5rem;"></i>
@@ -150,13 +156,23 @@
                         </div>
                         <hr>
                         <div class="d-flex justify-content-start">
-                            <a href="{{ route('user.edit') }}" class="btn btn-primary">{{ __('messages.edit_address') }}</a>
+                            <a href="{{ route('user.editAddress', $userAddress->id) }}" class="btn btn-primary">{{ __('messages.edit_address') }}</a>
+                            <form method="POST" action="{{ route('user.toggleAddressStatus', $userAddress->id) }}" style="margin-left: 10px;">
+                                @csrf
+                                <button type="submit" class="btn {{ $userAddress->status == 'aktif' ? 'btn-danger' : 'btn-success' }}">
+                                    {{ $userAddress->status == 'aktif' ? __('messages.deactivate') : __('messages.activate') }}
+                                </button>
+                            </form>
                         </div>
+                    </div>
+                    @endforeach
+        
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('user.createAddress') }}" class="btn btn-success">{{ __('messages.add_new_address') }}</a>
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>        
     </div>
 </div>
 

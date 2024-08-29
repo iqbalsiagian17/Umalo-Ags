@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Costumer\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserAddress;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,15 +16,17 @@ class UserDetailController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $userDetail = Auth::user()->userDetail;
+        $userDetail = $user->userDetail;
+        $userAddresses = $user->addresses; // This should return a collection, not null
     
         if (!$userDetail) {
-            return redirect()->route('user.create') // Menggunakan nama rute yang benar
+            return redirect()->route('user.create')
                 ->with('warning', 'Please complete your details.');
         }
     
-        return view('customer.user.show', compact('userDetail','user'));
+        return view('customer.user.show', compact('userDetail', 'user', 'userAddresses'));
     }
+    
 
     public function create()
     {
@@ -46,14 +49,21 @@ class UserDetailController extends Controller
         $userDetail = new UserDetail([
             'user_id' => Auth::id(),
             'no_telepone' => $request->get('no_telepone'),
-            'alamat' => $request->get('alamat'),
-            'kota' => $request->get('kota'),
-            'provinsi' => $request->get('provinsi'),
             'perusahaan' => $request->get('perusahaan'),
-            'kode_pos' => $request->get('kode_pos'),
             'lahir' => $request->get('lahir'),
             'jenis_kelamin' => $request->get('jenis_kelamin'),
         ]);
+
+        $userAddress = new UserAddress([
+            'user_id' => Auth::id(),
+            'alamat' => $request->get('alamat'),
+            'kota' => $request->get('kota'),
+            'provinsi' => $request->get('provinsi'),
+            'kode_pos' => $request->get('kode_pos'),
+            'tambahan' => $request->get('tambahan'),
+            'status' => 'aktif', // Default status
+        ]);
+        $userAddress->save();
 
         $userDetail->save();
 
@@ -93,14 +103,33 @@ class UserDetailController extends Controller
 
         $userDetail->update([
             'no_telepone' => $request->get('no_telepone'),
-            'alamat' => $request->get('alamat'),
-            'kota' => $request->get('kota'),
-            'provinsi' => $request->get('provinsi'),
             'perusahaan' => $request->get('perusahaan'),
-            'kode_pos' => $request->get('kode_pos'),
             'lahir' => $request->get('lahir'),
             'jenis_kelamin' => $request->get('jenis_kelamin'),
         ]);
+
+        $userAddress = Auth::user()->address;
+        if ($userAddress) {
+            $userAddress->update([
+                'alamat' => $request->get('alamat'),
+                'kota' => $request->get('kota'),
+                'provinsi' => $request->get('provinsi'),
+                'kode_pos' => $request->get('kode_pos'),
+                'tambahan' => $request->get('tambahan'),
+                'status' => 'aktif', // Keep the status active
+            ]);
+        } else {
+            // Create a new address if it doesn't exist
+            UserAddress::create([
+                'user_id' => Auth::id(),
+                'alamat' => $request->get('alamat'),
+                'kota' => $request->get('kota'),
+                'provinsi' => $request->get('provinsi'),
+                'kode_pos' => $request->get('kode_pos'),
+                'tambahan' => $request->get('tambahan'),
+                'status' => 'aktif',
+            ]);
+        }
 
         return redirect()->route('user.show')->with('success', 'Detail has been updated');
     }
@@ -185,6 +214,97 @@ public function uploadProfilePhoto(Request $request)
             dd('User is not an instance of User model');
         }
     }
+
+    public function editAddress()
+    {
+        $userAddress = Auth::user()->address;
+
+        if (!$userAddress) {
+            return redirect()->route('user.create') // Redirect to create if address doesn't exist
+                ->with('warning', 'Please add your address details first.');
+        }
+
+        return view('customer.user.edit_address', compact('userAddress'));
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $request->validate([
+            'alamat' => 'required|string',
+            'kota' => 'required|string',
+            'provinsi' => 'required|string',
+            'kode_pos' => 'required|string|size:5',
+            'tambahan' => 'nullable|string',
+        ]);
+
+        $userAddress = Auth::user()->address;
+
+        if (!$userAddress) {
+            return redirect()->route('user.create')
+                ->with('warning', 'Please complete your address details.');
+        }
+
+        $userAddress->update([
+            'alamat' => $request->get('alamat'),
+            'kota' => $request->get('kota'),
+            'provinsi' => $request->get('provinsi'),
+            'kode_pos' => $request->get('kode_pos'),
+            'tambahan' => $request->get('tambahan'),
+            'status' => 'aktif', // Keep the status active
+        ]);
+
+        return redirect()->route('user.show')->with('success', 'Address has been updated successfully.');
+    }
+
+    public function toggleAddressStatus($id)
+{
+    $user = Auth::user();
+    
+    // Deactivate all addresses for the user
+    UserAddress::where('user_id', $user->id)->update(['status' => 'tidak aktif']);
+
+    // Find the specific address by id and toggle its status
+    $address = UserAddress::where('user_id', $user->id)->findOrFail($id);
+
+    $address->status = 'aktif';
+    $address->save();
+
+    return redirect()->back()->with('success', 'Address status updated successfully.');
+}
+
+public function createAddress()
+{
+    return view('customer.user.create_address');
+}
+
+public function storeAddress(Request $request)
+{
+    $request->validate([
+        'alamat' => 'required|string',
+        'kota' => 'required|string',
+        'provinsi' => 'required|string',
+        'kode_pos' => 'required|string|size:5',
+        'tambahan' => 'nullable|string',
+    ]);
+
+    // Deactivate existing addresses
+    UserAddress::where('user_id', Auth::id())->update(['status' => 'tidak aktif']);
+
+    // Create a new address and set it as active
+    UserAddress::create([
+        'user_id' => Auth::id(),
+        'alamat' => $request->get('alamat'),
+        'kota' => $request->get('kota'),
+        'provinsi' => $request->get('provinsi'),
+        'kode_pos' => $request->get('kode_pos'),
+        'tambahan' => $request->get('tambahan'),
+        'status' => 'aktif',
+    ]);
+
+    return redirect()->route('user.show')->with('success', 'New address has been added.');
+}
+
+
 
     
 

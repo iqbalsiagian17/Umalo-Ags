@@ -65,11 +65,11 @@
     
                 <hr>
                 <!-- Address Section -->
-                <h4 class="mb-3">{{ __('messages.location') }}</h4>
+                <h4 class="mb3">{{ __('messages.location') }}</h4>
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat</label>
+                            <label for="alamat" class="form-label">{{ __('messages.alamat') }}</label>
                             <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}">
                             @if ($errors->has('alamat'))
                                 <small class="text-danger">{{ $errors->first('alamat') }}</small>
@@ -80,6 +80,13 @@
                             <input type="text" class="form-control" id="kota" name="kota" value="{{ old('kota') }}">
                             @if ($errors->has('kota'))
                                 <small class="text-danger">{{ $errors->first('kota') }}</small>
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <label for="tambahan" class="form-label">{{ __('messages.additional_info') }}</label>
+                            <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}">
+                            @if ($errors->has('tambahan'))
+                                <small class="text-danger">{{ $errors->first('tambahan') }}</small>
                             @endif
                         </div>
                     </div>

@@ -228,6 +228,99 @@
     </div>
     </header>
 
+
+
+
+
+
+
+<!-- Bottom Navbar -->
+<!-- Bottom Navbar -->
+<nav class="navbar navbar-dark bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none p-0 shadow">
+    <ul class="navbar-nav nav-justified w-100 shadow">
+        <li class="nav-item">
+            <a href="/" class="nav-link text-center text-dark">
+                <div class="icon-circle">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-house" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
+                        <path fill-rule="evenodd"
+                            d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z" />
+                    </svg>
+                </div>
+                <span class="small d-block">{{ __('messages.home') }}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link text-center text-dark">
+                <div class="icon-circle">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+                        <path fill-rule="evenodd"
+                            d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+                    </svg>
+                </div>
+                <span class="small d-block">{{ __('messages.search') }}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('order.history') }}" class="nav-link text-center text-dark">
+                <div class="icon-circle">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-bag" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M6 2a1 1 0 0 0-1 1v1H3.5A1.5 1.5 0 0 0 2 5.5v8A1.5 1.5 0 0 0 3.5 15h9A1.5 1.5 0 0 0 14 13.5v-8A1.5 1.5 0 0 0 12.5 4H11V3a1 1 0 0 0-1-1H6zm4 2H6V3h4v1zm-8 2h12v8H2V6zm3-1v1h6V5H5z" />
+                    </svg>
+                </div>
+                <span class="small d-block">{{ __('messages.purchase') }}</span>
+            </a>
+        </li>
+        <li class="nav-item dropup">
+            <a href="#" class="nav-link text-center text-dark" role="button" id="dropdownMenuProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <div class="icon-circle">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 5c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                    </svg>
+                </div>
+                <span class="small d-block">Profile</span>
+            </a>
+            <!-- Dropup menu for profile -->
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuProfile">
+                @auth
+                    <a class="dropdown-item" href="/personal">{{ __('messages.settings') }}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    {{ __('messages.logout') }}</a>
+                @else
+                    <a class="dropdown-item" href="{{ route('login') }}">{{ __('messages.login') }}</a>
+                @endauth
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<style>
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+}
+</style>
+
+
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var header = document.querySelector('.container-fluid.shadow');
@@ -292,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     <style>
-        .header__fixed {
+    .header__fixed {
     position: fixed;
     top: 0;
     left: 0;
@@ -306,6 +399,19 @@ document.addEventListener('DOMContentLoaded', function() {
     height: 120px; /* Adjust the height to match the height of the fixed header */
     display: none; /* Hidden by default */
 }
+
+/* Media Query for Mobile Mode */
+@media (max-width: 767px) {
+    .header__fixed {
+        position: static;
+        box-shadow: none;
+    }
+
+    .header__placeholder {
+        display: none; /* Optionally, ensure the placeholder is hidden on mobile */
+    }
+}
+
 
     </style>
     <!-- Header Section End -->
