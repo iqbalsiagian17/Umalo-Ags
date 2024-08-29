@@ -47,7 +47,14 @@
                         </tr>
                         <tr>
                             <td>Harga Total</td>
-                            <td>{{ 'Rp ' . number_format($order->harga_total, 0, ',', '.') }}</td>
+                            <td>
+                                @if($order->harga_setelah_nego)
+                                    <span style="text-decoration: line-through;">Rp {{ number_format($order->harga_total, 0, ',', '.') }}</span><br>
+                                    <span>Rp {{ number_format($order->harga_setelah_nego, 0, ',', '.') }}</span>
+                                @else
+                                    Rp {{ number_format($order->harga_total, 0, ',', '.') }}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td>Tanggal Transaksi</td>
@@ -61,39 +68,47 @@
 
     <div class="col-md-6">
         <!-- Second Card: Transaction Items -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title"><h2>Item Transaksi</h2></div>
-            </div>
-            <div class="card-body">
-                @if($order->orderItems && $order->orderItems->isNotEmpty())
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Produk ID</th>
-                                <th>Nama Produk</th>
-                                <th>Jumlah</th>
-                                <th>Harga Satuan</th>
-                                <th>Total Harga</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($order->orderItems as $item)
-                                <tr>
-                                    <td>{{ $item->produk_id }}</td>
-                                    <td>{{ $item->produk->nama }}</td>
-                                    <td>{{ $item->jumlah }}</td>
-                                    <td>{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
-                                    <td>{{ 'Rp ' . number_format($item->jumlah * $item->harga, 0, ',', '.') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <p>No Transaction Items Available</p>
-                @endif
-            </div>
-        </div>
+ <div class="card mb-4">
+    <div class="card-header">
+        <div class="card-title"><h2>Item Transaksi</h2></div>
+    </div>
+    <div class="card-body">
+        @if($order->orderItems && $order->orderItems->isNotEmpty())
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Produk ID</th>
+                        <th>Nama Produk</th>
+                        <th>Jumlah</th>
+                        <th>Harga Satuan</th>
+                        <th>Total Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($order->orderItems as $item)
+                        <tr>
+                            <td>{{ $item->produk_id }}</td>
+                            <td>{{ $item->produk->nama }}</td>
+                            <td>{{ $item->jumlah }}</td>
+                            <td>{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
+                            <td>
+                                @if($order->harga_setelah_nego)
+                                    <span style="text-decoration: line-through;">Rp {{ number_format($item->jumlah * $item->harga, 0, ',', '.') }}</span><br>
+                                    <span>Rp {{ number_format($item->jumlah * ($order->harga_setelah_nego / $order->orderItems->sum('jumlah')), 0, ',', '.') }}</span>
+                                @else
+                                    Rp {{ number_format($item->jumlah * $item->harga, 0, ',', '.') }}
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p>No Transaction Items Available</p>
+        @endif
+    </div>
+</div>
+
     </div>
 </div>
 

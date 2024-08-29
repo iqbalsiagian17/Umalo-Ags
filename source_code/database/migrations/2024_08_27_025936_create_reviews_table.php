@@ -13,6 +13,9 @@ class CreateReviewsTable extends Migration
             $table->unsignedBigInteger('produk_id');
             $table->unsignedInteger('user_id'); // Matching the type of the users.id
             $table->text('content');
+            $table->integer('rating');
+            $table->json('images')->nullable(); // Storing images as a JSON array
+            $table->json('videos')->nullable(); // Storing videos as a JSON array
             $table->timestamps();
 
             $table->foreign('produk_id')->references('id')->on('produk')->onDelete('cascade');

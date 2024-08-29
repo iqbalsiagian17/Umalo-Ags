@@ -64,6 +64,7 @@ return [
     'remove' => 'Hapus',
     'cart_total' => 'Total Keranjang',
     'total' => 'Total',
+    'negotiated_price' => 'Harga Setelah Nego', // Add this line
     'proceed_to_checkout' => 'Lanjutkan ke Pembayaran',
     'complete_personal_data' => 'Anda harus melengkapi data pribadi Anda sebelum melanjutkan ke pembayaran.',
     'fill_personal_data' => 'Isi Data Pribadi',

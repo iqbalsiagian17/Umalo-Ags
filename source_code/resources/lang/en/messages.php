@@ -68,6 +68,7 @@ return [
     'remove' => 'Remove',
     'cart_total' => 'Cart Total',
     'total' => 'Total',
+    'negotiated_price' => 'Negotiated Price', // Add this line
     'proceed_to_checkout' => 'Proceed to Checkout',
     'complete_personal_data' => 'You must complete your personal data before proceeding to checkout.',
     'fill_personal_data' => 'Fill Personal Data',

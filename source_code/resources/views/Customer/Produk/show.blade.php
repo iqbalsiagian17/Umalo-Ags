@@ -285,49 +285,101 @@
                         <div class="tab-pane" id="tabs-3" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>Ulasan</h6>
-            
+                        
                                 <!-- Display existing reviews or a message if no reviews are available -->
                                 @if($produk->reviews->isNotEmpty())
-                                    @foreach($produk->reviews as $review)
-                                        <div class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
-                                            <div class="review-avatar mr-3">
-                                                <img src="{{ $review->user->foto_profile ? asset($review->user->foto_profile) : asset('assets/images/logo.png') }}"                     
-                                                alt="Avatar" class="rounded-circle border" width="60" height="60" style="object-fit: cover;"> 
-                                            </div>
-                                            <div class="review-content">
-                                                <h6 class="mb-1 font-weight-bold text-primary">{{ $review->user->name }} 
-                                                    @if($review->user->userDetail && $review->user->userDetail->perusahaan)
-                                                        <small class="text-muted">- {{ $review->user->userDetail->perusahaan }}</small>
-                                                    @endif
-                                                </h6>
-                                                <p class="text-secondary mb-2">{{ $review->content }}</p>
-                                                <small class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
-                                            </div>
+                                @foreach($produk->reviews as $review)
+                                <div class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
+                                    <div class="review-avatar mr-3">
+                                        <img src="{{ $review->user->foto_profile ? asset($review->user->foto_profile) : asset('assets/images/logo.png') }}"                     
+                                        alt="Avatar" class="rounded-circle border" width="60" height="60" style="object-fit: cover;"> 
+                                    </div>
+                                    <div class="review-content">
+                                        <h6 class="mb-1 font-weight-bold text-primary">{{ $review->user->name }} 
+                                            @if($review->user->userDetail && $review->user->userDetail->perusahaan)
+                                                <small class="text-muted">- {{ $review->user->userDetail->perusahaan }}</small>
+                                            @endif
+                                        </h6>
+                                        <div class="mb-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $review->rating)
+                                                    <i class="fas fa-star text-warning"></i>
+                                                @else
+                                                    <i class="far fa-star text-warning"></i>
+                                                @endif
+                                            @endfor
                                         </div>
-                                    @endforeach
+                                        <p class="text-secondary mb-2">{{ $review->content }}</p>
+                                        @php
+                                        $decodedImages = json_decode($review->images, true);
+                                        $decodedVideos = json_decode($review->videos, true);
+                                    @endphp
+                                    
+                                    @if(is_array($decodedImages) && !empty($decodedImages))
+                                        <div class="review-images">
+                                            @foreach($decodedImages as $image)
+                                                <img src="{{ asset('storage/' . $image) }}" alt="Review Image" class="img-thumbnail" width="100">
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    
+                                    @if(is_array($decodedVideos) && !empty($decodedVideos))
+                                        <div class="review-videos">
+                                            @foreach($decodedVideos as $video)
+                                                <video width="320" height="240" controls>
+                                                    <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    
+                                    
+                                        <small class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
+                                    </div>
+                                </div>
+                            @endforeach
+                            
                                 @else
                                     <p class="text-muted">Belum ada ulasan untuk produk ini</p>
                                 @endif
-
-
+                        
                                 <!-- Review Form -->
                                 @if($order && $order->status === 'Selesai')
-                                    @if($produk->reviews->where('user_id', auth()->id())->isEmpty())
-                                        <form action="{{ route('order.submitReview', $order->id) }}" method="POST">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label for="review">Tinggalkan Ulasan</label>
-                                                <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Kirim</button>
-                                        </form>
-                                    @else
-                                        <p>Anda telah memberikan ulasan untuk produk ini.</p>
-                                    @endif
+                                @if($produk->reviews->where('user_id', auth()->id())->isEmpty())
+                                <form action="{{ route('order.submitReview', $order->id) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="review">Tinggalkan Ulasan</label>
+                                        <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rating">Rating</label>
+                                        <div class="star-rating">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
+                                                <label for="star{{ $i }}" class="fa fa-star"></label>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="review_images">Upload Foto (Optional)</label>
+                                        <input type="file" name="review_images[]" id="review_images" class="form-control-file" accept="image/*" multiple>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="review_videos">Upload Video (Optional)</label>
+                                        <input type="file" name="review_videos[]" id="review_videos" class="form-control-file" accept="video/*" multiple>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Kirim</button>
+                                </form>
+                                
+                                @else
+                                    <p>Anda telah memberikan ulasan untuk produk ini.</p>
                                 @endif
-
+                            @endif
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -435,6 +487,31 @@
 
     <!-- CSS untuk Notifikasi -->
     <style>
+       .star-rating {
+    direction: rtl;
+    font-size: 2rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffc700;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc700;
+}
+
         .cart-notification {
             position: fixed;
             top: 50%;
@@ -513,6 +590,25 @@
                     });
             });
         });
+    </script>
+    <script>
+        document.querySelectorAll('.star-rating label').forEach(function(label) {
+    label.addEventListener('mouseover', function() {
+        this.classList.add('hover');
+        this.previousElementSibling?.classList.add('hover');
+        this.previousElementSibling?.previousElementSibling?.classList.add('hover');
+        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
+        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
+    });
+    label.addEventListener('mouseout', function() {
+        this.classList.remove('hover');
+        this.previousElementSibling?.classList.remove('hover');
+        this.previousElementSibling?.previousElementSibling?.classList.remove('hover');
+        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
+        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
+    });
+});
+
     </script>
 
 @endsection

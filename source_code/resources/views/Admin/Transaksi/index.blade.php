@@ -33,7 +33,14 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->user->name }}</td> 
-                            <td>{{ $order->harga_total }}</td>
+                            <td>
+                                @if($order->harga_setelah_nego)
+                                    <span style="text-decoration: line-through;">Rp {{ number_format($order->harga_total, 0, ',', '.') }}</span><br>
+                                    <span>Rp {{ number_format($order->harga_setelah_nego, 0, ',', '.') }}</span>
+                                @else
+                                    Rp {{ number_format($order->harga_total, 0, ',', '.') }}
+                                @endif
+                            </td>
                             <td>{{ $order->status }}</td>
                             <td>
                                 <a href="{{ route('transaksi.show', $order->id) }}" class="btn btn-info">Lihat</a>

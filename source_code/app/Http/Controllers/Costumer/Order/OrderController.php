@@ -90,8 +90,8 @@ class OrderController extends Controller
 }
 public function generatePdf($id)
 {
-    // Retrieve the order along with related items and user details
-    $order = Order::with(['orderItems.produk', 'user.userDetail'])->findOrFail($id);
+    // Retrieve the order along with related items, user details, and addresses
+    $order = Order::with(['orderItems.produk', 'user.userDetail', 'user.addresses'])->findOrFail($id);
 
     // Retrieve the latest PPN record
     $ppn = PPN::latest()->first();
@@ -99,11 +99,14 @@ public function generatePdf($id)
     // Retrieve all Materai records
     $materai = Materai::all(); 
 
-    // Calculate the total price including PPN
-    $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
-    
     // Retrieve the UserDetail from the Order's user relationship
     $userDetail = $order->user->userDetail; 
+
+    // Retrieve the UserAddresses from the User
+    $userAddresses = $order->user->addresses;
+
+    // Calculate the total price including PPN
+    $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
 
     // Convert Materai images to base64
     $materaiImages = [];
@@ -118,7 +121,7 @@ public function generatePdf($id)
     }
 
     // Load the view and pass the necessary data to it
-    $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail'));
+    $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail', 'userAddresses'));
 
     // Sanitize the company name to create a valid filename
     $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan); 
@@ -128,10 +131,6 @@ public function generatePdf($id)
     // Return the generated PDF for download
     return $pdf->download($fileName);
 }
-
-
-
-
 
 
 public function transactionHistory($id)
@@ -161,7 +160,7 @@ public function uploadBuktiPembayaran(Request $request, $id)
 }
 public function submitReview(Request $request, $id)
 {
-    $order = Order::with('orderItems.produk')->findOrFail($id); // Ensure the order and related products are loaded
+    $order = Order::with('orderItems.produk')->findOrFail($id);
 
     if ($order->status !== 'Selesai') {
         return redirect()->route('order.show', $id)->with('error', 'Anda hanya dapat mengulas setelah pesanan selesai.');
@@ -169,14 +168,38 @@ public function submitReview(Request $request, $id)
 
     $request->validate([
         'review' => 'required|string|max:1000',
+        'rating' => 'required|integer|min:1|max:5',
+        'review_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'review_videos.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:20000',
     ]);
 
-    // Assuming the user is submitting a review for the first product in the order
     $orderItem = $order->orderItems->first();
     if ($orderItem) {
+        $images = [];
+        $videos = [];
+
+        // Handle image uploads
+        if ($request->hasFile('review_images')) {
+            foreach ($request->file('review_images') as $image) {
+                $path = $image->store('review_images', 'public');
+                $images[] = $path;
+            }
+        }
+
+        // Handle video uploads
+        if ($request->hasFile('review_videos')) {
+            foreach ($request->file('review_videos') as $video) {
+                $path = $video->store('review_videos', 'public');
+                $videos[] = $path;
+            }
+        }
+
         $orderItem->produk->reviews()->create([
             'user_id' => auth()->id(),
             'content' => $request->input('review'),
+            'rating' => $request->input('rating'),
+            'images' => $images ? json_encode($images, JSON_UNESCAPED_SLASHES) : null, // Ensure proper JSON encoding
+            'videos' => $videos ? json_encode($videos, JSON_UNESCAPED_SLASHES) : null, // Ensure proper JSON encoding
         ]);
 
         return redirect()->route('product.show', $orderItem->produk->id)->with('success', 'Ulasan berhasil dikirim.');
