@@ -92,47 +92,41 @@
 </footer>
 <!-- Footer Section End -->
 
-@auth
-    <a href="/chatify" id="chatBubble" class="chat-bubble">
-        <i class="fas fa-comments"></i>
-    </a>
-@endauth
 
 
-<style>
-    .chat-bubble {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #416bbf;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
+@if(Auth::check())
+   @php
+       $user = Auth::user();
+       $email = $user->email;
+       $no_telepon = $user->userDetail->no_telepone ?? 'N/A'; // Pastikan relasi UserDetail ada
+       $perusahaan = $user->userDetail->perusahaan ?? 'N/A'; // Pastikan relasi UserDetail ada
+   @endphp
 
-.chat-bubble:hover {
-    background-color: #334e86;
-}
+   <!--Start of Tawk.to Script-->
+   <script type="text/javascript">
+       var Tawk_API = Tawk_API || {};
+       Tawk_API.visitor = {
+           name : '{{ $user->name }}',
+           email : '{{ $email }}',
+           phone : '{{ $no_telepon }}',
+           job_title: '{{ $perusahaan }}'
+       };
 
-.chat-bubble i {
-    font-size: 24px;
-}
+       var Tawk_LoadStart = new Date();
+       (function(){
+           var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+           s1.async = true;
+           s1.src = 'https://embed.tawk.to/66b98f50146b7af4a4392fd9/1i52dfl1n';
+           s1.charset = 'UTF-8';
+           s1.setAttribute('crossorigin', '*');
+           s0.parentNode.insertBefore(s1, s0);
+       })();
+   </script>
+   <!--End of Tawk.to Script-->
+@endif
 
-@media (max-width: 767px) {
-    .chat-bubble {
-        margin-bottom: 80px;
-    }
-}
 
-</style>
+
 
     <!-- Js Plugins -->
     <script src="{{ asset('ogani/js/jquery-3.3.1.min.js') }}"></script>
