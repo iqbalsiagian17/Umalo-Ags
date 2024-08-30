@@ -32,7 +32,7 @@
                                         <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
                                             <div class="hero__text">
                                                 <h2 class="text-white">{{ $sliders->deskripsi }}</h2>
-                                                <a href="{{ $sliders->url }}" class="primary-btn rounded">{{ __('messages.shop') }}</a>
+                                                <a href="{{ $sliders->url }}" class="primary-btn rounded">{{ $sliders->tombol }}</a>
                                             </div>
                                         </div>
                                     </div>
