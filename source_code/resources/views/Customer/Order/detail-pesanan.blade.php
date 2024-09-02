@@ -58,54 +58,56 @@
 
             <h4 class="mt-4">{{ __('messages.order_items') }}:</h4>
             <div class="table-responsive">
-                <table class="table table-hover table-striped">
+                <table class="table table-bordered">
                     <thead class="text-white" style="background-color: #416bbf;">
                         <tr>
                             <th>{{ __('messages.product') }}</th>
                             <th class="text-center">{{ __('messages.quantity') }}</th>
                             <th class="text-right">{{ __('messages.price') }}</th>
-                            <!-- Conditionally display the negotiated price column if any product is negotiable -->
-                            @if($order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }))
-                                <th class="text-right">{{ __('messages.negotiated_price') }}</th>
-                            @endif
-                            <th class="text-right">{{ __('messages.subtotal') }}</th>
+                            <th class="text-right">{{ __('messages.total_price') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($order->orderItems as $item)
-                            <tr>
-                                <td>{{ $item->produk->nama }}</td>
-                                <td class="text-center">{{ $item->jumlah }}</td>
-                                <!-- Display original price; strikethrough only if negotiated price exists -->
-                                <td class="text-right">
-                                    @if($item->produk->nego == 'ya' && $order->harga_setelah_nego)
-                                        <span class="text-danger" style="text-decoration: line-through;">
-                                            {{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}
-                                        </span>
-                                    @else
-                                        {{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}
-                                    @endif
-                                </td>
-                                <!-- Display negotiated price only if the product is negotiable and the price has been updated -->
-                                @if($item->produk->nego == 'ya' && $order->harga_setelah_nego)
-                                    <td class="text-right">{{ 'Rp ' . number_format($order->harga_setelah_nego, 0, ',', '.') }}</td>
-                                @endif
-                                <!-- Calculate and display the subtotal -->
-                                <td class="text-right">
-                                    {{ 'Rp ' . number_format(($order->harga_setelah_nego && $item->produk->nego == 'ya') ? $order->harga_setelah_nego * $item->jumlah : $item->harga * $item->jumlah, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="bg-light">
+                        @foreach($order->orderItems as $index => $item)
                         <tr>
-                            <th colspan="{{ $order->orderItems->contains(function($item) { return $item->produk->nego == 'ya'; }) ? 4 : 3 }}" class="text-right">{{ __('messages.total') }}</th>
-                            <th class="text-right">
-                                <!-- Display the total using negotiated price if applicable -->
-                                {{ 'Rp ' . number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}
-                            </th>
+                            <td>{{ $index + 1 }}. {{ $item->produk->nama }}</td>
+                            <td class="text-center">{{ $item->jumlah }}</td>
+                            <td class="text-right">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
+                            <td class="text-right">{{ 'Rp ' . number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
                         </tr>
-                    </tfoot>
+                        @endforeach
+            
+                        <!-- Subtotal before negotiation -->
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>{{ __('messages.subtotal_before_negotiation') }}</strong></td>
+                            <td class="text-right">
+                                <strong>{{ 'Rp ' . number_format($order->orderItems->sum(function($item) {
+                                    return $item->harga * $item->jumlah;
+                                }), 0, ',', '.') }}</strong>
+                            </td>
+                        </tr>
+            
+                        @if($order->harga_setelah_nego)
+                        <!-- Harga Setelah Nego -->
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>{{ __('messages.negotiated_price') }}</strong></td>
+                            <td class="text-right">
+                                <strong>{{ 'Rp ' . number_format($order->harga_setelah_nego, 0, ',', '.') }}</strong>
+                            </td>
+                        </tr>
+                        @endif
+            
+                        <!-- Total -->
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>{{ __('messages.total') }}</strong></td>
+                            <td class="text-right">
+                                <strong>{{ 'Rp ' . number_format($order->harga_setelah_nego ? $order->harga_setelah_nego : $order->orderItems->sum(function($item) {
+                                    return $item->harga * $item->jumlah;
+                                }), 0, ',', '.') }}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                   
                 </table>
                 <p class="text-muted small">
                     <span class="text-danger">*</span>Harga yang tertera belum termasuk pajak PPN. Untuk mengetahui total transaksi yang sebenarnya, silakan melihat pada faktur (invoice) yang dapat diunduh.

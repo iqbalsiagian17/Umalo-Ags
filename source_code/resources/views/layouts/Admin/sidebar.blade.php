@@ -29,7 +29,7 @@
       <div class="sidebar-content">
         <ul class="nav nav-secondary">
           <li class="nav-item">
-            <a href="/dashboard">
+            <a href="{{ url('/dashboard') }}">
               <i class="fas fa-home"></i>
               <p>Dashboard</p>
              </a>

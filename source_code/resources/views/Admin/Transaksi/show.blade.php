@@ -221,20 +221,20 @@
     }
 
     function updateStatus(newStatus) {
-        if (newStatus === 'Packing' && !{{ $order->bukti_pembayaran ? 'true' : 'false' }}) {
+    if (newStatus === 'Packing' && !{{ $order->bukti_pembayaran ? 'true' : 'false' }}) {
         alert('Bukti pembayaran harus diunggah sebelum status bisa diubah menjadi Packing.');
         return;
     }
 
-        $('#statusInput').val(newStatus);
+    $('#statusInput').val(newStatus);
 
-        // Hide subtotal form for other statuses
-        if (newStatus === 'Packing' || newStatus === 'Pengiriman' || newStatus === 'Selesai') {
-            $('#subtotalGroup').hide();
-        }
-
-        submitForm();
+    // Hide subtotal form for other statuses
+    if (newStatus === 'Packing' || newStatus === 'Pengiriman' || newStatus === 'Selesai') {
+        $('#subtotalGroup').hide();
     }
+
+    submitForm();
+}
     function cancelOrder() {
         // Set status to Cancelled
         $('#statusInput').val('Cancelled');

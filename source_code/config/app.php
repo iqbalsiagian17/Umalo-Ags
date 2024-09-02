@@ -17,7 +17,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -56,9 +56,10 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost:8889/Umalo-Ags/source_code/public'),
 
-    'asset_url' => env('ASSET_URL', '/'),
+    //'asset_url' => env('ASSET_URL', '/'),
+    'asset' => env('APP_URL', 'http://localhost:8889/Umalo-Ags/source_code/public/'),
 
     /*
     |--------------------------------------------------------------------------

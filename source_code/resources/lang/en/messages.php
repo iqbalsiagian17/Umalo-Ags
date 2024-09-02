@@ -132,6 +132,8 @@ return [
     'cancelled' => 'Cancelled',
     'or_you_can_contact_admin' => 'or you can contact the admin via the following',
     'here' => 'here',
+    'subtotal_before_negotiation' => 'Subtotal Before Negotiation',
+
 
 
 
