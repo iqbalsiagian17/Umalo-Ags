@@ -10,7 +10,7 @@
                 <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
                 <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
                     <strong>Pesanan Anda #{{ $order->id }}</strong> sudah dikonfirmasi admin dan sedang menunggu Anda untuk mengirim bukti pembayaran segera.
-                    <a href="{{ route('order.details', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
+                    <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
             </div>
