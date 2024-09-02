@@ -163,6 +163,13 @@
                                     {{ $userAddress->status == 'aktif' ? __('messages.deactivate') : __('messages.activate') }}
                                 </button>
                             </form>
+                            <form method="POST" action="{{ route('user.deleteAddress', $userAddress->id) }}" style="margin-left: 10px;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('messages.are_you_sure_delete') }}')">
+                                    {{ __('messages.delete') }}
+                                </button>
+                            </form>
                         </div>
                     </div>
                     @endforeach
@@ -172,7 +179,7 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>                
     </div>
 </div>
 

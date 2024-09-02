@@ -5,7 +5,7 @@
     <div class="card shadow rounded border-0">
         <div class="card-body">
             <h4 class="mb-3">{{ __('messages.edit_address') }}</h4>
-            <form method="POST" action="{{ route('user.updateAddress') }}">
+            <form method="POST" action="{{ route('user.updateAddress', $userAddress->id) }}">
                 @csrf
                 @method('PUT')
                 <div class="row mb-4">
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>

@@ -64,12 +64,13 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/user/upload-profile-photo', [UserDetailController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
-    Route::get('/personal/address/edit', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
-    Route::put('/personal/address/update', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
+    Route::get('/personal/address/edit/{id}', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
+    Route::put('/personal/address/update/{id}', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
     Route::post('/personal/address/toggle/{id}', [UserDetailController::class, 'toggleAddressStatus'])->name('user.toggleAddressStatus');
     Route::get('/personal/address/create', [UserDetailController::class, 'createAddress'])->name('user.createAddress');
     Route::post('/personal/address/store', [UserDetailController::class, 'storeAddress'])->name('user.storeAddress');
-    
+    Route::delete('/personal/address/delete/{id}', [UserDetailController::class, 'deleteAddress'])->name('user.deleteAddress');
+
 
     // Cart
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');

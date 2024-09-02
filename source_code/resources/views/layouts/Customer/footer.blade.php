@@ -40,10 +40,18 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h6>{{ __('messages.help_resources') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/shop">{{ __('messages.find_product') }}</a></li>
+                                <li><a href="{{ route('shop') }}">{{ __('messages.find_product') }}</a></li>
 {{--                                 <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li> --}}
-                                <li><a href="/cart">{{ __('messages.shopping_cart') }}</a></li>
-                                <li><a href="/">{{ __('messages.home') }}</a></li>
+                                <li>
+                                    @auth
+                                        <!-- Jika pengguna sudah login, tampilkan link ke keranjang -->
+                                        <a href="{{ route('cart.view') }}">{{ __('messages.shopping_cart') }}</a>
+                                        @else
+                                        <!-- Jika pengguna belum login, arahkan ke halaman login -->
+                                        <a href="{{ route('login') }}">{{ __('messages.shopping_cart') }}</a>
+                                    @endauth
+                                </li>
+                                <li><a href="{{ route('home') }}">{{ __('messages.home') }}</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -52,7 +60,7 @@
 {{--                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
- --}}                                <li><a href="/faq">{{ __('messages.qna') }}</a></li>
+ --}}                                <li><a href="{{ route('faq') }}">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -63,10 +71,10 @@
             <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-center mb-4">
                 <div class="footer__widget">
                     <div class="footer__about__logo d-flex flex-column align-items-center">
-                        <a href="./index.html">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
-                        <a href="./index.html">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('assets/images/logo.png') }}" alt="" style="width: 100%; height: 100px;">
                         </a>
                     </div>
@@ -144,4 +152,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     </body>
-    </html>
+</html>

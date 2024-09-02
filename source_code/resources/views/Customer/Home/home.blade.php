@@ -37,7 +37,7 @@
                                             $formattedText = wordwrap($text, 100, "<br>\n", true);
                                         @endphp
                                         
-                                        <p class="text-white">{!! $formattedText !!}</p><a href="/shop" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                        <p class="text-white">{!! $formattedText !!}</p><a href="{{ route('shop')}}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -430,7 +430,7 @@
 
                     @if ($index == 7 && $produk->count() > 8)
                         <div class="col-lg-12 text-center mt-3">
-                            <a href="/shop" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
+                            <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>
                         @break
                     @endif

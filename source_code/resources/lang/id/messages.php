@@ -34,6 +34,8 @@ return [
     'language' => 'Bahasa',
     'settings' => 'Pengaturan',
     'purchase' => 'Pembelian Saya',
+    'delete' => 'Hapus',
+    'are_you_sure_delete' => 'Apakah Anda yakin ingin menghapus ini?',
     
 
 

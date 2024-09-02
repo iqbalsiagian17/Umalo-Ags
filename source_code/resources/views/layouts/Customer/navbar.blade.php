@@ -147,7 +147,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="header__logo text-center mb-3">
-                            <a href="/"><img src="{{ asset('assets/images/logo.png') }}" alt=""
+                            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}" alt=""
                                     style="width: 100%; height: 100px;"></a>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
     <nav class="navbar navbar-dark bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none p-0 shadow">
         <ul class="navbar-nav nav-justified w-100 shadow">
             <li class="nav-item">
-                <a href="/" class="nav-link text-center text-dark">
+                <a href="{{ route('home') }}" class="nav-link text-center text-dark">
                     <div class="icon-circle">
                         <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-house"
                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
