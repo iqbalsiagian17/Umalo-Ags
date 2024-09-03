@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Detail Pesanan</h1>
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($order->orderItems as $item)
+                @foreach ($order->orderItems as $item)
                     <tr>
                         <td>{{ $item->produk->nama }}</td>
                         <td>{{ $item->jumlah }}</td>
@@ -35,9 +35,9 @@
                 @endforeach
             </tbody>
         </table>
-        @if($order->status == 'Diterima')
-        <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download Invoice</a>
-    @endif
+        @if ($order->status == 'Diterima')
+            <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download Invoice</a>
+        @endif
 
         <div class="mt-4">
             <a href="{{ route('cart.view') }}" class="btn btn-secondary">Back</a>
@@ -45,7 +45,7 @@
         <div class="mt-4">
             <a href="{{ route('order.transaction_history', $order->id) }}" class="btn btn-info">Lihat Riwayat Transaksi</a>
         </div>
-        
-        
+
+
     </div>
 @endsection

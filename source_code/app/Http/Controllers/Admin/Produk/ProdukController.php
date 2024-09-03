@@ -51,13 +51,11 @@ class ProdukController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $komoditas = Komoditas::all();
-        $subKategoris = SubKategori::all();
-        $kategoris = Kategori::all();
-        return view('admin.produk.create', compact('komoditas', 'subKategoris', 'kategoris'));
-    }
-
+{
+    $komoditas = Komoditas::all();
+    $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
+    return view('admin.produk.create', compact('komoditas', 'kategoris'));
+}
     /**
      * Store a newly created resource in storage.
      */
@@ -146,15 +144,14 @@ class ProdukController extends Controller
      * Show the form for editing the specified resource.
      */
 
-    public function edit(string $id)
-    {
-        $produk = Produk::find($id);
-        $komoditas = Komoditas::all();
-        $subKategoris = SubKategori::all();
-        $kategoris = Kategori::all();
-        $images = ProdukImage::where('produk_id', $id)->get(); 
-        return view('admin.produk.edit', compact('produk', 'komoditas', 'subKategoris', 'kategoris','images'));
-    }
+     public function edit($id)
+{
+    $produk = Produk::find($id);
+    $komoditas = Komoditas::all();
+    $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
+    $images = ProdukImage::where('produk_id', $id)->get();
+    return view('admin.produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
+}
 
     /**
      * Update the specified resource in storage.
@@ -283,12 +280,12 @@ class ProdukController extends Controller
     }
     
 
+    
     public function getSubKategori($kategoriId)
-    {
-        $subKategoris = SubKategori::where('kategori_id', $kategoriId)->get();
-        return response()->json($subKategoris);
-    }
-
+{
+    $subKategoris = SubKategori::where('kategori_id', $kategoriId)->get();
+    return response()->json($subKategoris);
+}
     public function updateStatus(Request $request, $id)
     {
         $produk = Produk::find($id);

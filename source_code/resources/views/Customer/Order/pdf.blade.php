@@ -207,20 +207,20 @@
         <p><strong>Number:</strong> 240186/INV-AGS-GSA/VII/2024</p>
         <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     </div>
-    
+
     @php
         // Find the active address from the collection of userAddresses
         $activeAddress = $userAddresses->firstWhere('status', 'aktif');
     @endphp
-    
+
     <div class="content">
         <p style="margin: 0;">Billed To:</p>
         <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
-        @if($activeAddress)
+        @if ($activeAddress)
             <p style="margin: 0;">
                 {{ $activeAddress->alamat }},
                 {{ $activeAddress->kota }},
-                {{ $activeAddress->provinsi }} 
+                {{ $activeAddress->provinsi }}
                 {{ $activeAddress->kode_pos }}
             </p>
         @else
@@ -233,8 +233,8 @@
             PT. Arkamaya Guna Saharsa submits the invoice:
         </p>
     </div>
-    
-    
+
+
 
 
     <table class="invoice-table">
@@ -258,7 +258,15 @@
                     <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
-
+            @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) && $order->orderItems->contains(function ($item) {
+                return $item->produk->nego == 'ya';
+            }))
+                <tr>
+                    <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
+                    <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
+                </tr>
+            @endif
+            
             @if (
                 $order->orderItems->contains(function ($item) {
                     return $item->produk->nego == 'ya';
