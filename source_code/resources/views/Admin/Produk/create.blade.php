@@ -32,57 +32,58 @@
                         </li>
                     </ul>
                 
-                    <!-- Navigation Buttons -->
-                    <div class="ml-auto">
-                        <button type="button" class="btn btn-light" id="prevBtn"><i class="fas fa-arrow-left"></i> Back</button>
-                        <button type="button" class="btn btn-light" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
-                    </div>
+                   <!-- Navigation Buttons -->
+                   <div class="ml-auto">
+                    <button type="button" class="btn btn-light" id="prevBtn"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button type="button" class="btn btn-light" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
                 </div>
-    
-                <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-    
-                    <div class="tab-content" id="productFormContent">
-                        <!-- General Information Tab -->
-                        <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-                            <div class="form-group">
-                                <label for="nama"><span class="text-danger">*</span> Nama Produk: </label>
-                                <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
-                                @if ($errors->has('nama'))
-                                    <small class="text-danger">{{ $errors->first('nama') }}</small>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="nego"><span class="text-danger">*</span> Bisa Nego:</label>
-                                <select name="nego" id="nego" class="form-control" required>
-                                    <option value="" disabled {{ old('nego') ? '' : 'selected' }}>Pilih opsi</option>
-                                    <option value="ya" {{ old('nego') == 'ya' ? 'selected' : '' }}>Ya</option>
-                                    <option value="tidak" {{ old('nego') == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                </select>
-                                @if ($errors->has('nego'))
-                                    <small class="text-danger">{{ $errors->first('nego') }}</small>
-                                @endif
-                            </div>                            
-                            <div class="form-group">
-                                <label for="harga_ditampilkan"> <span class="text-danger">*</span> Harga Ditampilkan:</label>
-                                <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
-                                    <option value="" disabled {{ old('harga_ditampilkan') ? '' : 'selected' }}>Pilih opsi</option>
-                                    <option value="ya" {{ old('harga_ditampilkan') == 'ya' ? 'selected' : '' }}>Ya</option>
-                                    <option value="tidak" {{ old('harga_ditampilkan') == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                </select>
-                                @if ($errors->has('harga_ditampilkan'))
-                                    <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
-                                @endif
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="harga_tayang"><span class="text-danger">*</span> Harga Produk:</label>
-                                <input type="number" step="0.01" name="harga_tayang" id="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
-                                @if ($errors->has('harga_tayang'))
-                                    <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
-                                @endif
-                            </div>
+            </div>
 
+    
+            <form id="produkForm" action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="tab-content" id="productFormContent">
+                    <!-- General Information Tab -->
+                    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                        <div class="form-group">
+                            <label for="nama"><span class="text-danger">*</span> Nama Produk: </label>
+                            <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
+                            @if ($errors->has('nama'))
+                                <small class="text-danger">{{ $errors->first('nama') }}</small>
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            <label for="nego"><span class="text-danger">*</span> Bisa Nego:</label>
+                            <select name="nego" id="nego" class="form-control" required>
+                                <option value="" disabled {{ old('nego') ? '' : 'selected' }}>Pilih opsi</option>
+                                <option value="ya" {{ old('nego') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                <option value="tidak" {{ old('nego') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                            </select>
+                            @if ($errors->has('nego'))
+                                <small class="text-danger">{{ $errors->first('nego') }}</small>
+                            @endif
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="harga_ditampilkan"> <span class="text-danger">*</span> Harga Ditampilkan:</label>
+                            <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
+                                <option value="" disabled {{ old('harga_ditampilkan') ? '' : 'selected' }}>Pilih opsi</option>
+                                <option value="ya" {{ old('harga_ditampilkan') == 'ya' ? 'selected' : '' }}>Ya</option>
+                                <option value="tidak" {{ old('harga_ditampilkan') == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                            </select>
+                            @if ($errors->has('harga_ditampilkan'))
+                                <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
+                            @endif
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="harga_tayang"><span class="text-danger">*</span> Harga Produk:</label>
+                            <input type="number" step="0.01" name="harga_tayang" id="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
+                            @if ($errors->has('harga_tayang'))
+                                <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
+                            @endif
+                        </div>
                             <div class="form-group">
                                 <label for="spesifikasi_produk"><span class="text-danger">*</span> Spesifikasi Produk:</label>
                                 <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}
@@ -420,7 +421,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="submit" id="saveButton" class="btn btn-primary mt-3" >Simpan</button>
+                            <button type="button" id="saveButton" class="btn btn-primary mt-3">Simpan</button>
                         </div>
                     </div>
     
@@ -607,6 +608,26 @@
     }
 });
 
+</script>
+<script>
+    document.getElementById('saveButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Make sure all the data is correct before saving.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, save it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                document.getElementById('produkForm').submit();
+            }
+        });
+    });
 </script>
 
 @endsection

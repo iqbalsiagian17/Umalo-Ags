@@ -21,17 +21,6 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Edit Produk</div>
-                    <div class="d-flex align-items-center">
-                        <div class="selectgroup w-auto mr-3">
-                            <label class="selectgroup-item">
-                                <input type="radio" name="status" value="arsip" class="selectgroup-input" {{ $produk->status == 'arsip' ? 'checked' : '' }} />
-                                <span class="selectgroup-button">Arsip</span>
-                            </label>
-                            <label class="selectgroup-item">
-                                <input type="radio" name="status" value="publish" class="selectgroup-input" {{ $produk->status == 'publish' ? 'checked' : '' }} />
-                                <span class="selectgroup-button">Publish</span>
-                            </label>
-                        </div>
                     </div>
                     @if ($errors->has('status'))
                         <small class="text-danger">{{ $errors->first('status') }}</small>
@@ -580,36 +569,6 @@
     kategoriSelect.addEventListener('change', filterSubKategoris);
 });
 
-    </script>
-
-    <script>
-        document.querySelectorAll('input[name="status"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                var status = this.value;
-                var productId = "{{ $produk->id }}";  // Pass the product ID to use in the request
-
-                fetch(`/produk/update-status/${productId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({status: status})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        alert('Status berhasil diperbarui');
-                    } else {
-                        alert('Gagal memperbarui status');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat memperbarui status');
-                });
-            });
-        });
     </script>
 
 <style>
