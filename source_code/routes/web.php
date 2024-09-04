@@ -134,7 +134,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('transaksi', TransaksiController::class);
     Route::resource('users', UserController::class);
 
-
+    Route::put('/transaksi/{id}/updateEdit', [TransaksiController::class, 'updateEdit'])->name('transaksi.updateEdit');
     Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.update-status');
     Route::get('/admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
 
