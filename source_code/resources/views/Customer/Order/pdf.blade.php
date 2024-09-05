@@ -55,7 +55,8 @@
 
         hr {
             border: 1px solid #b8860b;
-            margin: 20px 0;
+            margin-top: -50px;
+
         }
 
         .invoice-info {
@@ -178,36 +179,45 @@
             line-height: 1.4;
             /* Adjust line height for better readability */
         }
+
+        .payment-box {
+            border: 1px solid #b8860b;
+            /* Adds a border to the box */
+            padding: -8px;
+            /* Adds space inside the box */
+            margin-top: 1px;
+            /* Adds space above the box */
+            border-radius: 5px;
+            /* Rounds the corners of the box */
+            background-color: #f9f9f9;
+            /* Optional: Adds a background color */
+        }
     </style>
 </head>
 
 <body>
     <div class="header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
         <div style="display: flex; align-items: center;">
-            <div style="font-size: 36px; font-family: 'Brush Script MT', cursive; color: #b8860b;">
-                ags.
-            </div>
-            <p style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #333; margin: 0 0 0 10px;">
-                Simplifying Industries
-            </p>
+            <!-- Adjust the image size and position -->
+            <img src="{{ $agsLogo }}" alt="AGS Logo" style="width: 130px; height: auto; margin-right: 15px;">
         </div>
-        <div style="text-align: center;">
+
+        <!-- Center the text vertically and horizontally -->
+        <div
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
             <h1
-                style="font-size: 28px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #b8860b; font-weight: 700; margin: 0;">
+                style="font-size: 34px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #b8860b; font-weight: 700; margin: 0; position: absolute; top: 30; right: 0; left: 50;">
                 ARKAMAYA GUNA SAHARSA
             </h1>
         </div>
     </div>
-
-
     <hr>
-
     <div class="invoice-info">
         <p class="invoice-title">INVOICE</p>
-        <p><strong>Number:</strong> 240186/INV-AGS-GSA/VII/2024</p>
+        <p><strong>Number:</strong> {{ $invoiceNumber }}</p>
         <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     </div>
-
+    
     @php
         // Find the active address from the collection of userAddresses
         $activeAddress = $userAddresses->firstWhere('status', 'aktif');
@@ -229,9 +239,11 @@
         <br>
         <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
         <p style="margin: 0;">
-            Based on Purchase Order No. {{ $order->id }}/GSA-PROC/IV/{{ $order->created_at->format('Y') }},
+            Based on Purchase Order No. {{ $order->id }}/{{ $companyAbbreviation }}-PROC/{{ $romanMonth }}/{{ $order->created_at->format('Y') }},
             PT. Arkamaya Guna Saharsa submits the invoice:
         </p>
+        
+        
     </div>
 
 
@@ -258,15 +270,16 @@
                     <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
-            @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) && $order->orderItems->contains(function ($item) {
-                return $item->produk->nego == 'ya';
-            }))
+            @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) &&
+                    $order->orderItems->contains(function ($item) {
+                        return $item->produk->nego == 'ya';
+                    }))
                 <tr>
                     <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
                     <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
                 </tr>
             @endif
-            
+
             @if (
                 $order->orderItems->contains(function ($item) {
                     return $item->produk->nego == 'ya';
@@ -301,12 +314,15 @@
 
     <div class="payment-info">
         <p><strong>Please make payments to:</strong></p>
-        <p>PT. Arkamaya Guna Saharsa</p>
-        <p>121-00-002881-1</p>
-        <p>Bank Mandiri Kebon Sirih</p>
-        <p>Jl. Tanah Abang Timur No. 1, RT.2/RW.3,</p>
-        <p> Gambir, Central Jakarta City, Jakarta 10110</p>
+        <div class="payment-box">
+            <p>PT. Arkamaya Guna Saharsa</p>
+            <p>121-00-002881-1</p>
+            <p>Bank Mandiri Kebon Sirih</p>
+            <p>Jl. Tanah Abang Timur No. 1, RT.2/RW.3,</p>
+            <p>Gambir, Central Jakarta City, Jakarta 10110</p>
+        </div>
     </div>
+
 
     <div class="footer">
         <p>Should you require further information, please do not hesitate to contact the undersigned.</p>
@@ -324,33 +340,23 @@
 
         <div class="company-details">
             <p>
-                <span class="icon icon-location">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                        <path
-                            d="M168 0C75.2 0 0 75.2 0 168s168 344 168 344s168-266.7 168-344S260.8 0 168 0zM168 256c-48.5 0-88-39.5-88-88s39.5-88 88-88s88 39.5 88 88S216.5 256 168 256z" />
-                    </svg>
-                </span>
+                <!-- Use the base64-encoded maps-and-flags.png -->
+                <img src="{{ $mapsIcon }}" alt="Location Icon"
+                    style="width: 10px; height: auto; margin-right: 5px;">
                 Jl. Matraman Raya No.148, Blok A2 No. 3 RT.1/RW.4, Kb. Manggis, Kec. Matraman, Kota Jakarta Timur,
                 Daerah Khusus Ibukota Jakarta 13150
             </p>
             <p>
-                <span class="icon icon-envelope">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path
-                            d="M502.3 190.8c3.5 2.7 5.7 7 5.7 11.6c0 4.2-2 8.2-5.4 10.8L256 416 8.5 213.2C4.9 210.7 2 206.7 2 202.4c0-4.6 2.2-8.9 5.7-11.6L256 32l246.3 158.8zM496 464H16c-8.8 0-16-7.2-16-16v-288l224 160c13.6 9.7 32 9.7 45.6 0L512 160v288C512 456.8 504.8 464 496 464z" />
-                    </svg>
-                </span>
+                <!-- Use the base64-encoded email.png -->
+                <img src="{{ $emailIcon }}" alt="Email Icon" style="width: 10px; height: auto; margin-right: 5px;">
                 info@labtek.id
                 |
-                <span class="icon icon-phone">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path
-                            d="M493.4 24.6L368 9.3c-8.3-1.1-16.6 2.5-22.4 8.9l-104 112c-6.3 6.8-7.8 16.6-4.3 25.1l32 80c3.1 7.8 1.4 16.9-4.3 23l-56 56c-3.1 3.1-8.3 3.1-11.4 0L128 336c-6.3-6.3-16.4-7.9-24.3-4.3l-80 32c-8.4 3.5-18.2 1.9-25-4.3L8.9 144c-6.4-6.4-9.9-14.7-8.9-22.9l15.3-125.4c1.2-10.2 9.2-18.5 19.5-19.5l96-8.5c6.8-.7 13.5 2.1 18.1 7.7l96 112c4.5 5.2 6.5 12 5.7 18.9L144 96 288 240l-96 64z" />
-                    </svg>
-                </span>
+                <!-- Use the base64-encoded phone-call.png -->
+                <img src="{{ $phoneIcon }}" alt="Phone Icon" style="width: 10px; height: auto; margin-right: 5px;">
                 (021) 85850913
             </p>
         </div>
+
 
     </div>
     </div>
