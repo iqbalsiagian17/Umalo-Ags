@@ -11,21 +11,23 @@
                         <div class="sidebar__item">
                             <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
                             <ul>
+                                <li><a href="{{ url('/shop') }}">All Komoditas</a></li> <!-- Default link to shop -->
                                 @foreach ($komoditas as $komoditasi)
                                     <li><a href="#">{{ $komoditasi->nama }}</a></li>
                                 @endforeach
                             </ul>
                         </div>
+                        
                         <div class="sidebar__item">
                             <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
                             <ul>
+                                <li><a href="{{ url('/shop') }}">All Categories</a></li> <!-- Default link to shop -->
                                 @foreach ($kategori as $kategoris)
-                                    <li><a
-                                            href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a>
-                                    </li>
+                                    <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
                                 @endforeach
                             </ul>
                         </div>
+                        
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">

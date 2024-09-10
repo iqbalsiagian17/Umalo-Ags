@@ -202,8 +202,7 @@
                                     <div class="form-group">
                                         <label for="bukti_pembayaran"
                                             class="form-label">{{ __('messages.select_payment_proof_file') }}</label>
-                                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran"
-                                            class="form-control" required>
+                                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="form-control" required>
                                         @if ($errors->has('bukti_pembayaran'))
                                             <small class="text-danger">{{ $errors->first('bukti_pembayaran') }}</small>
                                         @endif

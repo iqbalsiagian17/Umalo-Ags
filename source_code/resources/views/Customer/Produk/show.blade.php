@@ -104,14 +104,27 @@
                                                         $url = 'http://' . $url;
                                                     }
                                                 @endphp
-
-                                                <a href="{{ $url }}"
-                                                    target="_blank">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
+                                    
+                                                <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
                                             @else
                                                 N/A
                                             @endif
                                         </span>
                                     </li>
+
+                                    <style>
+                                        .ecatalog-link {
+                                            color: #007bff;
+                                            text-decoration: none;
+                                            transition: color 0.3s ease, text-decoration 0.3s ease;
+                                        }
+
+                                        .ecatalog-link:hover {
+                                            color: #ff0000;
+                                            text-decoration: underline;
+                                        }
+
+                                    </style>
                                     <li><b>{{ __('messages.average_rating') }}</b>
                                         <span>
                                             @if ($averageRating && $totalRatings)
@@ -287,12 +300,6 @@
                                                         <tr>
                                                             <th scope="row"><strong>Harga Diskon:</strong></th>
                                                             <td>{{ $produk->harga_diskon }}</td>
-                                                        </tr>
-                                                    @endif
-                                                    @if ($produk->harga_tayang)
-                                                        <tr>
-                                                            <th scope="row"><strong>Harga Tayang:</strong></th>
-                                                            <td>{{ $produk->harga_tayang }}</td>
                                                         </tr>
                                                     @endif
                                                     @if ($produk->kategori && $produk->kategori->nama)
