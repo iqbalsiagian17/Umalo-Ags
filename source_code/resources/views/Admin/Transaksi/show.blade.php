@@ -136,8 +136,10 @@
         @if($negotiable)
             @if($order->status == 'Menunggu Konfirmasi Admin untuk Negosiasi')
                 <button type="button" id="accButton" class="btn btn-success" onclick="prepareNegosiasi()">Konfirmasi</button>
+                <button type="button" id="rejectNegoButton" class="btn btn-danger" onclick="rejectNegotiation()">Tolak</button>
             @elseif($order->status == 'Negosiasi')
                 <button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus('Diterima')">Update</button>
+                <button type="button" id="rejectNegoButton" class="btn btn-danger" onclick="rejectNegotiation()">Tolak</button>
             @elseif($order->status == 'Diterima')
                 <button type="button" id="nextButton" class="btn btn-primary" onclick="updateStatus('Packing')">Update</button>
             @elseif($order->status == 'Packing')
@@ -220,21 +222,56 @@
         });
     }
 
+    function submitAndUpdateNegosiasi(isRejected = false) {
+    // Set status based on negotiation acceptance or rejection
+    if (isRejected) {
+        $('#statusInput').val('Diterima');
+    } else {
+        $('#statusInput').val('Negosiasi');
+    }
+
+    // Submit the form with the updated status
+    submitForm(function() {
+        let message = isRejected 
+            ? 'Negosiasi Ditolak, Orderan Berlanjut Ke Order Reguler. Status updated to Diterima successfully.'
+            : 'Status updated to Negosiasi successfully.';
+        alert(message);
+        
+        if (isRejected) {
+            // If rejected, hide WhatsApp group, subtotal input, and update button to 'Diterima'
+            $('#whatsappGroup').hide();
+            $('#subtotalGroup').hide();
+            updateButton('Update to Packing', 'Packing', 'btn-primary');
+        } else {
+            // If accepted, show subtotal input form and update button to 'Diterima'
+            $('#subtotalGroup').show();
+            updateButton('Update to Diterima', 'Diterima', 'btn-primary');
+        }
+    });
+}
+
+// Function to reject negotiation and move directly to 'Diterima'
+function rejectNegotiation() {
+    submitAndUpdateNegosiasi(true);
+}
+
+
+
     function updateStatus(newStatus) {
-    if (newStatus === 'Packing' && !{{ $order->bukti_pembayaran ? 'true' : 'false' }}) {
+        if (newStatus === 'Packing' && !{{ $order->bukti_pembayaran ? 'true' : 'false' }}) {
         alert('Bukti pembayaran harus diunggah sebelum status bisa diubah menjadi Packing.');
         return;
     }
 
-    $('#statusInput').val(newStatus);
+        $('#statusInput').val(newStatus);
 
-    // Hide subtotal form for other statuses
-    if (newStatus === 'Packing' || newStatus === 'Pengiriman' || newStatus === 'Selesai') {
-        $('#subtotalGroup').hide();
+        // Hide subtotal form for other statuses
+        if (newStatus === 'Packing' || newStatus === 'Pengiriman' || newStatus === 'Selesai') {
+            $('#subtotalGroup').hide();
+        }
+
+        submitForm();
     }
-
-    submitForm();
-}
     function cancelOrder() {
         // Set status to Cancelled
         $('#statusInput').val('Cancelled');
