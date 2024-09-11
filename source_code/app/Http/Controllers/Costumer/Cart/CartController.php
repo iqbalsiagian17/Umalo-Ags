@@ -77,47 +77,55 @@ class CartController extends Controller
     
 
 public function add(Request $request, $id)
-{
-    $product = Produk::find($id);
+    {
+        $product = Produk::with('bigSales')->find($id);
 
-    if (!$product) {
-        return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
-    }
-
-    $quantity = $request->input('quantity', 1);
-
-    // Cek apakah kuantitas melebihi stok
-    if ($quantity > $product->stok) {
-        return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
-    }
-
-    $harga = $product->harga_potongan ?: $product->harga_tayang;
-
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$id])) {
-        $cart[$id]['quantity'] += $quantity;
-
-        // Cek apakah kuantitas total melebihi stok setelah penambahan
-        if ($cart[$id]['quantity'] > $product->stok) {
-            return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
         }
-    } else {
-        $cart[$id] = [
-            "name" => $product->nama,
-            "quantity" => $quantity,
-            "harga_tayang" => $product->harga_tayang,
-            "harga_potongan" => $product->harga_potongan,
-            "image" => $product->images->first()->gambar ?? 'default.png'
-        ];
+
+        $quantity = $request->input('quantity', 1);
+
+        // Cek apakah kuantitas melebihi stok
+        if ($quantity > $product->stok) {
+            return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
+        }
+
+        $bigSale = $product->bigSales()
+                            ->where('status', 1)
+                            ->whereDate('mulai', '<=', now())
+                            ->whereDate('berakhir', '>=', now())
+                            ->first();
+
+        $harga = $product->harga_tayang;
+        if ($bigSale) {
+            $harga = $bigSale->pivot->harga_diskon;
+        }
+
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] += $quantity;
+
+            // Cek apakah kuantitas total melebihi stok setelah penambahan
+            if ($cart[$id]['quantity'] > $product->stok) {
+                return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
+            }
+        } else {
+            $cart[$id] = [
+                "name" => $product->nama,
+                "quantity" => $quantity,
+                "harga_tayang" => $harga,
+                "image" => $product->images->first()->gambar ?? 'default.png'
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+
+        return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
     }
-
-    session()->put('cart', $cart);
-
-    $totalQuantity = array_sum(array_column($cart, 'quantity'));
-
-    return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
-}
 
     
 
