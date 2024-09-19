@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <div class="container mt-5 mb-5">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                <button type="submit" class="btn text-white" style="background: #416bbf;">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>

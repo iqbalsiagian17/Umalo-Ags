@@ -248,16 +248,17 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
         return $word[0];
     }, $filteredWords))); // Take the first letter of each remaining word
 }
-    
+
     // Helper function to get the Roman numeral for a month
     public function getRomanMonth($month)
     {
         $romanMonths = [
-            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI', 
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI',
             7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'
         ];
         return $romanMonths[$month];
     }
+
 
 
 
@@ -321,6 +322,7 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
                     $videos[] = $path;
                 }
             }
+            // dd($images, $videos);
 
             $orderItem->produk->reviews()->create([
                 'user_id' => auth()->id(),

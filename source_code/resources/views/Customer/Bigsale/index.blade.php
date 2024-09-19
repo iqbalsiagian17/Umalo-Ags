@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <section class="product spad">
@@ -6,14 +6,6 @@
         <div class="row">
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
-                    <div class="sidebar__item">
-                        <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
-                        <ul>
-                            @foreach ($komoditas as $komoditasi)
-                                <li><a href="#">{{ $komoditasi->nama }}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
                     <div class="sidebar__item">
                         <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
                         <ul>
@@ -26,11 +18,11 @@
                             @endforeach
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
-                
+
                 <!-- Countdown Timer Begin -->
                 @if($bigSale)
                 <div class="countdown__timer">

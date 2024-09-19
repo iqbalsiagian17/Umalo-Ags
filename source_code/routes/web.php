@@ -22,6 +22,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
 use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
+use App\Http\Controllers\Costumer\Favorite\FavoriteController;
 use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\LanguageController;
@@ -44,6 +45,8 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
+Route::get('/shop/subcategory/{id}', [ShopController::class, 'filterBySubcategory'])->name('shop.subcategory');
+Route::get('/shop/price-range', [ShopController::class, 'filterByPriceRange'])->name('shop.priceRange');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
 Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
 Route::get('/product/{id}', [ProdukCostumerController::class, 'userShow'])->name('product.show');
@@ -64,19 +67,24 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/user/upload-profile-photo', [UserDetailController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
-    Route::get('/personal/address/edit/{id}', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
-    Route::put('/personal/address/update/{id}', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
+    Route::get('/personal/address/edit', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
+    Route::put('/personal/address/update', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
     Route::post('/personal/address/toggle/{id}', [UserDetailController::class, 'toggleAddressStatus'])->name('user.toggleAddressStatus');
     Route::get('/personal/address/create', [UserDetailController::class, 'createAddress'])->name('user.createAddress');
     Route::post('/personal/address/store', [UserDetailController::class, 'storeAddress'])->name('user.storeAddress');
-    Route::delete('/personal/address/delete/{id}', [UserDetailController::class, 'deleteAddress'])->name('user.deleteAddress');
-
+    
 
     // Cart
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
     Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+    //Favorite
+    Route::get('/favorites', [FavoriteController::class, 'showFavorites'])->name('favorite.show');
+    Route::post('/favorite/{product}', [FavoriteController::class, 'toggleFavorite'])->name('favorite.toggle');
+    Route::delete('/favorite/{product}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
+    Route::post('/favorite/{product}/cart', [FavoriteController::class, 'moveToCart'])->name('favorite.moveToCart');
 
     //checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
@@ -133,10 +141,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('qas', QaController::class);
     Route::resource('transaksi', TransaksiController::class);
     Route::resource('users', UserController::class);
+    Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
 
-    Route::put('/transaksi/{id}/updateEdit', [TransaksiController::class, 'updateEdit'])->name('transaksi.updateEdit');
+
+    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
     Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.update-status');
-    Route::get('/admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
+    Route::put('/transaksi/{id}/updateEdit', [TransaksiController::class, 'updateEdit'])->name('transaksi.updateEdit');
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);

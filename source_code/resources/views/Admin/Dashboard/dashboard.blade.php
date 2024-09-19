@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
     <div class="row">
@@ -35,7 +35,7 @@
                   <p class="card-category">Income</p>
                   <h4 class="card-title">Rp {{ number_format($totalSales, 2) }}</h4>
               </div>
-          </div>          
+          </div>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
           </div>
       </div>
   </div>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -141,7 +141,7 @@
           });
       });
   </script>
-  
+
 
     <!-- Statistik Pengunjung Hari Ini dan Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
     <div class="col-md-4">
@@ -188,8 +188,8 @@
                       <div class="col-md-6">
                           <!-- Google Account Information -->
                           <h5 class="text-muted">Google Account</h5>
-                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekeags@gmail.com</a></p>
-                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labtek123</span></p>
+                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekags@gmail.com</a></p>
+                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labtek123123</span></p>
                       </div>
                   </div>
                   <!-- Button to Tawk.to Dashboard -->
@@ -199,7 +199,7 @@
                       </button>
                   </div>
               </div>
-              
+
             </div>
         </div>
     </div>

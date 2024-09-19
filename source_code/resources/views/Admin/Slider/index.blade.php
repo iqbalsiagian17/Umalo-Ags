@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -16,6 +16,7 @@
             @endif
 
             <div class="card-body">
+                <div class="table-responsive">
                 <table class="table table-striped table-hover table-responsive">
                     <thead class="thead-dark">
                         <tr>
@@ -46,6 +47,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
                 <div class="d-flex justify-content-center">
                     {{ $sliders->links('pagination::bootstrap-5') }}
                 </div>

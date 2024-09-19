@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'slider_title' => 'Level Up Your Output With Labtek',
-    'slider_desc' => 'Everything you need to optimize your output to provide results that are more effective, efficient, of quality, and have added value.We deliver the solution through innovation by new technology products or services or deliver existing technology products or services in new ways.',
+    'slider_title' => 'Revolutionize Performance with Labtek Technology',
+    'slider_desc' => 'Labtek delivers innovations to improve your productivity and efficiency. Discover tailored solutions to deliver maximum results with the latest technologies that combine unparalleled quality, speed, and value-added advantages.',
     'shop_now' => 'Shop Now',
     'shop' => 'SHOP',
     'bisa_nego' => 'Negotiable',
@@ -25,7 +25,7 @@ return [
     'produk_ditemukan' => 'Products Found',
     'review' => 'Review',
 
-    //header 
+    //header
     'login' => 'Login',
     'register' => 'Register',
     'search' => 'Search',
@@ -36,11 +36,9 @@ return [
     'language' => 'language',
     'settings' => 'settings',
     'purchase' => 'My purchases',
-    'delete' => 'Delete',
-    'are_you_sure_delete' => 'Are you sure you want to delete this address?',
 
-        
-    
+
+
 
     //footer
     'contact_info' => 'Contact Info',
@@ -179,6 +177,8 @@ return [
     'deactivate' => 'Deactivate',
     'activate' => 'Activate',
     'add_new_address' => 'Add New Address',
+    'user_photo' => 'User Photo',
+
 
     //login
     'already_verified' => 'Already Verified',
@@ -202,4 +202,21 @@ return [
     'full_name' => 'Full Name',
     'register_with_google' => 'Register with Google Account',
     'already_have_account' => 'Already have an account?',
+
+    'all_kategori' => 'All Categories',
+    'search_empty' => 'Please enter the name of the product you want to search for before continuing the search. Thank You.',
+
+    'subkategori' => 'Subcategory',
+    'price_lowest' => 'Price Lowest',
+    'price_highest' => 'Price Highest',
+
+        'price_range' => 'Price Range',
+        'min_price' => 'Minimum Price',
+        'max_price' => 'Maximum Price',
+        'apply_filter' => 'Apply Filter',
+        'refresh' => 'Refresh',
+
+    'favorites_empty' => 'You don\'t have any favorite yet.',
+    'view_details' => 'View Detail',
+    'removed_from_favorites' => 'Deleted From Favorites'
 ];

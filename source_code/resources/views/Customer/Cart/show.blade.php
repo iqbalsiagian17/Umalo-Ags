@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 
@@ -59,28 +59,28 @@
                                         Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
                                     @endif
                                 </td>
-                                
-                                
-                                
-                                                 
+
+
+
+
                                 <td class="shoping__cart__quantity align-middle text-center">
                                     <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1" style="width: 70px; padding: 8px; text-align: center; margin: 0 auto; border-radius: 8px; border: 1px solid #ced4da; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
                                 </td>
-                                
+
                                 <td class="shoping__cart__total subtotal align-middle text-center" data-id="{{ $id }}">
                                     @php
-                                        $price = isset($details['harga_diskon']) && $details['harga_diskon'] > 0 ? $details['harga_diskon'] : 
-                                                (isset($details['harga_potongan']) && $details['harga_potongan'] > 0 ? $details['harga_potongan'] : 
+                                        $price = isset($details['harga_diskon']) && $details['harga_diskon'] > 0 ? $details['harga_diskon'] :
+                                                (isset($details['harga_potongan']) && $details['harga_potongan'] > 0 ? $details['harga_potongan'] :
                                                 ($details['harga_tayang'] ?? 0));
                                         $subtotal = $price * $details['quantity'];
                                     @endphp
                                     Rp {{ number_format($subtotal, 0, ',', '.') }}
                                 </td>
-                                
-                                
-                                
-                                
-                                
+
+
+
+
+
                                 <td>
                                     <form action="{{ route('cart.remove', $id) }}" method="POST">
                                         @csrf
@@ -89,7 +89,7 @@
                                     </form>
                                 </td>
                             </tr>
-                            
+
                             @php $total += $subtotal; @endphp
                             @endforeach
                         </tbody>
@@ -102,15 +102,15 @@
                                 <ul>
                                     <li>{{ __('messages.total') }} <span id="total">Rp {{ number_format($total, 0, ',', '.') }}</li>
                                 </ul>
-        
+
                                 @if(auth()->user()->userDetail)
                                     <form action="{{ route('cart.checkout') }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.proceed_to_checkout') }}</button>
+                                        <button type="submit" class="btn text-white" style="background: #416bbf;">{{ __('messages.proceed_to_checkout') }}</button>
                                     </form>
                                 @else
                                     <p class="text-danger">{{ __('messages.complete_personal_data') }}</p>
-                                    <a href="{{ route('user.create') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.fill_personal_data') }}</a>
+                                    <a href="{{ route('user.create') }}" class="btn text-white" style="background: #416bbf;">{{ __('messages.fill_personal_data') }}</a>
                                 @endif
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                 <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
                     <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
                         <h5 class="mb-1">{{ __('messages.cart_empty') }}</h5>
-                        <a href="{{ route('shop') }}" class="btn text-white mt-3" style="background-color: #42378C;">{{ __('messages.shop_now') }}</a>
+                        <a href="{{ route('shop') }}" class="btn text-white mt-3" style="background-color: #416bbf;">{{ __('messages.shop_now') }}</a>
                     </div>
                 </div>
                 @endif

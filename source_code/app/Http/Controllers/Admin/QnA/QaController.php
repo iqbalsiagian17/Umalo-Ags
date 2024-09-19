@@ -55,7 +55,7 @@ class QaController extends Controller
      */
     public function edit(Qa $qa)
     {
-        return view('admin.Qna.edit', compact('qa'));
+        return view('admin.QnA.edit', compact('qa'));
     }
 
     /**

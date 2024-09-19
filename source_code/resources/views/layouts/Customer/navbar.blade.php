@@ -8,7 +8,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="{{ asset('assets/images/ags.png') }}" alt=""></a>
+            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -76,8 +76,8 @@
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
-                <li class="active"><a href="{{ url('/') }}">Home</a></li>
-                <li><a href="{{ url('/shop') }}">Shop</a></li>
+                <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('shop') }}">Shop</a></li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -90,8 +90,7 @@
         <div class="humberger__menu__contact">
             <ul>
                 <li><i class="fa fa-envelope"></i> info@labtek.id</li>
-                <li>Level-Up Your Output With <LABTEK></LABTEK>
-                </li>
+                <li>Level-Up Your Output With Labtek</li>
             </ul>
         </div>
     </div>
@@ -106,7 +105,7 @@
                         <div class="header__top__left">
                             <ul>
                                 <li><i class="fa fa-envelope"></i>info@labtek.id</li>
-                                <li>Level-Up Your Output With LABTEK</li>
+                                <li>Level-Up Your Output With Labtek</li>
                             </ul>
                         </div>
                     </div>
@@ -147,34 +146,41 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="header__logo text-center mb-3">
-                            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}" alt=""
-                                    style="width: 100%; height: 100px;"></a>
+                            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}"
+                                    alt="" style="width: 100%; height: 100px;"></a>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="hero__search mb-3">
                             <div class="hero__search__form">
-                                <form action="{{ route('produk.search') }}" method="GET">
-                                    <input type="text" name="query"
-                                        placeholder="{{ __('messages.search_product') }}"
-                                        value="{{ request('query') }}">
-                                    <button type="submit"
-                                        class="site-btn rounded">{{ __('messages.search') }}</button>
+                                <form id="searchForm" action="{{ route('produk.search') }}" method="GET">
+                                    <input type="text" name="query" id="searchQuery" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
+                                    <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                                 </form>
                             </div>
-                        </div>
+                        </div>                        
                     </div>
                     <div class="col-lg-3">
                         <div class="header__cart mb-3">
                             <ul>
                                 @if (Auth::check())
-                                    <li>
-                                        <a href="{{ route('cart.view') }}">
-                                            <i class="fa fa-shopping-cart"></i>
-                                            <span
-                                                class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a href="{{ route('favorite.show') }}">
+                                        <i class="fa fa-heart"></i> <!-- Change the icon to a heart -->
+                                        <span class="notification">
+                                            {{ Auth::check() ? Auth::user()->favorites()->count() : 0 }}
+                                        </span>
+                                        
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('cart.view') }}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span
+                                            class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
+                                    </a>
+                                </li>
                                 @endif
                                 @guest
                                     <li>
@@ -220,8 +226,6 @@
                                             </div>
                                         </div>
                                     </li>
-
-
                                 @endguest
                             </ul>
                         </div>
@@ -301,7 +305,7 @@
                 <!-- Dropup menu for profile -->
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuProfile">
                     @auth
-                        <a class="dropdown-item" href="/personal">{{ __('messages.settings') }}</a>
+                        <a class="dropdown-item" href="{{ route('user.show') }}">{{ __('messages.settings') }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

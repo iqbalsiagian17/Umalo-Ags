@@ -40,16 +40,26 @@ class BigsaleController extends Controller
         $request->validate([
             'judul' => 'required|string',
             'mulai' => 'required|date',
-            'berakhir' => 'required|date',
+            'berakhir' => 'required|date|after:mulai', // Pastikan berakhir setelah mulai
             'status' => 'required|in:aktif,tidak aktif',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is required during creation
         ]);
-    
+
+            // Cek apakah ada BigSale lain yang berlangsung selama periode yang sama
+            $existingBigSale = BigSale::where(function($query) use ($request) {
+                $query->where('mulai', '<=', $request->berakhir)
+                    ->where('berakhir', '>=', $request->mulai);
+            })->where('status', 'aktif')->exists();
+
+            if ($existingBigSale) {
+                return redirect()->back()->withErrors('Sudah ada Big Sale aktif di periode waktu yang dipilih.');
+            }
+
         $image = $request->file('image');
         $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
         $imageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
         $image->move(public_path('uploads/bigsale/'), $imageName);
-    
+
         $bigSale = BigSale::create([
             'judul' => $request->input('judul'),
             'mulai' => $request->input('mulai'),
@@ -57,29 +67,29 @@ class BigsaleController extends Controller
             'status' => $request->input('status'),
             'image' => 'uploads/bigsale/' . $imageName,
         ]);
-    
+
         // Attach products if any
         if ($request->has('products')) {
             foreach ($request->products as $product_id => $value) {
                 $produk = Produk::findOrFail($product_id);
                 $harga_diskon = $request->input("harga_diskon.{$product_id}");
-    
+
                 if ($harga_diskon) {
                     $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
                 }
-    
+
                 // Update nego status to "tidak" if it was "ya"
                 if ($produk->nego === 'ya') {
                     $produk->update(['nego' => 'tidak']);
                 }
             }
         }
-        
+
         return redirect()->route('bigsale.index')->with('success', 'Big Sale created successfully.');
     }
-    
-    
-    
+
+
+
 
     /**
      * Display the specified resource.
@@ -99,10 +109,10 @@ class BigsaleController extends Controller
         $bigSale->mulai = \Carbon\Carbon::parse($bigSale->mulai);
         $bigSale->berakhir = \Carbon\Carbon::parse($bigSale->berakhir);
         $products = Produk::all();
-        $categories = Kategori::all(); 
+        $categories = Kategori::all();
         return view('admin.bigsale.edit', compact('bigSale', 'products','categories'));
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -112,31 +122,43 @@ class BigsaleController extends Controller
         $request->validate([
             'judul' => 'required|string',
             'mulai' => 'required|date',
-            'berakhir' => 'required|date',
+            'berakhir' => 'required|date|after:mulai', // Pastikan berakhir setelah mulai
             'status' => 'required|in:aktif,tidak aktif',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         $bigSale = BigSale::findOrFail($id);
-    
+
+         // Cek apakah ada BigSale lain yang berlangsung selama periode yang sama, kecuali yang sedang diupdate
+        $existingBigSale = BigSale::where(function($query) use ($request) {
+            $query->where('mulai', '<=', $request->berakhir)
+                ->where('berakhir', '>=', $request->mulai);
+        })->where('status', 'aktif')
+        ->where('id', '!=', $id) // Mengecualikan BigSale yang sedang diupdate
+        ->exists();
+
+        if ($existingBigSale) {
+            return redirect()->back()->withErrors('Sudah ada Big Sale aktif di periode waktu yang dipilih.');
+        }
+
         $data = $request->only('judul', 'mulai', 'berakhir', 'status');
-    
+
         if ($request->hasFile('image')) {
             if ($bigSale->image && file_exists(public_path($bigSale->image))) {
                 @unlink(public_path($bigSale->image));
             }
-    
+
             $image = $request->file('image');
             $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
             $newImageName = time() . '_' . $slug . '.' . $image->getClientOriginalExtension();
-    
+
             $image->move(public_path('uploads/bigsale/'), $newImageName);
-    
+
             $data['image'] = 'uploads/bigsale/' . $newImageName;
         }
-    
+
         $bigSale->update($data);
-    
+
         // Synchronize the products with their discounts
         $products = [];
         if ($request->has('products')) {
@@ -147,20 +169,20 @@ class BigsaleController extends Controller
                 }
             }
         }
-    
+
         // Sync the products with the Big Sale
         $bigSale->produk()->sync($products);
-    
+
         return redirect()->route('bigsale.index')->with('success', 'Big Sale updated successfully.');
     }
-    
-
-    
-
-    
 
 
-    
+
+
+
+
+
+
 
     /**
      * Remove the specified resource from storage.

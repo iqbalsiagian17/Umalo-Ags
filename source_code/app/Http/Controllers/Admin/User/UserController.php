@@ -8,6 +8,7 @@ use App\Models\UserAddress;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -30,10 +31,10 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:0,1', // 0 for customer, 1 for admin
         ]);
-    
+
         // Hash the password
         $validatedData['password'] = bcrypt($validatedData['password']);
-    
+
         $user = User::create($validatedData);
         UserDetail::create([
             'user_id' => $user->id,
@@ -53,22 +54,22 @@ class UserController extends Controller
             'tambahan' => $request->tambahan,
 
         ]);
-    
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     public function show($id)
     {
         $user = User::findOrFail($id);
-    
+
         // Mark the user as seen by the current admin
         if(!$user->seenByAdmins()->where('admin_id', Auth::id())->exists()) {
             $user->seenByAdmins()->attach(Auth::id());
         }
-    
+
         return view('admin.users.show', compact('user'));
     }
-    
+
 
     public function edit($id)
     {
@@ -81,22 +82,14 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed', // Password is optional in update
             'role' => 'required|in:0,1', // 0 for customer, 1 for admin
         ]);
-    
+
         $user = User::findOrFail($id);
-    
-        // If password is provided, hash it; otherwise, keep the existing password
-        if ($request->filled('password')) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        } else {
-            unset($validatedData['password']); // Remove password from $validatedData if not provided
-        }
-    
+
         // Update the user data
         $user->update($validatedData);
-    
+
         // Update user details
         $user->userDetail->update([
             'no_telepone' => $request->no_telepone,
@@ -104,7 +97,7 @@ class UserController extends Controller
             'lahir' => $request->lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
         ]);
-    
+
         // Update or create user address
         $user->addresses()->updateOrCreate(
             ['user_id' => $user->id], // Criteria for matching the existing record
@@ -116,10 +109,23 @@ class UserController extends Controller
                 'tambahan' => $request->tambahan,
             ]
         );
-    
+
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
-    
+
+
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->update(['password' => Hash::make($request->password)]);
+
+        return redirect()->route('users.index')->with('success', 'Password updated successfully.');
+    }
 
 
 

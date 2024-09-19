@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/labtek_wo_text.png') }}" type="image/png">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="{{ asset('ogani/css/bootstrap.min.css') }}" type="text/css">

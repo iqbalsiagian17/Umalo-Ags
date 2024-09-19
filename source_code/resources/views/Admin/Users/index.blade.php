@@ -1,10 +1,10 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
 @php
     $userId = Auth::id();
-    
+
     // Fetch unseen orders count
     $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
         $query->where('user_id', $userId);
@@ -29,8 +29,8 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="card-title"><h1>Produk</h1></div>
-                <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah Produk</a>
+                <div class="card-title"><h1>User</h1></div>
+                <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Tambah User</a>
             </div>
         @if (session('success'))
             <div class="alert alert-success mt-3">
@@ -39,6 +39,7 @@
         @endif
         <div class="card-body">
             <div class="row">
+                <div class="table-responsive">
                 <table class="table table-striped table-responsive table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -94,6 +95,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
                 <div class="d-flex justify-content-center">
                     {{ $users->links('pagination::bootstrap-5') }}
                 </div>

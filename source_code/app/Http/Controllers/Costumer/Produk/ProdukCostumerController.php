@@ -8,7 +8,8 @@ use App\Models\Komoditas;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use App\Models\Order;
-
+use App\Models\SubKategori;
+use Illuminate\Support\Facades\DB;
 
 class ProdukCostumerController extends Controller
 {
@@ -16,7 +17,7 @@ class ProdukCostumerController extends Controller
 {
     $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
     $images = $produk->images;
-    
+
     $bigSale = $produk->bigSales->first();
     $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
     $averageRating = $produk->reviews()->avg('rating');
@@ -39,36 +40,71 @@ class ProdukCostumerController extends Controller
                   ->where('status', 'Selesai')
                   ->latest()
                   ->first();
-    
-    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings'));
+
+                  $userId = auth()->id();
+                  $isFavorite = DB::table('favorites')
+                                  ->where('user_id', $userId)
+                                  ->where('produk_id', $id)
+                                  ->exists();
+
+    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite'));
 }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 public function search(Request $request)
 {
     $query = $request->input('query');
+    $sort = $request->get('sort'); // Get the sort parameter from the request
 
-    $komoditas = Komoditas::all();
+    $subkategori = SubKategori::all();
     $kategori = Kategori::all();
 
-    // Search products by name, specifications, or brand
-    $produk = Produk::where('nama', 'LIKE', "%{$query}%")
-        ->orderByRaw("CASE WHEN nama LIKE ? THEN 1 ELSE 2 END", ["%{$query}%"])
-        ->orWhere('merk', 'LIKE', "%{$query}%")
-        ->get();
+    // Start the query for searching products
+    $produk = Produk::where(function ($q) use ($query) {
+        $q->where('nama', 'LIKE', "%{$query}%")
+          ->orWhere('merk', 'LIKE', "%{$query}%");
+    });
+
+    // Removing dots for price inputs and converting them to integers
+    $minPrice = preg_replace('/\D/', '', $request->input('min_price')); // Remove non-digits
+    $maxPrice = preg_replace('/\D/', '', $request->input('max_price'));
+
+    if (!empty($minPrice)) {
+        $produk->where('harga_tayang', '>=', (int)$minPrice);
+    }
+    if (!empty($maxPrice)) {
+        $produk->where('harga_tayang', '<=', (int)$maxPrice);
+    }
+
+    // Apply sorting logic
+    if ($sort == 'newest') {
+        $produk->orderBy('created_at', 'desc');
+    } elseif ($sort == 'oldest') {
+        $produk->orderBy('created_at', 'asc');
+    } elseif ($sort == 'price_lowest') {
+        $produk->orderBy('harga_tayang', 'asc');
+    } elseif ($sort == 'price_highest') {
+        $produk->orderBy('harga_tayang', 'desc');
+    }
+
+    // Execute the query and paginate the results
+    $produk = $produk->paginate(9);
 
     // Count the number of products found
-    $productCount = $produk->count();
+    $productCount = $produk->total();
 
     // Return the search results to a view
-    return view('customer.search.index', compact('produk', 'query', 'komoditas', 'kategori', 'productCount'));
+    return view('Customer.Search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
 }
 
 
-    
-    
+
+
+
+
+
 }

@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
     @if ($errors->any())
@@ -12,8 +12,9 @@
     @endif
 
     <div class="row">
+        <div class="col-md-8">
         <div class="card">
-            <div class="card-body">
+                <div class="card-body">
                 <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -44,27 +45,6 @@
                             <option value="1" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                         @error('role')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <hr>
-
-                    <!-- Password Section -->
-                    <h5 class="mb-3">Change Password</h5>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">New Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
-                        @error('password')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password_confirmation" class="form-label">Confirm New Password</label>
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Leave blank to keep current password">
-                        @error('password_confirmation')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
@@ -157,6 +137,34 @@
                     <button type="submit" class="btn btn-primary">Update User</button>
                 </form>
             </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Change Password</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('users.update.password', $user->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+    
+                        <div class="mb-3">
+                            <label for="password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm new password">
+                        </div>
+    
+                        <button type="submit" class="btn btn-success">Update Password</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+
 @endsection

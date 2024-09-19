@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <!-- Hero Section Begin -->
@@ -14,29 +14,26 @@
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
             </div>
-            
-            
             @endforeach
         @endif
 
         @if ($rejectOrders->isNotEmpty())
-        @foreach ($rejectOrders as $order)
-            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff3cd; padding: 1rem 1.5rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
-                <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
-                    <strong>Pesanan Anda #{{ $order->id }}</strong> telah ditolak untuk negosiasi dan berlanjut ke pembelian reguler.
-                    <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
+            @foreach ($rejectOrders as $order)
+                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff3cd; padding: 1rem 1.5rem;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
+                    <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
+                        <strong>Pesanan Anda #{{ $order->id }}</strong> telah ditolak untuk negosiasi dan berlanjut ke pembelian reguler.
+                        <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
-            </div>
-        @endforeach
-    @endif
-        
+            @endforeach
+        @endif
+
             <div class="row">
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-
                             @if ($slider->isEmpty())
                                 <!-- If no sliders are available, show a default image -->
                                 <div class="carousel-item active">
@@ -44,20 +41,22 @@
                                         data-setbg="{{ asset('assets/images/slider.png') }}">
                                         <div class="hero__text">
                                             <span></span>
-                                            <h2 class="text-white">{{ __('messages.slider_title') }}</h2>
+                                            <h2 class="text-white">{{ __('messages.slider_title') }}</h2><br>
                                             @php
                                             $text = __('messages.slider_desc');
                                             $formattedText = wordwrap($text, 100, "<br>\n", true);
-                                        @endphp
-                                        
-                                        <p class="text-white">{!! $formattedText !!}</p><a href="{{ route('shop')}}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                            $truncatedText = strlen($formattedText) > 40 ? substr($formattedText, 0, 40) . '...' : $formattedText;
+                                            @endphp
+                                            <p class="text-white full-text" style="border-radius: 30px;">{!! $formattedText !!}</p>
+                                            <p class="text-white truncated-text" style="border-radius: 30px; display: none;">{!! $truncatedText !!}</p>
+                                        <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
                             @else
                                 @foreach ($slider as $index => $sliders)
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
+                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset( $sliders->image) }}">
                                             <div class="hero__text">
                                                 <h2 class="text-white">{{ $sliders->deskripsi }}</h2>
                                                 <a href="{{ $sliders->url }}" class="primary-btn rounded">{{ $sliders->tombol }}</a>
@@ -67,51 +66,56 @@
                                 @endforeach
                             @endif
                         </div>
-
                         <style>
                             .carousel-inner .hero__text h2 {
                                 font-size: 48px; /* Default size */
                             }
-                        
+
                             .carousel-inner .hero__text p {
                                 font-size: 18px; /* Default size */
                             }
-                        
+
                             .carousel-inner .primary-btn {
                                 font-size: 16px; /* Default size */
                             }
-                        
+
                             /* Media Query for smaller devices (e.g., mobile phones) */
                             @media (max-width: 767px) {
+                                .full-text {
+                                    display: none; /* Hide full text on mobile */
+                                }
+
+                                .truncated-text {
+                                    display: block; /* Show truncated text on mobile */
+                                }
+
                                 .carousel-inner .hero__text h2 {
                                     font-size: 28px; /* Smaller font size for mobile */
                                 }
-                        
-                                .carousel-inner .hero__text p {
-                                    font-size: 14px; /* Smaller font size for mobile */
-                                }
-                        
+
                                 .carousel-inner .primary-btn {
                                     font-size: 14px; /* Smaller font size for mobile */
                                 }
                             }
-                        
+
+
+
                             /* Media Query for medium-sized devices (e.g., tablets) */
                             @media (min-width: 768px) and (max-width: 991px) {
                                 .carousel-inner .hero__text h2 {
                                     font-size: 36px; /* Medium font size */
                                 }
-                        
+
                                 .carousel-inner .hero__text p {
                                     font-size: 16px; /* Medium font size */
                                 }
-                        
+
                                 .carousel-inner .primary-btn {
                                     font-size: 15px; /* Medium font size */
                                 }
                             }
                         </style>
-                        
+
 
                         @if ($slider->count() > 1)
                             <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
@@ -179,7 +183,7 @@
                                     </div>
                                 </section>
                                 <!-- Exclusive deal end -->
-        
+
                                 <!-- Product list start -->
                                 <div class="row featured__filter mt-5" id="MixItUpD27635">
                                     @foreach ($bigSale->produk as $product)
@@ -195,7 +199,7 @@
                                                     <ul class="featured__item__pic__hover">
                                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                                     class="fa fa-info-circle"></i></a></li>
-        
+
                                                         @auth
                                                             <!-- Jika pengguna sudah login -->
                                                             <li><a href="#" class="add-to-cart-btn"
@@ -208,7 +212,7 @@
                                                         @endauth
                                                     </ul>
                                                 </div>
-        
+
                                                 <div class="featured__item__text">
                                                     <h6><a
                                                             href="{{ route('produk_customer.user.show', $product->id) }}">{{ $product->nama }}</a>
@@ -225,11 +229,11 @@
                                         </div>
                                     @endforeach
                                 </div>
-        
-        
+
+
                                 <hr>
                                 <!-- Product list end -->
-        
+
                                 <script>
                                     function startCountdown(endTime) {
                                         let statusUpdated = false; // Add a flag to prevent multiple updates
@@ -301,7 +305,7 @@
         </div>
     </section>
 
-            @if($topSellingProducts->isNotEmpty())
+        @if($topSellingProducts->isNotEmpty())
             <section class="featured spad">
                 <div class="container">
                     <div class="row">
@@ -311,7 +315,7 @@
                             </div>
                         </div>
                     </div>
-            
+
                     <div class="row featured__filter" id="MixItUpD27635">
                         @foreach ($topSellingProducts as $item)
                             @php
@@ -320,13 +324,13 @@
                                     : 'path/to/default/image.jpg';
                             @endphp
                             <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                                <div class="featured__item">
+                                <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
                                     <div class="featured__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                         <ul class="featured__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>
-            
+
                                             @auth
                                                 <!-- Jika pengguna sudah login -->
                                                 <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
@@ -337,9 +341,9 @@
                                             @endauth
                                         </ul>
                                     </div>
-            
+
                                     <div class="featured__item__text">
-                                        <h6><a href="#">{{ $item->nama }}</a></h6>
+                                        <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
                                         <h5>
                                             @if ($item->harga_potong)
                                                 <span style="text-decoration: line-through;">
@@ -353,7 +357,7 @@
                                                 @if ($item->harga_ditampilkan === 'ya')
                                                     Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
                                                 @else
-                                                    {{ __('messages.hubungi_admin') }}                                            
+                                                    {{ __('messages.hubungi_admin') }}
                                                 @endif
                                             @endif
 
@@ -365,12 +369,12 @@
                     </div>
                 </div>
             </section>
-            @endif
-            
+        @endif
+
 
         <hr>
 
-        @if($produk->isNotEmpty())
+    @if($produk->isNotEmpty())
     <section class="featured spad">
         <div class="container">
             <div class="row">
@@ -389,62 +393,86 @@
                             : 'path/to/default/image.jpg';
                     @endphp
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                        <div class="featured__item">
+                        <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->harga_potongan)
                                     <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
                                 @endif
-
+            
                                 <ul class="featured__item__pic__hover">
-                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
-                                                class="fa fa-info-circle"></i></a></li>
+                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i class="fa fa-info-circle"></i></a></li>
                                     @auth
                                         <!-- Jika pengguna sudah login -->
-                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                    class="fa fa-shopping-cart"></i></a></li>
+                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i class="fa fa-shopping-cart"></i></a></li>
                                     @else
                                         <!-- Jika pengguna belum login -->
                                         <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
                                     @endauth
                                 </ul>
                             </div>
-
+            
                             <div class="featured__item__text">
-                                <h6><a href="#">{{ $item->nama }}</a></h6>
+                                <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
                                 <h5>
                                     @if ($item->harga_potongan)
-                                                <span style="text-decoration: line-through; color:red;">
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                </span>
-                                                <br>
-                                                <span>
-                                                    Rp{{ number_format($item->harga_potongan, 0, ',', '.') }}
-                                                </span>
-                                            @else
-                                                @if ($item->harga_ditampilkan === 'ya')
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                @else
-                                                    {{ __('messages.hubungi_admin') }}                                            
-                                                @endif
-                                            @endif
+                                        <span style="text-decoration: line-through; color:red;">
+                                            Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                        </span>
+                                        <br>
+                                        <span>
+                                            Rp{{ number_format($item->harga_potongan, 0, ',', '.') }}
+                                        </span>
+                                    @else
+                                        @if ($item->harga_ditampilkan === 'ya')
+                                            Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                        @else
+                                            {{ __('messages.hubungi_admin') }}
+                                        @endif
+                                    @endif
                                 </h5>
                             </div>
                         </div>
                     </div>
-
+            
                     @if ($index == 7 && $produk->count() > 8)
                         <div class="col-lg-12 text-center mt-3">
                             <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>
                         @break
                     @endif
-
+            
                 @endforeach
             </div>
+            
         </div>
     </section>
 @endif
+
+<style>
+    /* Gaya pointer untuk elemen .featured__item */
+    .featured__item {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all product items
+        const productItems = document.querySelectorAll('.featured__item');
+
+        // Add a click event listener to each product card
+        productItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Check if the clicked element is not one of the interactive elements
+                if (!e.target.closest('a') && !e.target.closest('li')) {
+                    // If not, redirect to the product's detail page
+                    window.location.href = this.getAttribute('data-href');
+                }
+            });
+        });
+    });
+</script>
 
 
 

@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -16,7 +16,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-            
+
                             <!-- Error Message -->
                             @if(session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -24,7 +24,8 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-                <table class="table table-striped table-hover table-responsive">
+                    <div class="table-responsive">
+                <table class="table table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th>Judul</th>
@@ -54,6 +55,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                    </div>
                 <div class="d-flex justify-content-center">
                     {{ $bigSales->links('pagination::bootstrap-5') }}
                 </div>

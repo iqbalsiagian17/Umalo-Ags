@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
@@ -19,22 +19,15 @@
 
         <div class="row">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header">
                     <div class="card-title">Edit Produk</div>
-                    </div>
-                    @if ($errors->has('status'))
-                        <small class="text-danger">{{ $errors->first('status') }}</small>
-                    @endif
                 </div>
-                
+
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <ul class="nav nav-tabs" id="productFormTabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General Information</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="categories-tab" data-toggle="tab" href="#categories" role="tab" aria-controls="categories" aria-selected="false">Categories</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
@@ -86,24 +79,26 @@
                             <div class="form-group">
                                 <label for="harga_potongan">Harga Diskon:</label>
                                 <input type="number" step="0.01" name="harga_potongan" class="form-control"
-                                       value="{{ old('harga_potongan', $produk->harga_potongan) }}" id="harga_potongan" 
+                                       value="{{ old('harga_potongan', $produk->harga_potongan) }}" id="harga_potongan"
                                        {{ old('allow_discount', $produk->harga_potongan ? true : false) ? '' : 'disabled' }}>
                                 @if ($errors->has('harga_potongan'))
                                     <small class="text-danger">{{ $errors->first('harga_potongan') }}</small>
                                 @endif
+                                <small class="form-text text-muted">Jika Anda ingin mematikan harga potongan, cukup ubah jadi 0,00.</small>
                             </div>
-                            
+
+
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"
                                        {{ old('allow_discount', $produk->harga_potongan ? 'checked' : '') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
                             </div>
-                            
+
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const allowDiscountCheckbox = document.getElementById('allow_discount');
                                     const hargaDiskonInput = document.getElementById('harga_potongan');
-                            
+
                                     // Toggle the disabled state of the input field based on the checkbox state
                                     allowDiscountCheckbox.addEventListener('change', function() {
                                         if (this.checked) {
@@ -113,13 +108,13 @@
                                             hargaDiskonInput.value = ''; // Clear the input if unchecked
                                         }
                                     });
-                            
+
                                     // Trigger the change event on page load to set the initial state
                                     allowDiscountCheckbox.dispatchEvent(new Event('change'));
                                 });
                             </script>
-                            
-                            
+
+
 
                             <div class="form-group">
                                 <label for="spesifikasi_produk">Spesifikasi Produk:</label>
@@ -130,7 +125,7 @@
                                     <small class="text-danger">{{ $errors->first('spesifikasi_produk') }}</small>
                                 @endif
                             </div>
-                            
+
                             <script>
                                 $(document).ready(function() {
                                     $('#spesifikasi_produk').summernote({
@@ -150,7 +145,7 @@
                                     });
                                 });
                             </script>
-                            
+
 
                             <div class="form-group">
                                 <label for="link_ekatalog">Link E-katalog:</label>
@@ -182,10 +177,60 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="komoditas_id">Komoditas:</label>
+                                    <select name="komoditas_id" class="form-control" required>
+                                        @foreach($komoditas as $k)
+                                            <option value="{{ $k->id }}" {{ $produk->komoditas_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('komoditas_id'))
+                                        <small class="text-danger">{{ $errors->first('komoditas_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="kategori_id">Kategori:</label>
+                                    <select name="kategori_id" id="kategori_id" class="form-control" required>
+                                        <option value="">Pilih Kategori</option>
+                                        @foreach($kategoris as $kategori)
+                                            <option value="{{ $kategori->id }}" {{ $produk->kategori_id == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('kategori_id'))
+                                        <small class="text-danger">{{ $errors->first('kategori_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="sub_kategori_id">Sub Kategori:</label>
+                                    <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
+                                        <option value="">Pilih Sub Kategori</option>
+                                        @foreach($kategoris as $kategori)
+                                            @foreach($kategori->subKategori as $subKategori)
+                                                <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', $produk->sub_kategori_id) == $subKategori->id ? 'selected' : '' }}>
+                                                    {{ $subKategori->nama }}
+                                                </option>
+                                            @endforeach
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('sub_kategori_id'))
+                                        <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="gambar">Gambar Produk:</label>
                             <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
-                        
+
                             <div class="mt-2 d-flex flex-wrap">
                                 @foreach($produk->images as $image)
                                     <div class="position-relative" style="margin-right: 10px;">
@@ -194,67 +239,18 @@
                                     </div>
                                 @endforeach
                             </div>
-                        
+
                             <input type="hidden" name="deleted_images" id="deleted_images">
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+
+                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                     </div>
 
 
                         <!-- Categories Tab -->
                         <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="komoditas_id">Komoditas:</label>
-                                        <select name="komoditas_id" class="form-control" required>
-                                            @foreach($komoditas as $k)
-                                                <option value="{{ $k->id }}" {{ $produk->komoditas_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('komoditas_id'))
-                                            <small class="text-danger">{{ $errors->first('komoditas_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="kategori_id">Kategori:</label>
-                                        <select name="kategori_id" id="kategori_id" class="form-control" required>
-                                            <option value="">Pilih Kategori</option>
-                                            @foreach($kategoris as $kategori)
-                                                <option value="{{ $kategori->id }}" {{ $produk->kategori_id == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('kategori_id'))
-                                            <small class="text-danger">{{ $errors->first('kategori_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="sub_kategori_id">Sub Kategori:</label>
-                                        <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
-                                            <option value="">Pilih Sub Kategori</option>
-                                            @foreach($kategoris as $kategori)
-                                                @foreach($kategori->subKategori as $subKategori)
-                                                    <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', $produk->sub_kategori_id) == $subKategori->id ? 'selected' : '' }}>
-                                                        {{ $subKategori->nama }}
-                                                    </option>
-                                                @endforeach
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('sub_kategori_id'))
-                                            <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
 
                         <!-- Details Tab -->
@@ -272,7 +268,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="jenis_alat">Jenis Alat:</label>
@@ -283,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -294,7 +290,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="merk">Merk:</label>
@@ -305,7 +301,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -329,10 +325,10 @@
                                         @endif
                                     </div>
                                 </div>
-                        
-                               
+
+
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -346,7 +342,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no_sni">No SNI:</label>
@@ -357,8 +353,8 @@
                                     </div>
                                 </div>
                             </div>
-                        
-                        
+
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -369,7 +365,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="asal_negara">Asal Negara:</label>
@@ -380,7 +376,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -394,7 +390,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fungsi">Fungsi:</label>
@@ -405,7 +401,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -416,7 +412,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="garansi_produk">Garansi Produk:</label>
@@ -427,9 +423,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
-                        
+
 
                         <!-- Images Tab -->
                         <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
@@ -439,7 +435,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No</th> 
+                                            <th>No</th>
                                             <th>Nama Produk List</th>
                                             <th>Spesifikasi Produk List</th>
                                             <th>Merk Produk List</th>
@@ -453,7 +449,7 @@
                                     <tbody>
                                         @foreach($produk->produkList as $detail)
                                             <tr class="detail-list">
-                                                <td class="numbering">1</td> 
+                                                <td class="numbering">1</td>
                                                 <td><input type="text" name="detail[nama][]" class="form-control" value="{{ $detail->nama }}"></td>
                                                 <td><textarea name="detail[spesifikasi][]" class="form-control">{{ $detail->spesifikasi }}</textarea></td>
                                                 <td><input type="text" name="detail[merk][]" class="form-control" value="{{ $detail->merk }}"></td>
@@ -473,7 +469,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
                     </div>
 
@@ -536,40 +532,40 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    var kategoriSelect = document.getElementById('kategori_id');
-    var subKategoriSelect = document.getElementById('sub_kategori_id');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+var kategoriSelect = document.getElementById('kategori_id');
+var subKategoriSelect = document.getElementById('sub_kategori_id');
 
-    function filterSubKategoris() {
-        const selectedKategoriId = kategoriSelect.value;
+function filterSubKategoris() {
+    const selectedKategoriId = kategoriSelect.value;
 
-        // Sembunyikan semua subkategori
-        Array.from(subKategoriSelect.options).forEach(option => {
-            option.style.display = 'none';
-            option.disabled = true;
-        });
+    // Sembunyikan semua subkategori
+    Array.from(subKategoriSelect.options).forEach(option => {
+        option.style.display = 'none';
+        option.disabled = true;
+    });
 
-        // Tampilkan hanya subkategori yang sesuai
-        Array.from(subKategoriSelect.options).forEach(option => {
-            if (option.getAttribute('data-kategori-id') === selectedKategoriId) {
-                option.style.display = 'block';
-                option.disabled = false;
-            }
-        });
+    // Tampilkan hanya subkategori yang sesuai
+    Array.from(subKategoriSelect.options).forEach(option => {
+        if (option.getAttribute('data-kategori-id') === selectedKategoriId) {
+            option.style.display = 'block';
+            option.disabled = false;
+        }
+    });
 
-        // Set subkategori ke opsi pertama yang sesuai
-        subKategoriSelect.value = '';
-    }
+    // Set subkategori ke opsi pertama yang sesuai
+    subKategoriSelect.value = '';
+}
 
-    // Filter subkategori saat halaman pertama kali dimuat
-    filterSubKategoris();
+// Filter subkategori saat halaman pertama kali dimuat
+filterSubKategoris();
 
-    // Tambahkan event listener untuk filter ulang saat kategori berubah
-    kategoriSelect.addEventListener('change', filterSubKategoris);
+// Tambahkan event listener untuk filter ulang saat kategori berubah
+kategoriSelect.addEventListener('change', filterSubKategoris);
 });
 
-    </script>
+</script>
 
 <style>
     .nav-tabs .nav-link {

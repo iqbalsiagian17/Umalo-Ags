@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <div class="container">
@@ -16,7 +16,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('user.store') }}">
                 @csrf
-    
+
                 <!-- User Information Section -->
                 <h4 class="mb-3">{{ __('messages.additional_information') }}</h4>
                 <div class="row mb-4">
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <hr>
                 <!-- Address Section -->
                 <h4 class="mb3">{{ __('messages.location') }}</h4>
@@ -84,11 +84,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="tambahan" class="form-label">{{ __('messages.additional_info') }}</label>
-                            <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}">
+                            <!-- Span to provide additional information -->
+                            <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}" required>
+                            <span class="form-text text-muted">{{ __('Berikan ciri-ciri unik tempat Anda agar petugas pengantaran bisa lebih mudah menemukan lokasi pengiriman.') }}</span>
                             @if ($errors->has('tambahan'))
                                 <small class="text-danger">{{ $errors->first('tambahan') }}</small>
                             @endif
                         </div>
+                        
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -107,11 +110,11 @@
                         </div>
                     </div>
                 </div>
-    
-                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+
+                <button type="submit" class="btn text-white" style="background: #416bbf;">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>
-    
+
 </div>
 @endsection

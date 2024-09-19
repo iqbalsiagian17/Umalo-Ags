@@ -1,10 +1,10 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <div class="container">
         <h1>Riwayat Transaksi untuk Pesanan ID: {{ $order->id }}</h1>
 
-        @if ($order->statusHistories->isEmpty())
+        @if($order->statusHistories->isEmpty())
             <p>Tidak ada riwayat transaksi untuk pesanan ini.</p>
         @else
             <table class="table table-bordered">
@@ -16,12 +16,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($order->statusHistories as $history)
+                    @foreach($order->statusHistories as $history)
                         <tr>
                             <td>{{ $history->status }}</td>
                             <td>{{ $history->created_at->format('d M Y, H:i') }}</td>
                             <td>
-                                @if ($history->status == 'Pengiriman' && $history->extra_info)
+                                @if($history->status == 'Pengiriman' && $history->extra_info)
                                     {{ $history->extra_info }}
                                 @else
                                     -

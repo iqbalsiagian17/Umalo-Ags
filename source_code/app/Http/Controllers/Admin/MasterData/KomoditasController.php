@@ -37,10 +37,10 @@ class KomoditasController extends Controller
 
     public function edit(Komoditas $komoditas)
     {
-        
+
         return view('admin.masterdata.komoditas.edit', compact('komoditas'));
     }
-    
+
 
     public function update(Request $request, Komoditas $komoditas)
     {
