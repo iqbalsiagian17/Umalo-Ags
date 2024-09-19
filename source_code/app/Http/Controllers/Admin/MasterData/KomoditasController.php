@@ -11,12 +11,12 @@ class KomoditasController extends Controller
     public function index()
     {
         $komoditas = Komoditas::where('flag', 'yes')->get();
-        return view('admin.masterdata.komoditas.index', compact('komoditas'));
+        return view('admin.masterdata.Komoditas.index', compact('komoditas'));
     }
 
     public function create()
     {
-        return view('admin.masterdata.komoditas.create');
+        return view('admin.masterdata.Komoditas.create');
     }
 
     public function store(Request $request)
@@ -27,18 +27,18 @@ class KomoditasController extends Controller
 
         Komoditas::create($request->all());
 
-        return redirect()->route('admin.masterdata.komoditas.index')->with('success', 'Komoditas berhasil dibuat.');
+        return redirect()->route('admin.masterdata.Komoditas.index')->with('success', 'Komoditas berhasil dibuat.');
     }
 
     public function show(Komoditas $komoditas)
     {
-        return view('admin.masterdata.komoditas.show', compact('komoditas'));
+        return view('admin.masterdata.Komoditas.show', compact('komoditas'));
     }
 
     public function edit(Komoditas $komoditas)
     {
 
-        return view('admin.masterdata.komoditas.edit', compact('komoditas'));
+        return view('admin.masterdata.Komoditas.edit', compact('komoditas'));
     }
 
 
@@ -50,13 +50,13 @@ class KomoditasController extends Controller
 
         $komoditas->update($request->all());
 
-        return redirect()->route('admin.masterdata.komoditas.index')->with('success', 'Komoditas berhasil diperbarui.');
+        return redirect()->route('admin.masterdata.Komoditas.index')->with('success', 'Komoditas berhasil diperbarui.');
     }
 
     public function destroy(Komoditas $komoditas)
     {
         $komoditas->update(['flag' => 'no']);
 
-        return redirect()->route('admin.masterdata.komoditas.index')->with('success', 'Komoditas berhasil dihapus.');
+        return redirect()->route('admin.masterdata.Komoditas.index')->with('success', 'Komoditas berhasil dihapus.');
     }
 }

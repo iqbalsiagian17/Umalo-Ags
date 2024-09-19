@@ -12,13 +12,13 @@ class SubKategoriController extends Controller
     public function index()
     {
         $subkategoris = SubKategori::with('kategori')->where('flag', 'yes')->get(); // Filter berdasarkan flag
-        return view('admin.masterdata.subkategori.index', compact('subkategoris'));
+        return view('admin.masterdata.SubKategori.index', compact('subkategoris'));
     }
 
     public function create()
     {
         $kategori = Kategori::where('flag', 'yes')->get(); // Hanya kategori aktif
-        return view('admin.masterdata.subkategori.create', compact('kategori'));
+        return view('admin.masterdata.SubKategori.create', compact('kategori'));
     }
 
     public function store(Request $request)
@@ -30,13 +30,13 @@ class SubKategoriController extends Controller
 
         SubKategori::create($request->all());
 
-        return redirect()->route('admin.masterdata.subkategori.index')->with('success', 'Sub Kategori berhasil ditambahkan.');
+        return redirect()->route('admin.masterdata.SubKategori.index')->with('success', 'Sub Kategori berhasil ditambahkan.');
     }
 
     public function edit(SubKategori $subkategori)
     {
         $kategori = Kategori::where('flag', 'yes')->get(); // Hanya kategori aktif
-        return view('admin.masterdata.subkategori.edit', compact('subkategori', 'kategori'));
+        return view('admin.masterdata.SubKategori.edit', compact('subkategori', 'kategori'));
     }
 
     public function update(Request $request, SubKategori $subkategori)
@@ -48,13 +48,13 @@ class SubKategoriController extends Controller
 
         $subkategori->update($request->all());
 
-        return redirect()->route('admin.masterdata.subkategori.index')->with('success', 'Sub Kategori berhasil diperbarui.');
+        return redirect()->route('admin.masterdata.SubKategori.index')->with('success', 'Sub Kategori berhasil diperbarui.');
     }
 
     public function destroy(SubKategori $subkategori)
     {
         $subkategori->update(['flag' => 'no']); // Set flag menjadi 'no' bukannya dihapus
 
-        return redirect()->route('admin.masterdata.subkategori.index')->with('success', 'Sub Kategori berhasil dihapus.');
+        return redirect()->route('admin.masterdata.SubKategori.index')->with('success', 'Sub Kategori berhasil dihapus.');
     }
 }

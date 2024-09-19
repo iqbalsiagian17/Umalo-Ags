@@ -11,7 +11,7 @@ class PPNController extends Controller
     public function index()
     {
         $ppns = PPN::all();
-        return view('admin.masterdata.ppn.index', compact('ppns'));
+        return view('admin.masterdata.PPN.index', compact('ppns'));
     }
 
     /**
@@ -19,7 +19,7 @@ class PPNController extends Controller
      */
     public function create()
     {
-        return view('admin.masterdata.ppn.create');
+        return view('admin.masterdata.PPN.create');
     }
 
     /**
@@ -33,7 +33,7 @@ class PPNController extends Controller
 
         PPN::create($request->all());
 
-        return redirect()->route('admin.masterdata.ppn.index')
+        return redirect()->route('admin.masterdata.PPN.index')
             ->with('success', 'PPN created successfully.');
     }
 
@@ -42,7 +42,7 @@ class PPNController extends Controller
      */
     public function show(PPN $ppn)
     {
-        return view('admin.masterdata.ppn.show', compact('ppn'));
+        return view('admin.masterdata.PPN.show', compact('ppn'));
     }
 
     /**
@@ -50,7 +50,7 @@ class PPNController extends Controller
      */
     public function edit(PPN $ppn)
     {
-        return view('admin.masterdata.ppn.edit', compact('ppn'));
+        return view('admin.masterdata.PPN.edit', compact('ppn'));
     }
 
 
@@ -65,7 +65,7 @@ class PPNController extends Controller
 
         $ppn->update($request->all());
 
-        return redirect()->route('admin.masterdata.ppn.index')
+        return redirect()->route('admin.masterdata.PPN.index')
             ->with('success', 'PPN updated successfully.');
     }
 
@@ -76,7 +76,7 @@ class PPNController extends Controller
     {
         $ppn->delete();
 
-        return redirect()->route('admin.masterdata.ppn.index')
+        return redirect()->route('admin.masterdata.PPN.index')
             ->with('success', 'PPN deleted successfully.');
     }
 }
