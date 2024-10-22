@@ -914,7 +914,7 @@
                             $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
                         @endphp
                         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                            <div class="featured__item">
+                            <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
                                 <div class="featured__item__pic"
                                     style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
@@ -975,6 +975,31 @@
             </div>
         </section>
     @endif
+
+    <style>
+        /* Gaya pointer untuk elemen .featured__item */
+        .featured__item {
+            cursor: pointer;
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all product items
+            const productItems = document.querySelectorAll('.featured__item');
+    
+            // Add a click event listener to each product card
+            productItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Check if the clicked element is not one of the interactive elements
+                    if (!e.target.closest('a') && !e.target.closest('li')) {
+                        // If not, redirect to the product's detail page
+                        window.location.href = this.getAttribute('data-href');
+                    }
+                });
+            });
+        });
+    </script>
 
 
 
