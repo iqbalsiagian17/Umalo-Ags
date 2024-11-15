@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Services\InvoiceService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\InvoiceService;
+
 
 class TransaksiController extends Controller
 {
@@ -73,7 +74,7 @@ class TransaksiController extends Controller
     if ($request->has('subtotal')) {
         // Loop through each order item
         foreach ($order->orderItems as $item) {
-            if ($item->produk->nego == 'ya') {
+            if ($item->Product->nego == 'ya') {
                 // If the product is negotiable, set harga_setelah_nego
                 $order->harga_setelah_nego = $request->input('subtotal');
             } else {
@@ -190,7 +191,7 @@ class TransaksiController extends Controller
         // Handle the negotiated price (subtotal) update
         if ($request->has('subtotal')) {
             foreach ($order->orderItems as $item) {
-                if ($item->produk->nego == 'ya') {
+                if ($item->Product->nego == 'ya') {
                     $order->harga_setelah_nego = $request->input('subtotal');
                 } else {
                     $order->harga_setelah_nego = null;

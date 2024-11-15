@@ -1,5 +1,4 @@
 @extends('layouts.customer.master')
-
 @section('content')
     <div class="container">
         <h1>Detail Pesanan</h1>
@@ -18,7 +17,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Produk</th>
+                    <th>Product</th>
                     <th>Jumlah</th>
                     <th>Harga</th>
                     <th>Sub Total</th>
@@ -27,7 +26,7 @@
             <tbody>
                 @foreach($order->orderItems as $item)
                     <tr>
-                        <td>{{ $item->produk->nama }}</td>
+                        <td>{{ $item->Product->nama }}</td>
                         <td>{{ $item->jumlah }}</td>
                         <td>{{ $item->harga }}</td>
                         <td>{{ $item->harga * $item->jumlah }}</td>
@@ -37,7 +36,7 @@
         </table>
         @if($order->status == 'Diterima')
         <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download Invoice</a>
-    @endif
+        @endif
 
         <div class="mt-4">
             <a href="{{ route('cart.view') }}" class="btn btn-secondary">Back</a>

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin\Slider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Slider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 class SliderController extends Controller
 {
@@ -23,7 +26,15 @@ class SliderController extends Controller
      */
     public function create()
     {
-        return view('admin.slider.create');
+        $routeOptions = [
+            'home' => route('home'),
+            'shop' => route('shop'),
+        ];
+
+        $products = Product::all();
+
+
+        return view('admin.slider.create', compact('routeOptions','products'));
     }
 
     /**
@@ -33,9 +44,9 @@ class SliderController extends Controller
     {
         $request->validate([
             'image' => 'required|image',
-            'deskripsi' => 'required',
+            'description' => 'required',
             'url' => 'nullable|string',
-            'tombol' => 'nullable|string',
+            'button' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -52,12 +63,15 @@ class SliderController extends Controller
             $imagePath = 'uploads/slider/' . $newImageName;
         }
 
+        $url = $request->input('url');
+
+
         // Membuat slider dengan data yang diberikan
         Slider::create([
             'image' => $imagePath,
-            'deskripsi' => $request->input('deskripsi'),
-            'url' => $request->input('url'),
-            'tombol' => $request->input('tombol'),
+            'description' => $request->input('description'),
+            'url' => $url,
+            'button' => $request->input('button'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -77,8 +91,18 @@ class SliderController extends Controller
      */
     public function edit($id)
     {
+
         $slider = Slider::findOrFail($id);
-        return view('admin.slider.edit', compact('slider'));
+
+        // Prepare route options and products
+        $routeOptions = [
+            'home' => route('home'),
+            'shop' => route('shop'),
+        ];
+        
+        $products = Product::all();
+
+        return view('admin.slider.edit', compact('slider', 'routeOptions', 'products'));
     }
 
     /**
@@ -88,9 +112,9 @@ class SliderController extends Controller
     {
         $request->validate([
             'image' => 'nullable|image',
-            'deskripsi' => 'required',
+            'description' => 'required',
             'url' => 'nullable|string',
-            'tombol' => 'nullable|string',
+            'button' => 'nullable|string',
         ]);
 
         $slider = Slider::findOrFail($id);
@@ -118,9 +142,9 @@ class SliderController extends Controller
         // Update slider dengan data yang diberikan
         $slider->update([
             'image' => $imagePath,
-            'deskripsi' => $request->input('deskripsi'),
+            'description' => $request->input('description'),
             'url' => $request->input('url'),
-            'tombol' => $request->input('tombol'),
+            'button' => $request->input('button'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider updated successfully.');
@@ -136,4 +160,6 @@ class SliderController extends Controller
 
         return redirect()->route('slider.index')->with('success', 'Slider deleted successfully.');
     }
+
+    
 }

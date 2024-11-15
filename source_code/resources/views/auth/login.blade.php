@@ -1,6 +1,11 @@
-@extends('layouts.customer.master2')
+@extends('layouts.Customer.master2')
 
 @section('content')
+
+<?php 
+use App\Models\TParameter;
+$parameter = TParameter::first();
+?>
     <!----------------------- Main Container -------------------------->
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <!----------------------- Login Container -------------------------->
@@ -9,7 +14,9 @@
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #416bbf;">
                 <div class="inner-box rounded-4 p-4" style="background: #ffffff; width: 70%;">
                     <div class="featured-image mb-3 d-flex justify-content-center">
-                        <img src="{{ asset('assets/images/logo.png') }}" class="img-fluid" style="width: 250px;">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset($parameter->logo1) }}" class="img-fluid" style="width: 250px;">
+                        </a>
                     </div>
                     <p class="text-dark fs-2 text-center">{{ __('messages.already_verified') }}</p>
                     <p class="text-dark text-wrap text-center">{{ __('messages.discover_technology') }}</p>
@@ -58,11 +65,6 @@
                                 <input type="checkbox" class="form-check-input" name="remember" id="formCheck" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="formCheck" class="form-check-label text-secondary"><small>{{ __('messages.remember_me') }}</small></label>
                             </div>
-                            <div class="forgot">
-                                @if (Route::has('password.request'))
-                                    <small><a href="{{ route('password.request') }}" style="color: #416bbf;">{{ __('messages.forgot_password') }}</a></small>
-                                @endif
-                            </div>
                         </div>
 
                         <!-- Sign In Button -->
@@ -77,7 +79,7 @@
                                 <small>{{ __('messages.sign_in_with_google') }}</small>
                             </a>
                         </div>
-                        
+
                         <!-- Sign Up Link -->
                         <div class="input-group">
                             <small>{{ __('messages.dont_have_account') }} <a href="{{ route('register') }}">{{ __('messages.register') }}</a></small>

@@ -19,13 +19,17 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 't_users';
+
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'foto_profile'
-
+        'foto_profile',
+        'phone_number',
+        'company',
 
     ];
 
@@ -61,38 +65,21 @@ class User extends Authenticatable
         return $this->hasMany(Socialite::class);
     }
 
-    public function userDetail()
-    {
-        return $this->hasOne(UserDetail::class);
-    }
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    // User.php
-    public function seenByAdmins()
+    public function userAddresses()
     {
-        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'user_id', 'admin_id')->withTimestamps();
+        return $this->hasMany(UserAddress::class); // Sesuaikan dengan nama model alamat pengguna Anda
     }
 
-    public function newUsersSeenByAdmin()
+    public function wishlist()
     {
-        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'admin_id', 'user_id')->withTimestamps();
-    }
-
-    public function addresses()
-    {
-        return $this->hasMany(UserAddress::class);
-    }
-
-    public function favorites()
-    {
-        return $this->belongsToMany(Produk::class, 'favorites', 'user_id', 'produk_id')
+        return $this->belongsToMany(Product::class, 't_wishlist', 'user_id', 'product_id')
                     ->withTimestamps();
     }
-
-    
     
 
 }

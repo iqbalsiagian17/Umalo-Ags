@@ -3,210 +3,220 @@
 namespace App\Http\Controllers\Costumer\Cart;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
+use App\Models\Cart;
 use Illuminate\Http\Request;
-use App\Models\Produk;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function checkout()
+    public function index()
     {
-        $cart = session()->get('cart');
+        $cartItems = Cart::with('product')->where('user_id', Auth::id())->get();
         
-        if (!$cart || count($cart) == 0) {
-            return redirect()->route('cart.view')->with('error', 'Keranjang belanja Anda kosong.');
-        }
+        // Calculate the subtotal
+        $subtotal = $cartItems->sum('total_price'); // Sum the total prices of all cart items
+        $total = $subtotal; // Add any taxes or shipping costs if needed
         
-        foreach ($cart as $id => $details) {
-            $product = Produk::find($id);
-            if ($product && $details['quantity'] > $product->stok) {
-                return redirect()->route('cart.view')->with('error', 'Kuantitas untuk produk ' . $product->nama . ' melebihi stok yang tersedia.');
-            }
-        }
-    
-        // Determine initial status based on product negotiation availability
-        $initialStatus = 'Menunggu Konfirmasi Admin';
-        foreach ($cart as $id => $details) {
-            $product = Produk::find($id);
-            if ($product && $product->nego == 'ya') {
-                $initialStatus = 'Menunggu Konfirmasi Admin untuk Negosiasi';
-                break;
-            }
-        }
-    
-        $totalHarga = 0;
-        foreach ($cart as $id => $details) {
-            $product = Produk::with(['bigSales' => function ($query) {
-                $query->where('status', 'aktif')
-                      ->whereDate('mulai', '<=', now())
-                      ->whereDate('berakhir', '>=', now());
-            }])->find($id);
-    
-            // Check if the product is part of an active Big Sale and apply harga_diskon if available
-            $harga_diskon = null;
-            if ($product && $product->bigSales->isNotEmpty()) {
-                $bigSale = $product->bigSales->first();
-                $harga_diskon = $bigSale->pivot->harga_diskon ?? null;
-            }
-    
-            // Determine the price to use: harga_diskon, harga_potongan, or harga_tayang
-            $harga = $harga_diskon ?: ($details['harga_potongan'] > 0 ? $details['harga_potongan'] : $details['harga_tayang']);
-            
-            $totalHarga += $harga * $details['quantity'];
-        }
-    
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'harga_total' => $totalHarga,
-            'status' => $initialStatus,
+        return view('customer.cart.index', [
+            'cartItems' => $cartItems,
+            'subtotal' => $subtotal,
+            'total' => $subtotal,  // Total is the same as the subtotal since shipping is not included
         ]);
+    }
+
+    public function addToCart(Request $request)
+{
+    // Validate request data
+    $request->validate([
+        'product_id' => 'required|integer|exists:t_product,id',
+        'quantity' => 'required|integer|min:1',
+    ]);
+
+    $productId = $request->input('product_id');
+    $quantity = $request->input('quantity');
+
+    // Get the product
+    $product = Product::findOrFail($productId);
+
+    // Check if the product is out of stock
+    if ($product->stock <= 0) {
+        return response()->json(['error' => 'Product is out of stock.'], 400);
+    }
+
+    // Check if the requested quantity is available in stock
+    if ($product->stock < $quantity) {
+        return response()->json(['error' => 'Not enough stock available.'], 400);
+    }
+
+    // Determine if the product is part of an active Big Sale
+    $bigSalePrice = $product->price; // Default to the regular price
+
+    $activeBigSale = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->whereHas('products', function ($query) use ($product) {
+            $query->where('t_product.id', $product->id);
+        })
+        ->first();
+
+    if ($activeBigSale) {
+        // Apply Big Sale discount
+        if ($activeBigSale->discount_amount) {
+            $bigSalePrice = $product->price - $activeBigSale->discount_amount;
+        } elseif ($activeBigSale->discount_percentage) {
+            $bigSalePrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+        }
+    } elseif ($product->discount_price) {
+        // If no Big Sale, apply the product-specific discount price
+        $bigSalePrice = $product->discount_price;
+    }
+
+    // Calculate the total price for this item based on the determined price
+    $totalPrice = $bigSalePrice * $quantity;
+
+    // Check if the product is already in the cart
+    $cartItem = Cart::where('user_id', Auth::id())
+                    ->where('product_id', $productId)
+                    ->first();
+
+    if ($cartItem) {
+        // Update quantity and total price if the product is already in the cart
+        $cartItem->quantity += $quantity;
+        $cartItem->total_price += $totalPrice;
+        $cartItem->save();
+    } else {
+        // Add new item to the cart
+        Cart::create([
+            'user_id' => Auth::id(), // Use user ID, or session ID for guest users if needed
+            'product_id' => $productId,
+            'quantity' => $quantity,
+            'total_price' => $totalPrice, // Store the calculated total price
+        ]);
+    }
+
+    return response()->json(['success' => 'Product added to cart.']);
+}
+
+
+    public function removeFromCart($id)
+    {
+        try {
+            // Find the cart item
+            $cartItem = Cart::findOrFail($id);
     
-        foreach ($cart as $id => $details) {
-            $product = Produk::with(['bigSales' => function ($query) {
-                $query->where('status', 'aktif')
-                      ->whereDate('mulai', '<=', now())
-                      ->whereDate('berakhir', '>=', now());
-            }])->find($id);
+            // Get the associated product
+            $product = $cartItem->product;
     
-            // Check if the product is part of an active Big Sale and apply harga_diskon if available
-            $harga_diskon = null;
-            if ($product && $product->bigSales->isNotEmpty()) {
-                $bigSale = $product->bigSales->first();
-                $harga_diskon = $bigSale->pivot->harga_diskon ?? null;
-            }
-    
-            // Determine the price to save in OrderItem: harga_diskon, harga_potongan, or harga_tayang
-            $harga = $harga_diskon ?: ($details['harga_potongan'] > 0 ? $details['harga_potongan'] : $details['harga_tayang']);
-    
-            OrderItem::create([
-                'order_id' => $order->id,
-                'produk_id' => $id,
-                'jumlah' => $details['quantity'],
-                'harga' => $harga,
-            ]);
-    
-            // Update stock
+            // Restore the product's stock by adding the cart item's quantity back to it
             if ($product) {
-                $product->stok -= $details['quantity'];
+                $product->stock += $cartItem->quantity;
                 $product->save();
             }
+    
+            // Remove the item from the cart
+            $cartItem->delete();
+    
+            // Return a JSON response
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
-    
-        session()->forget('cart');
-    
-        return redirect()->route('order.show', $order->id)->with('success', 'Pesanan Anda berhasil dibuat! Menunggu konfirmasi dari admin.');
     }
     
-
-
-    
-    
-    
-
-public function add(Request $request, $id)
+    public function updateQuantity(Request $request)
 {
-    // Fetch the product along with any active big sales
-    $product = Produk::with(['bigSales' => function ($query) {
-        $query->where('status', 'aktif')
-              ->whereDate('mulai', '<=', now())
-              ->whereDate('berakhir', '>=', now());
-    }])->find($id);
+    try {
+        // Retrieve the cart item based on the provided ID
+        $cartItem = Cart::findOrFail($request->id);
 
-    if (!$product) {
-        return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
-    }
+        // Update the quantity in the database
+        $cartItem->quantity = $request->quantity;
+        $cartItem->save();
 
-    $quantity = $request->input('quantity', 1);
-
-    // Check if quantity exceeds available stock
-    if ($quantity > $product->stok) {
-        return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
-    }
-
-    // Initialize harga_diskon
-    $harga_diskon = null;
-
-    // Check if the product is part of an active Big Sale and apply harga_diskon
-    if ($product->bigSales->isNotEmpty()) {
-        // Get the first active Big Sale (there should only be one active Big Sale at a time)
-        $bigSale = $product->bigSales->first();
-        $harga_diskon = $bigSale->pivot->harga_diskon ?? null;
-    }
-
-    // Determine which price to use: harga_diskon, harga_potongan, or harga_tayang
-    $harga = $harga_diskon ?: ($product->harga_potongan ?: $product->harga_tayang);
-
-    // Fetch the cart from the session (or initialize it if empty)
-    $cart = session()->get('cart', []);
-
-    // If product is already in the cart, update its quantity
-    if (isset($cart[$id])) {
-        $cart[$id]['quantity'] += $quantity;
-
-        // Check if total quantity exceeds stock after the update
-        if ($cart[$id]['quantity'] > $product->stok) {
-            return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
+        // Retrieve the associated product
+        $product = $cartItem->product;
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found for this cart item.'
+            ], 404);
         }
-    } else {
-        // Add the product to the cart
-        $cart[$id] = [
-            "name" => $product->nama,
-            "quantity" => $quantity,
-            "harga_tayang" => $product->harga_tayang,
-            "harga_potongan" => $product->harga_potongan,
-            "harga_diskon" => $harga_diskon,  // Save harga_diskon if available
-            "image" => $product->images->first()->gambar ?? 'default.png'
-        ];
+
+        // Calculate the price, checking for active Big Sale discounts
+        $price = $product->price;
+        $activeBigSale = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->whereHas('products', function ($query) use ($product) {
+                $query->where('t_product.id', $product->id);
+            })
+            ->first();
+
+        if ($activeBigSale) {
+            if ($activeBigSale->discount_amount) {
+                $price = $product->price - $activeBigSale->discount_amount;
+            } elseif ($activeBigSale->discount_percentage) {
+                $price = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+            }
+        } elseif ($product->discount_price) {
+            $price = $product->discount_price;
+        }
+
+        // Calculate the subtotal for this cart item
+        $subtotal = $price * $cartItem->quantity;
+
+        // Calculate the total for all items in the cart
+        $total = Cart::where('user_id', auth()->id())->get()->sum(function ($item) {
+            $itemPrice = $item->product->price;
+
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($item) {
+                    $query->where('t_product.id', $item->product->id);
+                })
+                ->first();
+
+            if ($activeBigSale) {
+                if ($activeBigSale->discount_amount) {
+                    $itemPrice = $item->product->price - $activeBigSale->discount_amount;
+                } elseif ($activeBigSale->discount_percentage) {
+                    $itemPrice = $item->product->price - ($activeBigSale->discount_percentage / 100) * $item->product->price;
+                }
+            } elseif ($item->product->discount_price) {
+                $itemPrice = $item->product->discount_price;
+            }
+
+            return $itemPrice * $item->quantity;
+        });
+
+        return response()->json([
+            'success' => true,
+            'subtotal' => $subtotal,
+            'total' => $total
+        ]);
+    } catch (\Exception $e) {
+        // Log the error for debugging
+        Log::error('Error updating cart quantity:', [
+            'error' => $e->getMessage(),
+            'request_data' => $request->all()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error updating cart: ' . $e->getMessage()
+        ], 500);
     }
-
-    // Save the updated cart back to the session
-    session()->put('cart', $cart);
-
-    // Calculate total quantity in the cart
-    $totalQuantity = array_sum(array_column($cart, 'quantity'));
-
-    return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
 }
 
 
 
-    
-
-
 
     
-    
-
-    public function viewCart()
-    {
-        $cart = session()->get('cart');
-
-        return view('customer.cart.show', compact('cart'));
-    }
-
-    public function updateQuantity(Request $request, $id)
-{
-    $cart = session()->get('cart');
-    if (isset($cart[$id])) {
-        $cart[$id]['quantity'] = $request->input('quantity');
-        session()->put('cart', $cart);
-
-        return response()->json(['success' => true]);
-    }
-
-    return response()->json(['success' => false]);
-}
-
-
-    public function remove($id)
-    {
-        $cart = session()->get('cart');
-        unset($cart[$id]);
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.view')->with('success', 'Produk berhasil dihapus dari keranjang!');
-    }
-
     
 }

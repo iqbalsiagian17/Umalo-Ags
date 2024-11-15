@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserDetail;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ class UserController extends Controller
     $search = $request->input('search');
 
     // Inisialisasi query
-    $query = User::with('userDetail');
+    $query = User::query();
 
     // Filter berdasarkan role
     if (!is_null($role)) {
@@ -36,44 +37,11 @@ class UserController extends Controller
     return view('admin.users.index', compact('users'));
 }
 
+    
+
     public function create()
     {
         return view('admin.users.create');
-    }
-
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:0,1', // 0 for customer, 1 for admin
-        ]);
-
-        // Hash the password
-        $validatedData['password'] = bcrypt($validatedData['password']);
-
-        $user = User::create($validatedData);
-        UserDetail::create([
-            'user_id' => $user->id,
-            'no_telepone' => $request->no_telepone,
-            'perusahaan' => $request->perusahaan,  // Save perusahaan field
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-
-        ]);
-
-        UserAddress::create([
-            'user_id' => $user->id,
-            'alamat' => $request->alamat,
-            'kota' => $request->kota,
-            'provinsi' => $request->provinsi,
-            'kode_pos' => $request->kode_pos,
-            'tambahan' => $request->tambahan,
-
-        ]);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     public function show($id)
@@ -91,45 +59,25 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('userDetail')->findOrFail($id);
+        $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|in:0,1', // 0 for customer, 1 for admin
-        ]);
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:t_users,email,' . $id,
+        'role' => 'required|in:0,1', // 0 for customer, 1 for admin
+    ]);
 
-        $user = User::findOrFail($id);
+    $user = User::findOrFail($id);
 
-        // Update the user data
-        $user->update($validatedData);
+    // Update the user data
+    $user->update($validatedData);
 
-        // Update user details
-        $user->userDetail->update([
-            'no_telepone' => $request->no_telepone,
-            'perusahaan' => $request->perusahaan,
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-        ]);
-
-        // Update or create user address
-        $user->addresses()->updateOrCreate(
-            ['user_id' => $user->id], // Criteria for matching the existing record
-            [
-                'alamat' => $request->alamat,
-                'kota' => $request->kota,
-                'provinsi' => $request->provinsi,
-                'kode_pos' => $request->kode_pos,
-                'tambahan' => $request->tambahan,
-            ]
-        );
-
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
-    }
+    return redirect()->route('users.index')->with('success', 'User updated successfully.');
+}
 
 
     public function updatePassword(Request $request, $id)
@@ -148,11 +96,38 @@ class UserController extends Controller
 
 
 
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function visits()
+    {
+         // Daily visits for the last 30 days
+         $dailyVisits = Visit::selectRaw('DATE(visited_at) as date, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subDays(30))
+         ->groupBy('date')
+         ->orderBy('date', 'asc')
+         ->get();
+
+     // Monthly visits for the last 12 months
+     $monthlyVisits = Visit::selectRaw('DATE_FORMAT(visited_at, "%Y-%m") as month, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subYear())
+         ->groupBy('month')
+         ->orderBy('month', 'asc')
+         ->get();
+
+     // Hourly visits for the last 24 hours
+     $hourlyVisits = Visit::selectRaw('HOUR(visited_at) as hour, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subDay())
+         ->groupBy('hour')
+         ->orderBy('hour', 'asc')
+         ->get();
+
+        return view('admin.users.visits', compact('dailyVisits', 'monthlyVisits', 'hourlyVisits'));
     }
 }

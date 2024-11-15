@@ -1,5 +1,4 @@
 @extends('layouts.customer.master')
-
 @section('content')
     <div class="container">
         <h1>Riwayat Transaksi untuk Pesanan ID: {{ $order->id }}</h1>
@@ -32,6 +31,8 @@
                 </tbody>
             </table>
         @endif
+
+        
 
         <div class="mt-4">
             <a href="{{ route('order.detail', $order->id) }}" class="btn btn-secondary">Kembali</a>

@@ -20,24 +20,41 @@
                         @endif
                     </div>
                     <div class="form-group mb-3">
-                        <label for="deskripsi" class="form-label">Description:</label>
-                        <textarea class="form-control" id="deskripsi" name="deskripsi" required>{{ old('deskripsi', $slider->deskripsi) }}</textarea>
-                        @if ($errors->has('deskripsi'))
-                            <small class="text-danger">{{ $errors->first('deskripsi') }}</small>
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description" required>{{ old('description', $slider->description) }}</textarea>
+                        @if ($errors->has('description'))
+                            <small class="text-danger">{{ $errors->first('description') }}</small>
                         @endif
                     </div>
+                   
+        <div class="form-group">
+            <label for="url">Select URL for the Slider:</label>
+            <select name="url" class="form-control" id="url">
+                <option value="">Select a URL</option>
+                
+                <!-- Predefined URLs Group -->
+                <optgroup label="Halaman General">
+                    @foreach($routeOptions as $name => $url)
+                        <option value="{{ $url }}" {{ $slider->url == $url ? 'selected' : '' }}>{{ $name }}</option>
+                    @endforeach
+                </optgroup>
+        
+                <!-- Product URLs Group -->
+                <optgroup label="Halaman Detail Product">
+                    @foreach($products as $product)
+                        <option value="{{ route('product.show', ['slug' => $product->slug]) }}"
+                            {{ $slider->url == route('product.show', ['slug' => $product->slug]) ? 'selected' : '' }}>
+                            Product: {{ $product->name }}
+                        </option>
+                    @endforeach
+                </optgroup>                
+            </select>
+        </div>
                     <div class="form-group mb-3">
-                        <label for="url" class="form-label">URL:</label>
-                        <input type="text" class="form-control" id="url" name="url" value="{{ old('url', $slider->url) }}">
-                        @if ($errors->has('url'))
-                            <small class="text-danger">{{ $errors->first('url') }}</small>
-                        @endif
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="tombol" class="form-label">Button Text:</label>
-                        <input type="text" class="form-control" id="tombol" name="tombol" value="{{ old('tombol', $slider->tombol) }}">
-                        @if ($errors->has('tombol'))
-                            <small class="text-danger">{{ $errors->first('tombol') }}</small>
+                        <label for="button" class="form-label">Button Text:</label>
+                        <input type="text" class="form-control" id="button" name="button" value="{{ old('button', $slider->button) }}">
+                        @if ($errors->has('button'))
+                            <small class="text-danger">{{ $errors->first('button') }}</small>
                         @endif
                     </div>
                     <button type="submit" class="btn btn-success">Update</button>

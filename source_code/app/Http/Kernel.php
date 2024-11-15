@@ -36,9 +36,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\TrackVisit::class,
             \App\Http\Middleware\UpdateLastLoginAt::class,
             \App\Http\Middleware\LocaleMiddleware::class,
+            \App\Http\Middleware\LogVisit::class,
         ],
 
         'api' => [
@@ -67,7 +67,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user-access' => \App\Http\Middleware\UserAccess::class,
-        'check.big.sale' => \App\Http\Middleware\CheckBigSale::class,
-        'track.visit' => \App\Http\Middleware\TrackVisit::class,
+        'restrict_admin' => \App\Http\Middleware\RestrictAdminAccess::class,
+
     ];
 }

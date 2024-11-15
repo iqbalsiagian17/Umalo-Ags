@@ -15,9 +15,18 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'name' => 'Admin',
+        DB::table('t_users')->insert([
+            'name' => 'Admin Development',
             'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'), // Password untuk admin
+            'role' => 1, // Menandakan sebagai admin
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('t_users')->insert([
+            'name' => 'Admin Labtek',
+            'email' => 'admin@labtek.com',
             'password' => Hash::make('password'), // Password untuk admin
             'role' => 1, // Menandakan sebagai admin
             'created_at' => now(),

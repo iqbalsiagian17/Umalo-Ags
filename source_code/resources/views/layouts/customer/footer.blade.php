@@ -1,4 +1,8 @@
  <!-- Footer Section Begin -->
+<?php 
+$parameter = App\Models\TParameter::first();
+?>
+
 <footer class="footer spad">
     <div class="container">
         <div class="row">
@@ -9,27 +13,28 @@
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-home" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="address info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            {{ __('messages.address') }}
+                            {{ $parameter->address ? $parameter->address : 'Alamat belum tersedia' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-phone-alt" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="phone info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            (021) 2204 3144
+                            {{ $parameter->telephone_number ? $parameter->telephone_number : '(021) 2204 3144' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            info@labtek.id
+                            {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            sales@labtek.id
+                            {{ $parameter->email2 ? $parameter->email2 : 'sales@labtek.id' }}
                         </span>
                     </div>
+                    
                 </div>
             </div>
 
@@ -42,16 +47,8 @@
                             <ul style="text-decoration: underline;">
                                 <li><a href="{{ route('shop') }}">{{ __('messages.find_product') }}</a></li>
 {{--                                 <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li> --}}
-                                <li>
-                                    @auth
-                                        <!-- Jika pengguna sudah login, tampilkan link ke keranjang -->
-                                        <a href="{{ route('cart.view') }}">{{ __('messages.shopping_cart') }}</a>
-                                        @else
-                                        <!-- Jika pengguna belum login, arahkan ke halaman login -->
-                                        <a href="{{ route('login') }}">{{ __('messages.shopping_cart') }}</a>
-                                    @endauth
-                                </li>
-                                <li><a href="{{ route('home') }}">{{ __('messages.home') }}</a></li>
+                                <li><a href="{{route ('cart.show') }}">{{ __('messages.shopping_cart') }}</a></li>
+                                <li><a href="{{ route('home')  }}">{{ __('messages.home') }}</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -60,7 +57,7 @@
 {{--                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
- --}}                                <li><a href="{{ route('faq') }}">{{ __('messages.qna') }}</a></li>
+ --}}                                <li><a href="{{ route('customer.faq') }}">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -71,12 +68,13 @@
             <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-center mb-4">
                 <div class="footer__widget">
                     <div class="footer__about__logo d-flex flex-column align-items-center">
-                        <a href="{{ route('home') }}">
+                        <a href="./index.html">
                             <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
-                        <a href="{{ route('home') }}">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="" style="width: 100%; height: 100px;">
+                        <a href="./index.html">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/100%25_Cinta_Indonesia_Logo.svg/1200px-100%25_Cinta_Indonesia_Logo.svg.png" alt="" style="width: 100%; height: 100px;">
                         </a>
+                        
                     </div>
                 </div>
             </div>
@@ -88,11 +86,9 @@
                         &copy;
                         <script>
                             document.write(new Date().getFullYear());
-                        </script> {{ __('messages.created_by') }} PT Arkamaya Guna Saharsa
+                        </script> {{ __('messages.created_by') }} {{ $parameter->company_name ?? 'PT. Arkamaya Guna Saharsa' }}
                     </div>
-                    <div class="footer__copyright__payment mt-2">
-                        <img src="img/payment-item.png" alt="">
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -137,9 +133,42 @@
 
 
 
+ {{-- <script>
+    // Mencegah penggunaan Ctrl + U dan beberapa kombinasi lainnya
+    document.addEventListener('keydown', function(event) {
+        // Cegah kombinasi Ctrl + U, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + S, F12
+        if (event.ctrlKey && (event.keyCode === 85 || event.keyCode === 73 || event.keyCode === 74 || event.keyCode === 83) || event.keyCode === 123) {
+            event.preventDefault();
+            alert('Viewing source code is disabled!');
+        }
+    });
+
+    // Mencegah klik kanan (context menu)
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        alert('Right-click is disabled!');
+    });
+
+    // Mencegah double-click untuk mencegah pemilihan elemen secara tidak sengaja
+    document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+    });
+
+    // Mencegah fungsi Inspect Element melalui klik kanan
+    document.addEventListener('mousedown', function(event) {
+        if (event.button == 2 || event.button == 1) { // Klik kanan atau klik tengah
+            event.preventDefault();
+        }
+    });
+</script>  --}}
+
+
+
+
+
     <!-- Js Plugins -->
     <script src="{{ asset('ogani/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/bootstrap.bundle.min.js') }}"></script> <!-- Use bootstrap.bundle.min.js for Bootstrap 5 -->
+    <script src="{{ asset('ogani/js/bootstrap.bundle.min.js') }}"></script> 
     <script src="{{ asset('ogani/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('ogani/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('ogani/js/jquery-ui.min.js') }}"></script>
@@ -147,9 +176,11 @@
     <script src="{{ asset('ogani/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('ogani/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('ogani/js/main.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="{{ asset('ogani/js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+
+    
+    <script src="{{ asset('ogani/js/custom.js') }}"></script>
+
     </body>
-</html>
+    </html>

@@ -1,11 +1,30 @@
+<?php
+use App\Models\Order;
+use App\Models\Payment;
+
+$unseenOrders = Order::where('is_viewed_by_admin', false)->get();
+
+// Fetch unpaid or pending payments (you can adjust the status as needed)
+$unseenPayments = Payment::where('is_viewed_by_admin', false)
+                          ->whereIn('status', [Payment::STATUS_UNPAID, Payment::STATUS_PENDING])
+                          ->get();
+
+$unseenOrderCount = $unseenOrders->count();
+$unseenPaymentCount = $unseenPayments->count();
+
+
+$totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
+        
+
+?>
 <div class="main-panel">
     <div class="main-header">
       <div class="main-header-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-          <a href="index.html" class="logo">
+          <a href="{{ route('dashboard') }}" class="logo">
             <img
-              src="assets/img/kaiadmin/logo_light.svg"
+              src=""
               alt="navbar brand"
               class="navbar-brand"
               height="20"
@@ -149,77 +168,72 @@
               </ul>
             </li> --}}
 
-            @php
-    $unseenOrders = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) {
-        $query->where('user_id', Auth::id());
-    })->get();
-
-    $unseenUsers = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
-        ->whereDoesntHave('seenByAdmins', function($query) {
-            $query->where('admin_id', Auth::id());
-        })
-        ->get();
-@endphp
-
-<li class="nav-item topbar-icon dropdown hidden-caret">
-    <a
-        class="nav-link dropdown-toggle"
-        href="#"
-        id="notifDropdown"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-    >
-        <i class="fa fa-bell"></i>
-        @if(count($unseenOrders) > 0 || count($unseenUsers) > 0)
-            <span class="notification">{{ count($unseenOrders) + count($unseenUsers) }}</span>
-        @endif
-    </a>
-    <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
-        <li>
-            <div class="dropdown-title">
-                You have {{ count($unseenOrders) + count($unseenUsers) }} new notifications
-            </div>
-        </li>
-        <li>
-            <div class="notif-scroll scrollbar-outer">
-                <div class="notif-center">
-                    <!-- Unseen Orders -->
-                    @foreach($unseenOrders as $order)
-                        <a href="{{ route('transaksi.show', $order->id) }}">
-                            <div class="notif-icon notif-primary">
-                                <i class="fa fa-shopping-cart"></i>
-                            </div>
-                            <div class="notif-content">
-                                <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
-                                <span class="time">{{ $order->created_at->diffForHumans() }}</span>
-                            </div>
-                        </a>
-                    @endforeach
-
-                    <!-- Unseen User Registrations -->
-                    @foreach($unseenUsers as $user)
-                        <a href="{{ route('users.show', $user->id) }}">
-                            <div class="notif-icon notif-primary">
-                                <i class="fa fa-user"></i>
-                            </div>
-                            <div class="notif-content">
-                                <span class="block">New User: {{ $user->name }} - {{ $user->userDetail->perusahaan ?? 'Unknown Company' }}</span>
-                                <span class="time">{{ $user->created_at->diffForHumans() }}</span>
-                            </div>
-                        </a>
-                    @endforeach
+      <li class="nav-item topbar-icon dropdown hidden-caret">
+          <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="notifDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+          >
+          <i class="fa fa-bell position-relative"></i>
+          @if ($totalUnseenCount > 0)
+              <span class="badge badge-danger position-absolute translate-middle rounded-circle">
+                  {{ $totalUnseenCount }}
+              </span>
+          @endif
+          
+          </a>
+          <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+            <li>
+                <div class="dropdown-title">
+                    You have new notifications
                 </div>
-            </div>
-        </li>
-        <li>
-            <a class="see-all" href="{{ route('transaksi.index') }}">
-                See all notifications<i class="fa fa-angle-right"></i>
-            </a>
-        </li>
-    </ul>
-</li>
+            </li>
+            <li>
+                <div class="notif-scroll scrollbar-outer">
+                    <div class="notif-center">
+        
+                        <!-- Unseen Orders -->
+                        @foreach($unseenOrders as $order)
+                            <a href="{{ route('admin.orders.show', $order->id) }}">
+                                <div class="notif-icon notif-primary">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </div>
+                                <div class="notif-content">
+                                    <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
+                                    <span class="time">{{ $order->created_at->diffForHumans() }}</span>
+                                    <span class="status">{{ $order->statusMessage() }}</span> <!-- Displaying the status message -->
+                                </div>
+                            </a>
+                        @endforeach
+        
+                        <!-- Unseen Payments -->
+                        @foreach($unseenPayments as $payment)
+                            <a href="{{ route('admin.payments.index') }}">
+                                <div class="notif-icon notif-success">
+                                    <i class="fa fa-credit-card"></i>
+                                </div>
+                                <div class="notif-content">
+                                    <span class="block">New Payment for Order #{{ $payment->order->id }} - Status: {{ $payment->statusMessage() }}</span>
+                                    <span class="time">{{ $payment->created_at->diffForHumans() }}</span>
+                                </div>
+                            </a>
+                        @endforeach
+        
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a class="see-all" href="{{ route('admin.orders.index') }}">
+                    See all notifications <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+        
+      </li>
 
           
             <li class="nav-item topbar-icon dropdown hidden-caret">
@@ -248,24 +262,24 @@
                         </div>
                       </a>
                     
-                      <a class="col-6 col-md-4 p-0" href="{{ route('transaksi.index') }}">
+                      <a class="col-6 col-md-4 p-0" href="{{ route('admin.orders.index') }}">
                         <div class="quick-actions-item">
                             <div class="avatar-item bg-warning rounded-circle">
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
-                            <span class="text">Transaksi</span>
+                            <span class="text">Order</span>
                         </div>
                     </a>                    
-                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.create') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('admin.product.create') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-info rounded-circle">
                               <i class="fas fa-plus-circle"></i>
                           </div>
-                          <span class="text">Create Produk</span>
+                          <span class="text">Create Product</span>
                       </div>
                   </a>
                   
-                  <a class="col-6 col-md-4 p-0" href="{{ route('bigsale.index') }}">
+                  <a class="col-6 col-md-4 p-0" href="{{-- {{ route('bigsale.index') }} --}}">
                     <div class="quick-actions-item">
                         <div class="avatar-item bg-success rounded-circle">
                             <i class="fas fa-tags"></i>
@@ -283,12 +297,12 @@
                         </div>
                     </a>
                     
-                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.index') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('admin.product.index') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-secondary rounded-circle">
                               <i class="fas fa-boxes"></i>
                           </div>
-                          <span class="text">Produk</span>
+                          <span class="text">Product</span>
                       </div>
                   </a>
                   
@@ -307,7 +321,7 @@
               >
                 <div class="avatar-sm">
                   <img
-                    src="{{ asset('assets/images/logo.png') }}"
+                    src="{{ asset('assets/images/logo-nobg.png') }}"
                     alt="..."
                     class="avatar-img rounded-circle"
                   />
@@ -323,7 +337,7 @@
                     <div class="user-box">
                       <div class="avatar-lg">
                         <img
-                          src="{{ asset('assets/images/logo.png') }}"
+                          src="{{ asset('assets/images/logo-nobg.png') }}"
                           alt="image profile"
                           class="avatar-img rounded"
                         />

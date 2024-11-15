@@ -20,12 +20,11 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             AdminSeeder::class,
-            KategoriSeeder::class,
-            SubKategoriSeeder::class,
-            KomoditasSeeder::class,
-            PPNSeeder::class,
-            ProdukSeeder::class,
-            QaSeeder::class,
+            CategorySeeder::class,
+            SubCategorySeeder::class, 
+            ProductSeeder::class,
+            FaqSeeder::class,
+            TParameterSeeder::class, 
         ]);
     }
 }

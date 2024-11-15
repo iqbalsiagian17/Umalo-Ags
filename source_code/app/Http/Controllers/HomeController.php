@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\BigSale;
-use App\Models\Kategori;
+use App\Models\Category;
 use App\Models\Komoditas;
 use App\Models\Order;
-use App\Models\Produk;
+use App\Models\Payment;
+use App\Models\Product;
 use App\Models\Slider;
+use App\Models\SubCategory;
+use App\Models\TParameter;
 use App\Models\User;
 use App\Models\Visit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class HomeController extends Controller
 {
@@ -32,86 +37,52 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-{
-    // Update the status of expired Big Sales
-    $this->updateBigSaleStatus();
+    {
 
-    // Retrieve Big Sales that are within the time frame but may be inactive
-    $activeOrUpcomingBigSales = BigSale::with('produk')
-        ->whereDate('mulai', '<=', now())
-        ->whereDate('berakhir', '>=', now())
-        ->get();
+        // Ambil data slider, user, dan order terkait user yang sedang login
+        $slider = Slider::all();
+        $user = User::find(auth()->id());
+        $orders = Order::where('user_id', Auth::id())->get();
 
-    // Collect product IDs from active or valid Big Sales
-    $bigSaleProductIds = collect();
-    foreach ($activeOrUpcomingBigSales as $bigSale) {
-        if ($bigSale->status === 'aktif') {
-            $bigSaleProductIds = $bigSaleProductIds->merge($bigSale->produk->pluck('id'));
-        }
+        // Ambil Big Sale aktif
+        $bigSales = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->with('products.images') // Memuat produk dan gambar yang terkait dengan Big Sale
+            ->first();
+
+        // Ambil ID dari produk yang termasuk dalam Big Sale aktif (jika ada)
+        $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
+
+        // Ambil produk yang tidak termasuk dalam Big Sale aktif
+        $product = Product::with('images')
+            ->where('status', 'publish')
+            ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan produk terbaru
+            ->take(8) // Batas produk yang diambil sebanyak 8
+            ->get();
+
+            
+
+        // Kirim data ke view
+        return view('customer.home.home', compact('slider', 'product', 'user', 'orders', 'bigSales'));
     }
-    $bigSaleProductIds = $bigSaleProductIds->toArray();
-
-    // Retrieve products that are either not in any active Big Sale or in an inactive Big Sale
-    $produk = Produk::with('images')
-    ->where('status', 'publish')
-    ->where(function ($query) use ($bigSaleProductIds) {
-        $query->whereNotIn('id', $bigSaleProductIds)
-              ->orWhereHas('bigSales', function ($query) {
-                  $query->where('status', '!=', 'aktif')
-                        ->whereDate('mulai', '<=', now())
-                        ->whereDate('berakhir', '>=', now());
-              });
-    })
-    ->orderBy('created_at', 'desc') // Order by latest products
-    ->take(9) // Limit to the top 8 products
-    ->get();
 
 
-    $slider = Slider::all();
-
-    $bigSale = $activeOrUpcomingBigSales->where('status', 'aktif')->first();
-
-    $topSellingProducts = Produk::with('images')
-    ->select('produk.id', 'produk.nama', 'produk.harga_tayang', 'produk.nego', 'produk.harga_ditampilkan', DB::raw('SUM(order_items.jumlah) as total_sold'))
-    ->join('order_items', 'produk.id', '=', 'order_items.produk_id')
-    ->groupBy('produk.id', 'produk.nama', 'produk.harga_tayang', 'produk.nego', 'produk.harga_ditampilkan')
-    ->orderBy('total_sold', 'desc')
-    ->where('produk.status', 'publish')
-    ->whereDoesntHave('bigSales', function ($query) {
-        $query->where('status', 'aktif');
-    })
-    ->take(4) // Limit to the top 4 best-sellers
-    ->get();
-
-    $user = User::find(auth()->id());
-    $pendingOrders = $user ? $user->orders()->where('status', 'Diterima')->whereNull('bukti_pembayaran')->get() : collect();
-
-
-    $rejectOrders = $user ? $user->orders()
-        ->where('status', 'Diterima') // Status 'Diterima' means the negotiation has been rejected
-        ->whereHas('orderItems', function($query) {
-            $query->whereHas('produk', function($query) {
-                $query->where('nego', 'ya'); // Product was previously negotiable
-            });
-        })
-        ->whereNull('bukti_pembayaran') // Orders where payment has not been made yet
-        ->get() : collect();
-    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders','rejectOrders' ));
-}
 
 
 
     public function filterByCategory($id)
 {
-    $category = Kategori::find($id);
-    $products = Produk::where('kategori_id', $id)->where('status', 'publish')->get(); // Sesuaikan dengan struktur tabel Anda
+    $category = Category::find($id);
+    $products = Product::where('Category_id', $id)->where('status', 'publish')->get(); // Sesuaikan dengan struktur tabel Anda
     return view('shop.index', compact('products', 'category'));
 }
 
 
 
 
-private function updateBigSaleStatus()
+/* private function updateBigSaleStatus()
 {
     $currentDateTime = now(); // Get the current date and time
 
@@ -119,7 +90,7 @@ private function updateBigSaleStatus()
     BigSale::where('status', 'aktif')
         ->where('berakhir', '<=', $currentDateTime)
         ->update(['status' => 'tidak aktif']);
-}
+} */
 
 
 
@@ -131,37 +102,58 @@ private function updateBigSaleStatus()
         $customerCount = User::where('role', 'customer')->count();
 
         // Menghitung jumlah pesanan
-        $orderCount = Order::where('status', 'selesai')->count();
+        $orderCount = Order::where('status', 'delivered')->count();
 
-        $orderNotFinishCount = Order::where('status', '!=', 'selesai')->count();
+        $orderNotFinishCount = Order::where('status', '!=', 'delivered')->count();
 
+        $totalSales = Order::where('status', 'delivered')->sum('total');
 
-        $totalSales = Order::where('status', 'selesai')->sum('harga_total');
+        $payments = Payment::orderBy('created_at', 'desc')->paginate(10);
 
-        // Menghitung jumlah kunjungan ke halaman home hari ini oleh pengguna biasa
-        $visitorCountToday = Visit::whereDate('visited_at', Carbon::today())->count();
+        $orders = Order::orderBy('created_at', 'desc')->paginate(10);
 
-        // Statistik kunjungan berdasarkan interval waktu (misalnya per jam dalam sehari)
-        $hourlyVisits = Visit::select(DB::raw('HOUR(visited_at) as hour'), DB::raw('count(*) as visits'))
-            ->whereDate('visited_at', Carbon::today())
-            ->groupBy('hour')
-            ->orderBy('hour', 'asc')
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item['hour'] => $item['visits']];
-            });
+        $parameterExists = TParameter::exists(); // Checks if there are any records
+        
+        if (!$parameterExists) {
+            session()->flash('warning', 'Data Parameter Kosong, Silahkan Isi Data Parameter Terlebih Dahulu Dikarenakan Berkatian Dengan Halaman Ecommerce dan Transaksi Pembayaran ');
+        }
+        
+        $waitingApprovalOrders = Order::where('status', Order::STATUS_WAITING_APPROVAL)->get();
+        $processingOrders = Order::where('status', Order::STATUS_PROCESSING)->get();
+        $pendingPaymentOrders = Order::where('status', Order::STATUS_APPROVED)->get();
+        $confirmPaymentOrders = Order::where('status', Order::STATUS_CONFIRMED)->get();
 
-        // Hitung durasi kunjungan individu per pengguna hari ini
-        $visitDurations = Visit::whereDate('visited_at', Carbon::today())
-            ->select(DB::raw('TIMESTAMPDIFF(SECOND, MIN(visited_at), MAX(visited_at)) as duration'))
-            ->groupBy('user_id')
-            ->pluck('duration');
-
-        // Hitung rata-rata durasi kunjungan hari ini
-        $averageVisitTimeToday = $visitDurations->avg();
-
+        
         // Mengirim variabel ke view
-        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
+        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'payments', 'totalSales', 'orders' ,'parameterExists','waitingApprovalOrders', 'processingOrders', 'pendingPaymentOrders', 'confirmPaymentOrders'));
     }
+
+
+    public function bigsale($slug)
+    {
+        $bigSales = BigSale::where('slug', $slug)
+            ->where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->with(['products' => function ($query) {
+                // Only apply the category filter if 'category' is present in the request
+                if (request()->has('category') && request()->category) {
+                    $query->where('category_id', request()->category);
+                }
+            }, 'products.images']) // Load images for products
+            ->first();
+    
+        if (!$bigSales) {
+            abort(404, 'Big Sale not found or inactive.');
+        }
+    
+        // Retrieve categories for the sidebar
+        $categories = Category::all();
+    
+        // Pass the Big Sale, filtered (or all) products, and categories to the view
+        return view('customer.bigsale.index', compact('bigSales', 'categories'));
+    }
+    
+
 
 }

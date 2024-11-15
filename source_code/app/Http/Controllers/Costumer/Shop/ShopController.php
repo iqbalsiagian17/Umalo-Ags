@@ -4,247 +4,142 @@ namespace App\Http\Controllers\Costumer\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\BigSale;
-use App\Models\Kategori;
+use App\Models\Category;
 use App\Models\Komoditas;
-use App\Models\Produk;
-use App\Models\SubKategori;
+use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
 
-        public function shop(Request $request)
-        {
-            // Ambil semua kategori dan komoditas untuk ditampilkan di sidebar
-            $kategori = Kategori::take(10)->get(); // Retrieve all categories
-            $subkategori = SubKategori::get();
-
-            // Ambil parameter sort dan kategori dari request
-            $sort = $request->get('sort');
-            $kategoriId = $request->get('kategori_id');
-
-            // Query dasar untuk produk yang dipublish
-            $query = Produk::with('images')->where('status', 'publish');
-
-            // Filter berdasarkan kategori jika ada
-            if ($kategoriId) {
-                $query->where('kategori_id', $kategoriId);
-            }
-
-            // Sorting berdasarkan parameter yang diberikan
-            if ($sort == 'newest') {
-                $query->orderBy('created_at', 'desc');
-            } elseif ($sort == 'oldest') {
-                $query->orderBy('created_at', 'asc');
-            } elseif ($sort == 'price_lowest') {
-                $query->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
-            } elseif ($sort == 'price_highest') {
-                $query->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
-            }
-
-
-            $produk = $query->paginate(9);
-
-            // Dapatkan produk setelah menerapkan filter dan sorting
-            $productCount = $produk->total();
-
-            return view('customer.shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
-        }
-
-
-    public function filterByCategory(Request $request, $id)
-    {
-        $kategori = Kategori::all(); // Untuk sidebar kategori
-        $currentCategory = Kategori::find($id); // Kategori yang dipilih
-
-        if (!$currentCategory) {
-            return redirect()->route('shop')->with('error', 'Kategori tidak ditemukan.');
-        }
-
-        // Menghitung jumlah produk yang memiliki kategori yang sama
-        $productCount = Produk::where('kategori_id', $id)->where('status', 'publish')->count();
-
-        $subkategori = SubKategori::all(); // Untuk sidebar komoditas
-
-        $sort = $request->get('sort');
-    
-        $minPrice = str_replace('.', '', $request->input('min_price'));
-        $maxPrice = str_replace('.', '', $request->input('max_price'));
-    
-            // Convert to integers
-            $minPrice = (int)$minPrice;
-            $maxPrice = (int)$maxPrice;
-
-
-        $query = Produk::where('kategori_id', $id)->where('status', 'publish');
-        
-        // Menambahkan kondisi filter harga ke query
-        if (!empty($minPrice)) {
-            $query->where('harga_tayang', '>=', floatval($minPrice));
-        }
-        if (!empty($maxPrice)) {
-            $query->where('harga_tayang', '<=', floatval($maxPrice));
-        }
-
-        if ($sort == 'newest') {
-            $query->orderBy('created_at', 'desc');
-        } elseif ($sort == 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } elseif ($sort == 'price_lowest') {
-            $query->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
-        } elseif ($sort == 'price_highest') {
-            $query->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
-        }
-
-        // Selalu dapatkan produk setelah sorting
-        $produk = $query->paginate(9);
-
-        // Pastikan untuk mengirimkan variabel $productCount ke view
-        return view('customer.shop.kategori', compact('produk', 'kategori', 'currentCategory', 'subkategori', 'productCount'));
-    }
-
-    public function filterBySubcategory(Request $request, $id)
-    {
-        $kategori = Kategori::all(); // Untuk sidebar kategori
-        $currentSubcategory = SubKategori::find($id); // Subkategori yang dipilih
-    
-        if (!$currentSubcategory) {
-            return redirect()->route('shop')->with('error', 'Subkategori tidak ditemukan.');
-        }
-    
-        // Menghitung jumlah produk yang memiliki subkategori yang sama
-        $productCount = Produk::where('sub_kategori_id', $id)->where('status', 'publish')->count();
-    
-        $subkategori = SubKategori::all(); // Untuk sidebar komoditas
-    
-        $sort = $request->get('sort');
-
-        $minPrice = str_replace('.', '', $request->input('min_price'));
-        $maxPrice = str_replace('.', '', $request->input('max_price'));
-    
-            // Convert to integers
-            $minPrice = (int)$minPrice;
-            $maxPrice = (int)$maxPrice;
-
-
-        $query = Produk::where('sub_kategori_id', $id)->where('status', 'publish');
-
-        if (!empty($minPrice)) {
-            $query->where('harga_tayang', '>=', floatval($minPrice));
-        }
-        if (!empty($maxPrice)) {
-            $query->where('harga_tayang', '<=', floatval($maxPrice));
-        }
-    
-        if ($sort == 'newest') {
-            $query->orderBy('created_at', 'desc');
-        } elseif ($sort == 'oldest') {
-            $query->orderBy('created_at', 'asc');
-        } elseif ($sort == 'price_lowest') {
-            $query->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
-        } elseif ($sort == 'price_highest') {
-            $query->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
-        }
-    
-        // Selalu dapatkan produk setelah sorting
-        $produk = $query->paginate(9);
-    
-        // Pastikan untuk mengirimkan variabel $productCount ke view
-        return view('customer.shop.subkategori', compact('produk', 'kategori', 'currentSubcategory', 'subkategori', 'productCount'));
-    }
-    
-
-
-    public function showDiscountedCategoryProducts($categoryId)
+    public function shop(Request $request, $categorySlug = null, $subcategorySlug = null, $rating = null)
 {
-    $komoditas = Komoditas::all();
+    // Retrieve categories and subcategories for the sidebar
+    $categories = Category::take(10)->get();
+    $subcategories = SubCategory::get();
 
-    // Get the active Big Sale
-    $bigSale = BigSale::with('produk')
-        ->where('status', true)
-        ->whereDate('mulai', '<=', now())
-        ->whereDate('berakhir', '>=', now())
+    // Retrieve sorting, price range, rating filter, and search query parameters
+    $sort = $request->get('sort');
+    $minPrice = str_replace('.', '', $request->get('min_price'));
+    $maxPrice = str_replace('.', '', $request->get('max_price'));
+    $queryParam = $request->get('query'); // Retrieve the search query
+
+    // Initialize message variables
+    $pageMessage = '';
+    $categoryName = null;
+    $subcategoryName = null;
+
+    // Find an active Big Sale
+    $activeBigSale = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
         ->first();
 
-    if (!$bigSale) {
-        return redirect()->back()->with('error', 'No active Big Sale found.');
-    }
+    // Base query for published products
+    $query = Product::with('images')->where('status', 'publish');
 
-    // Filter products by the selected category
-    $products = $bigSale->produk->filter(function($product) use ($categoryId) {
-        return $product->kategori_id == $categoryId;
-    });
-
-    // Get categories related to Big Sale products
-    $kategori = Kategori::whereHas('produk', function ($query) use ($bigSale) {
-        $query->whereHas('bigSales', function ($query) use ($bigSale) {
-            $query->where('big_sale_id', $bigSale->id);
+    // Exclude products in the active Big Sale
+    if ($activeBigSale) {
+        $query->whereDoesntHave('bigSales', function ($q) use ($activeBigSale) {
+            $q->where('t_bigsales.id', $activeBigSale->id); // Use 'big_sales.id' to avoid ambiguity
         });
-    })->get();
-
-    return view('customer.bigsale.kategori', compact('products', 'kategori', 'bigSale','komoditas'));
-}
-
-public function filterByRating($rating)
-{
-    $subkategori = SubKategori::all(); // Untuk sidebar komoditas
-    $kategori = Kategori::all(); // Untuk sidebar kategori
-
-    // Fetch products with the exact average rating specified
-    $produk = Produk::whereHas('reviews', function($query) use ($rating) {
-        $query->select('produk_id', DB::raw('AVG(rating) as average_rating'))
-              ->groupBy('produk_id')
-              ->havingRaw('ROUND(AVG(rating), 1) = ?', [$rating]);
-    })->with(['reviews' => function($query) {
-        $query->select('produk_id', DB::raw('AVG(rating) as average_rating'))->groupBy('produk_id');
-    }])->paginate(9); // Paginate the results
-
-    // Get the total count of filtered products
-    $productCount = $produk->total();
-
-    return view('customer.shop.shop', compact('produk', 'subkategori', 'kategori', 'productCount'));
-}
-
-
-public function filterByPriceRange(Request $request)
-{
-    $minPrice = str_replace('.', '', $request->input('min_price'));
-    $maxPrice = str_replace('.', '', $request->input('max_price'));
-
-        // Convert to integers
-        $minPrice = (int)$minPrice;
-        $maxPrice = (int)$maxPrice;
+    }
     
 
-    $kategori = Kategori::all();
-    $subkategori = SubKategori::all();
+    // Filter by category if category slug is provided
+    if ($categorySlug) {
+        $category = Category::where('slug', $categorySlug)->first();
+        if ($category) {
+            $query->where('category_id', $category->id);
+            $categoryName = $category->name;
+        }
+    }
 
-    // Start building the query for filtering products by price range
-    $query = Produk::with('images')->where('status', 'publish');
+    // Filter by subcategory if subcategory slug is provided
+    if ($subcategorySlug) {
+        $subcategory = SubCategory::where('slug', $subcategorySlug)->first();
+        if ($subcategory) {
+            $query->where('subcategory_id', $subcategory->id);
+            $subcategoryName = $subcategory->name;
+        }
+    }
 
-    // Apply the price filter if the user has provided min and/or max price
+    // Apply search filtering if query is provided
+    if ($queryParam) {
+        $query->where(function ($q) use ($queryParam) {
+            $q->where('name', 'like', "%{$queryParam}%")
+              ->orWhere('product_specifications', 'like', "%{$queryParam}%");
+        });
+    }
+
+    // Determine the message based on filters applied
+    if ($queryParam) {
+        $pageMessage = "Kamu sedang berada di halaman shop dengan keyword \"$queryParam\"";
+    } elseif ($categoryName && $subcategoryName) {
+        $pageMessage = "Kamu sedang berada di halaman shop dengan kategori \"$categoryName\" dan subkategori \"$subcategoryName\"";
+    } elseif ($categoryName) {
+        $pageMessage = "Kamu sedang berada di halaman shop dengan kategori \"$categoryName\"";
+    } elseif ($minPrice || $maxPrice || $rating) {
+        $priceMessage = '';
+
+        if ($minPrice && $maxPrice) {
+            $priceMessage = "harga dari Rp" . number_format($minPrice, 0, ',', '.') . " sampai Rp" . number_format($maxPrice, 0, ',', '.');
+        } elseif ($minPrice) {
+            $priceMessage = "harga mulai dari Rp" . number_format($minPrice, 0, ',', '.');
+        } elseif ($maxPrice) {
+            $priceMessage = "harga hingga Rp" . number_format($maxPrice, 0, ',', '.');
+        }
+
+        $ratingMessage = $rating ? "dan rating $rating" : '';
+        $pageMessage = "Kamu sedang berada di halaman shop dengan filter $priceMessage $ratingMessage";
+    }
+
+    // Apply price filtering
     if ($minPrice) {
-        $query->where('harga_tayang', '>=', $minPrice);
+        $query->where('price', '>=', (int)$minPrice);
     }
     if ($maxPrice) {
-        $query->where('harga_tayang', '<=', $maxPrice);
+        $query->where('price', '<=', (int)$maxPrice);
     }
 
-    // Execute the query and paginate the results
-    $produk = $query->paginate(9);
+    // Apply rating filter
+    if ($rating) {
+        $query->whereHas('reviews', function ($q) use ($rating) {
+            $q->select(DB::raw('AVG(rating) as avg_rating'))
+              ->groupBy('product_id')
+              ->having('avg_rating', '=', $rating);
+        });
+    }
 
-    // Count the number of products found
-    $productCount = $produk->total();
+    // Apply sorting based on the selected option
+    if ($sort == 'newest') {
+        $query->orderBy('created_at', 'desc');
+    } elseif ($sort == 'oldest') {
+        $query->orderBy('created_at', 'asc');
+    } elseif ($sort == 'price_lowest') {
+        $query->orderBy('price', 'asc');
+    } elseif ($sort == 'price_highest') {
+        $query->orderBy('price', 'desc');
+    }
 
-    return view('customer.shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
+    // Paginate products
+    $products = $query->paginate(9);
+
+    // Total count of products after filtering and sorting
+    $productCount = $products->total();
+
+    // Return view with all parameters for correct display
+    return view('customer.shop.shop', compact('products', 'categories', 'subcategories', 'productCount', 'categorySlug', 'subcategorySlug', 'rating', 'queryParam', 'pageMessage','activeBigSale'));
 }
 
 
 
 
+        
 
 
-
+    
 
 }

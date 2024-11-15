@@ -4,17 +4,33 @@
       <div class="loader"></div>
   </div> --}}
 
+<?php 
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\TParameter;
+use Illuminate\Support\Facades\Auth;
+
+$orders = Order::where('user_id', Auth::id())->where('is_viewed_by_customer', false)->get();
+
+$payments = Payment::whereHas('order', function($query) { $query->where('user_id', Auth::id()); })->where('is_viewed_by_customer', false)->get();
+
+$parameter = TParameter::first();
+?>
+
+
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}" alt=""></a>
+            <a href="{{ route('home') }}">
+                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo">
+            </a>            
         </div>
         <div class="humberger__menu__cart">
             <ul>
                 @if (Auth::check())
                     <li>
-                        <a href="{{ route('cart.view') }}"><i class="fa fa-shopping-cart"></i></a>
+                        <a href="{{ route('cart.show') }}"><i class="fa fa-shopping-cart"></i></a>
                     </li>
                 @endif
             </ul>
@@ -47,7 +63,7 @@
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             style="text-decoration: none; color: inherit;">
-                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}"
+                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}"
                                 alt="Avatar"
                                 style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                             {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
@@ -56,7 +72,7 @@
                             <a class="dropdown-item" href="{{ route('user.show') }}">
                                 {{ __('messages.settings') }}
                             </a>
-                            <a class="dropdown-item" href="{{ route('order.history') }}">
+                            <a class="dropdown-item" href="{{ route('customer.orders.index') }}">
                                 {{ __('messages.purchase') }}
                             </a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
@@ -89,12 +105,16 @@
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> info@labtek.id</li>
-                <li>Level-Up Your Output With Labtek</li>
-            </ul>
+                <li><i class="fa fa-envelope"></i> {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}</li>
+                <li>{{ $parameter->slogan ? $parameter->slogan : 'Level-Up Your Output With Labtek' }}</li>
+            </ul>            
         </div>
     </div>
     <!-- Humberger End -->
+
+
+
+
 
     <!-- Header Section Begin -->
     <header class="header">
@@ -104,9 +124,9 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i>info@labtek.id</li>
-                                <li>Level-Up Your Output With Labtek</li>
-                            </ul>
+                                <li><i class="fa fa-envelope"></i> {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}</li>
+                                <li>{{ $parameter->slogan ? $parameter->slogan : 'Level-Up Your Output With Labtek' }}</li>
+                            </ul>                            
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
@@ -132,9 +152,7 @@
                                     <li><a href="{{ route('lang.switch', 'en') }}">English</a></li>
                                 </ul>
                             </div>
-                            <div class="header__top__right__auth">
-
-                            </div>
+                                                        
                         </div>
                     </div>
                 </div>
@@ -146,39 +164,120 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="header__logo text-center mb-3">
-                            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo.png') }}"
-                                    alt="" style="width: 100%; height: 100px;"></a>
+                            <a href="{{ route('home') }}">
+                                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo" style="width: 100%; height: 100px;">
+                            </a>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="hero__search mb-3">
                             <div class="hero__search__form">
-                                <form id="searchForm" action="{{ route('produk.search') }}" method="GET">
-                                    <input type="text" name="query" id="searchQuery" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
+                                <form id="searchForm" action="{{ route('shop', ['categorySlug' => $categorySlug ?? null, 'subcategorySlug' => $subcategorySlug ?? null]) }}" method="GET" onsubmit="removeEmptyInputs()">
+                                    <input type="text" name="query" id="searchQuery" placeholder="{{ __('messages.search_product') }}" value="{{ $queryParam ?? '' }}">
                                     <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
+                                
+                                    {{-- Pass existing filters in hidden inputs to retain them on search --}}
+                                    <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                                    <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+                                    <input type="hidden" name="sort" value="{{ request('sort') }}">
+                                    <input type="hidden" name="rating" value="{{ request('rating') }}">
                                 </form>
-                            </div>
-                        </div>                        
+                                
+                                <script>
+                                    function removeEmptyInputs() {
+                                        // Get all input elements within the form
+                                        const inputs = document.querySelectorAll('#searchForm input');
+                                
+                                        // Loop through each input and remove it if it has no value
+                                        inputs.forEach(input => {
+                                            if (input.value.trim() === '') {
+                                                input.removeAttribute('name'); // Remove name attribute to exclude it from form submission
+                                            }
+                                        });
+                                    }
+                                </script>
+                                
+                                
+                                </div>
+                        </div>
                     </div>
+                    
+                    
                     <div class="col-lg-3">
                         <div class="header__cart mb-3">
                             <ul>
                                 @if (Auth::check())
                                 <li>
-                                    <a href="{{ route('favorite.show') }}">
+                                    <a href="{{ route('wishlist.index') }}">
                                         <i class="fa fa-heart"></i> <!-- Change the icon to a heart -->
                                         <span class="notification">
-                                            {{ Auth::check() ? Auth::user()->favorites()->count() : 0 }}
+                                            {{ Auth::check() ? Auth::user()->wishlist()->count() : 0 }}
                                         </span>
                                         
                                     </a>
                                 </li>
+                                <li class="notification-item">
+                                    <a href="javascript:void(0)" onclick="toggleNotifications()">
+                                        <i class="fa fa-bell"></i>
+                                        <span class="notification"><?= $orders->count() + $payments->count() ?></span> <!-- Jumlah notifikasi -->
+                                    </a>
+                                    <div class="notification-dropdown" id="notificationDropdown">
+                                        <div class="notification-header">
+                                            <h4>Notifikasi</h4>
+                                            <i class="fa fa-cog settings-icon"></i> <!-- Ikon pengaturan -->
+                                        </div>
+                                
+                                        <!-- Tab Content: Update -->
+                                        <div class="tab-content" id="updates" style="display: block;">
+                                            <?php if ($orders->isEmpty() && $payments->isEmpty()): ?>
+                                                <!-- Jika tidak ada notifikasi -->
+                                                <div class="notification-item">
+                                                    <p>Tidak ada notifikasi saat ini.</p>
+                                                </div>
+                                            <?php else: ?>
+                                                <?php foreach ($orders as $order): ?>
+                                                    <a href="<?= route('customer.order.show', ['orderId' => $order->id]) ?>" class="notification-link">
+                                                        <div class="notification-item" id="notification-<?= $order->id ?>">
+                                                            <div class="notification-icon">
+                                                                <i class="fa fa-shopping-cart"></i>
+                                                            </div>
+                                                            <div class="notification-content">
+                                                                <p><strong>Order #<?= $order->id ?></strong> <?= $order->statusMessage() ?></p>
+                                                                <small><?= $order->updated_at->diffForHumans() ?></small>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                <?php endforeach; ?>
+                                
+                                                <?php foreach ($payments as $payment): ?>
+                                                    <a href="<?= route('customer.order.show', ['orderId' => $payment->order->id]) ?>" class="notification-link">
+                                                        <div class="notification-item" id="payment-notification-<?= $payment->id ?>">
+                                                            <div class="notification-icon">
+                                                                <i class="fa fa-credit-card"></i>
+                                                            </div>
+                                                            <div class="notification-content">
+                                                                <p><strong>Pembayaran</strong> untuk order #<?= $payment->order->id ?> <?= $payment->statusMessage() ?></p>
+                                                                <small><?= $payment->updated_at->diffForHumans() ?></small>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                <?php endforeach; ?>
+
+                                            <?php endif; ?>
+                                        </div>
+                                
+                                        <div class="notification-footer">
+                                            <a href="<?= route('customer.orders.index') ?>">Lihat semua notifikasi</a>
+                                        </div>
+                                    </div>
+                                </li>
 
                                 <li>
-                                    <a href="{{ route('cart.view') }}">
+                                    <a href="{{ route('cart.show') }}">
                                         <i class="fa fa-shopping-cart"></i>
-                                        <span
-                                            class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
+                                        <span class="notification">
+                                            {{ Auth::check() ? \App\Models\Cart::where('user_id', Auth::id())->sum('quantity') : 0 }}
+                                        </span>
                                     </a>
                                 </li>
                                 @endif
@@ -198,7 +297,7 @@
                                                 aria-expanded="false" style="text-decoration: none; color: inherit;">
                                                 <!-- Avatar Gambar -->
                                                 @if (Auth::check())
-                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}"
+                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}"
                                                         alt="Avatar"
                                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                                                 @else
@@ -212,7 +311,7 @@
                                                 <a class="dropdown-item" href="{{ route('user.show') }}">
                                                     {{ __('messages.settings') }}
                                                 </a>
-                                                <a class="dropdown-item" href="{{ route('order.history') }}">
+                                                <a class="dropdown-item" href="{{ route('customer.orders.index') }}">
                                                     {{ __('messages.purchase') }}
                                                 </a>
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
@@ -230,7 +329,6 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="humberger__open">
                         <i class="fa fa-bars"></i>
                     </div>
@@ -279,7 +377,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('order.history') }}" class="nav-link text-center text-dark">
+                <a href="{{ route('customer.orders.index') }}" class="nav-link text-center text-dark">
                     <div class="icon-circle">
                         <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-bag"
                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -318,18 +416,6 @@
         </ul>
     </nav>
 
-    <style>
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            background-color: #f8f9fa;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 5px;
-        }
-    </style>
 
 
 
@@ -358,75 +444,4 @@
             });
         });
     </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const productId = this.dataset.productId;
-                    const url = `/cart/add/${productId}`;
-
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').getAttribute('content'),
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                quantity: 1 // or the quantity from an input field
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Update the cart notification span
-                                const cartNotification = document.querySelector(
-                                    '.notification');
-                                cartNotification.textContent = data.totalQuantity;
-                            } else {
-                                alert(data.message);
-                            }
-                        });
-                });
-            });
-        });
-    </script>
-
-
-    <style>
-        .header__fixed {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .header__placeholder {
-            height: 120px;
-            /* Adjust the height to match the height of the fixed header */
-            display: none;
-            /* Hidden by default */
-        }
-
-        /* Media Query for Mobile Mode */
-        @media (max-width: 767px) {
-            .header__fixed {
-                position: static;
-                box-shadow: none;
-            }
-
-            .header__placeholder {
-                display: none;
-                /* Optionally, ensure the placeholder is hidden on mobile */
-            }
-        }
-    </style>
     <!-- Header Section End -->

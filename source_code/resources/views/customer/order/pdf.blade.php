@@ -83,17 +83,40 @@
             font-size: 14px;
         }
 
-        .invoice-table th,
-        .invoice-table td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
+        .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
 
-        .invoice-table th {
-            background-color: #f2f2f2;
-            text-transform: uppercase;
-        }
+    .invoice-table th,
+    .invoice-table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .invoice-table th {
+        background-color: #f2f2f2;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .invoice-table td {
+        text-align: right;
+    }
+
+    .invoice-table td:first-child,
+    .invoice-table td:nth-child(2) {
+        text-align: left;
+    }
+
+    .invoice-table .total-row {
+        font-weight: bold;
+        background-color: #f9f9f9;
+    }
 
         .payment-info {
             margin-top: 20px;
@@ -219,27 +242,27 @@
 
 @php
     // Find the active address from the collection of userAddresses
-    $activeAddress = $userAddresses->firstWhere('status', 'aktif');
+    $activeAddress = $userAddresses->firstWhere('is_active', '1');
 @endphp
 
 <div class="content">
     <p style="margin: 0;">Billed To:</p>
-    <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
+    <p style="margin: 0;"><strong>{{ $user->company }}</strong></p>
     @if ($activeAddress)
         <p style="margin: 0;">
-            {{ $activeAddress->alamat }},
-            {{ $activeAddress->kota }},
-            {{ $activeAddress->provinsi }}
-            {{ $activeAddress->kode_pos }}
+            {{ $activeAddress->address }},
+            {{ $activeAddress->city }},
+            {{ $activeAddress->province }}
+            {{ $activeAddress->postal_code }}
         </p>
     @else
         <p style="margin: 0;">No active address available.</p>
     @endif
     <br>
-    <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
+    <p style="margin: 0;">Dear {{ $user->company }},</p><br>
     <p style="margin: 0;">
-        Based on Purchase Order No. {{ $order->id }}/{{ $companyAbbreviation }}-PROC/{{ $romanMonth }}/{{ $order->created_at->format('Y') }},
-        PT. Arkamaya Guna Saharsa submits the invoice:
+        Based on Purchase Order No. {{ $order->id }}/{{ $order->created_at->format('Y') }},
+        {{ $parameter->company_name }} submits the invoice:
     </p>
 </div>
 
@@ -253,63 +276,57 @@
             <th>Description</th>
             <th>Qty</th>
             <th>Unit Price</th>
-            <th>Total Price</th>
+            <th>Total</th>
         </tr>
     </thead>
-
     <tbody>
-        @foreach ($order->orderItems as $index => $item)
+        @foreach ($order->items as $index => $item)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $item->produk->nama }}</td>
-                <td>{{ $item->jumlah }}</td>
-                <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
+                <td>{{ $item->product->name }}</td>
+                <td>{{ $item->quantity }}</td>
+                <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
             </tr>
         @endforeach
-        @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) &&
-                $order->orderItems->contains(function ($item) {
-                    return $item->produk->nego == 'ya';
-                }))
-            <tr>
-                <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
-                <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
-            </tr>
-        @endif
-        @if (
-            $order->orderItems->contains(function ($item) {
-                return $item->produk->nego == 'ya';
-            }) && $order->harga_setelah_nego)
-            <tr>
-                <td colspan="4" style="text-align:right;"><strong>Harga Setelah Nego</strong></td>
-                <td>Rp {{ number_format($order->harga_setelah_nego, 0, ',', '.') }}</td>
-            </tr>
-        @endif
-
-        <tr>
-            <td colspan="4" style="text-align:right;"><strong>Subtotal</strong></td>
-            <td>Rp {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}</td>
-        </tr>
-        </tr>
-        <tr>
+        <!-- Original Total Price Row -->
+        <tr class="total-row">
             <td colspan="4" style="text-align:right;"><strong>Total Price</strong></td>
-            <td>
-                Rp
-                {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}
+            <td style="text-align: right;">
+                <span style="{{ $order->negotiation_total ? 'text-decoration: line-through; color: #999;' : '' }}">
+                    Rp {{ number_format($order->total, 0, ',', '.') }}
+                </span>
             </td>
         </tr>
+        
+        <!-- Discount Row (if negotiation_total exists) -->
+        @if ($order->negotiation_total)
+            <tr class="discount-row">
+                <td colspan="4" style="text-align:right;"><strong>Discount</strong></td>
+                <td style="text-align: right; ">
+                    {{ round((($order->total - $order->negotiation_total) / $order->total) * 100, 2) }}%
+                </td>
+            </tr>
+            <tr class="final-price-row">
+                <td colspan="4" style="text-align:right;"><strong>Final Price</strong></td>
+                <td style="text-align: right; color: green;">
+                    Rp {{ number_format($order->negotiation_total, 0, ',', '.') }}
+                </td>
+            </tr>
+        @endif
+        
     </tbody>
 </table>
+
 
 
 <div class="payment-info">
     <p><strong>Please make payments to:</strong></p>
     <div class="payment-box">
-        <p>PT. Arkamaya Guna Saharsa</p>
-        <p>121-00-002881-1</p>
-        <p>Bank Mandiri Kebon Sirih</p>
-        <p>Jl. Tanah Abang Timur No. 1, RT.2/RW.3,</p>
-        <p>Gambir, Central Jakarta City, Jakarta 10110</p>
+        <p>{{ $parameter->company_name }}</p>
+        <p>{{ $parameter->account_number }}</p>
+        <p>{{ $parameter->bank_name }} {{ $parameter->bank_city }}</p>
+        <p>{{ $parameter->bank_address }}</p>
     </div>
 </div>
 
@@ -318,12 +335,12 @@
 
     <div class="signature-section">
         <p>Kind Regards,</p>
-        <p><strong>PT. Arkamaya Guna Saharsa</strong></p>
+        <p><strong>{{ $parameter->company_name }}</strong></p>
 {{--         @foreach ($materaiImages as $image)
             <img src="{{ $image }}" alt="Materai Image" style="width: 100px;">
         @endforeach
  --}}
-        <p>Agustina Panjaitan</p>
+        <p>{{ $parameter->director }}</p>
         <p>Director</p>
     </div>
 
@@ -332,17 +349,16 @@
             <!-- Use the base64-encoded maps-and-flags.png -->
             <img src="{{ $mapsIcon }}" alt="Location Icon"
                 style="width: 10px; height: auto; margin-right: 5px;">
-            Jl. Matraman Raya No.148, Blok A2 No. 3 RT.1/RW.4, Kb. Manggis, Kec. Matraman, Kota Jakarta Timur,
-            Daerah Khusus Ibukota Jakarta 13150
+            {{ $parameter->address }}
         </p>
         <p>
             <!-- Use the base64-encoded email.png -->
             <img src="{{ $emailIcon }}" alt="Email Icon" style="width: 10px; height: auto; margin-right: 5px;">
-            info@labtek.id
+            {{ $parameter->email1  }}
             |
             <!-- Use the base64-encoded phone-call.png -->
             <img src="{{ $phoneIcon }}" alt="Phone Icon" style="width: 10px; height: auto; margin-right: 5px;">
-            (021) 85850913
+            {{ $parameter->telephone_number}}
         </p>
     </div>
 
