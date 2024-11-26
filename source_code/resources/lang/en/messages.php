@@ -133,6 +133,8 @@ return [
     'or_you_can_contact_admin' => 'or you can contact the admin via the following',
     'here' => 'here',
     'subtotal_before_negotiation' => 'Subtotal Before Negotiation',
+    'confirm_new_password' => 'Confirm New Password',
+
 
 
 

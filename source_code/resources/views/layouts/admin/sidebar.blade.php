@@ -1,11 +1,16 @@
+<?php
+use App\Models\TParameter;
+$parameter = TParameter::first();
+?>
+
 <!-- Sidebar -->
 <div class="sidebar" data-background-color="white">
     <div class="sidebar-logo">
       <!-- Logo Header -->
-<div class="logo-header" data-background-color="white" data-logo-light="{{ asset('assets/images/logo-nobg.png') }}" data-logo-dark="{{ asset('assets/images/logo-dark.png') }}">
+      <div class="logo-header" data-background-color="white" data-logo-light="{{ asset('assets/images/logo.png') }}" data-logo-dark="{{ asset('assets/images/logo-dark.png') }}">
         <a href="{{ route('dashboard') }}" class="logo">
           <img
-            src="{{ asset('assets/images/logo-nobg.png') }}"
+            src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo.png') }}"
             alt="navbar brand"
             class="navbar-brand"
             width="200"

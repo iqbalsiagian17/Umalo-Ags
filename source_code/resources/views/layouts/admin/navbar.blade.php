@@ -1,6 +1,7 @@
 <?php
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\TParameter;
 
 $unseenOrders = Order::where('is_viewed_by_admin', false)->get();
 
@@ -12,6 +13,7 @@ $unseenPayments = Payment::where('is_viewed_by_admin', false)
 $unseenOrderCount = $unseenOrders->count();
 $unseenPaymentCount = $unseenPayments->count();
 
+$parameter = TParameter::first();
 
 $totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
         
@@ -321,7 +323,7 @@ $totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
               >
                 <div class="avatar-sm">
                   <img
-                    src="{{ asset('assets/images/logo-nobg.png') }}"
+                    src="{{ asset('assets/images/labtek_wo_text.png') }}"
                     alt="..."
                     class="avatar-img rounded-circle"
                   />
@@ -337,7 +339,7 @@ $totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
                     <div class="user-box">
                       <div class="avatar-lg">
                         <img
-                          src="{{ asset('assets/images/logo-nobg.png') }}"
+                          src="{{ asset('assets/images/labtek_wo_text.png') }}"
                           alt="image profile"
                           class="avatar-img rounded"
                         />

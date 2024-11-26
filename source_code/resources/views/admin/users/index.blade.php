@@ -24,12 +24,10 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item {{ request('role', '0') == '0' ? 'active' : '' }}" href="{{ route('users.index', ['role' => 0]) }}">Customers</a></li>
-                        <li><a class="dropdown-item {{ request('role', '0') == '1' ? 'active' : '' }}" href="{{ route('users.index', ['role' => 1]) }}">Admins</a></li>
+                        <li><a class="dropdown-item {{ request('role', '1') == '1' ? 'active' : '' }}" href="{{ route('users.index', ['role' => 1]) }}">Admins</a></li>
                     </ul>
                 </div>
-            
                 <!-- Add New User Button on the right -->
-                <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
             </div>
             
             @if (session('success'))
@@ -61,7 +59,7 @@
                                 </td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->company ?? 'N/A' }}</td>
-                                <td>{{ $user->role == 1 ? 'Admin' : 'Customer' }}</td>
+                                <td>{{ $user->role}}</td>
                                 <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td>
                                     @if(auth()->check() && auth()->user()->id === $user->id)

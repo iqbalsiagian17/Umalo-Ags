@@ -23,7 +23,7 @@ $parameter = TParameter::first();
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
             <a href="{{ route('home') }}">
-                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo">
+                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo.png') }}" alt="Logo">
             </a>            
         </div>
         <div class="humberger__menu__cart">
@@ -63,7 +63,7 @@ $parameter = TParameter::first();
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             style="text-decoration: none; color: inherit;">
-                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}"
+                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}"
                                 alt="Avatar"
                                 style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                             {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
@@ -165,7 +165,7 @@ $parameter = TParameter::first();
                     <div class="col-lg-3">
                         <div class="header__logo text-center mb-3">
                             <a href="{{ route('home') }}">
-                                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo" style="width: 100%; height: 100px;">
+                                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo.png') }}" alt="Logo" style="width: 100%; height: 100px;">
                             </a>
                         </div>
                     </div>
@@ -297,7 +297,7 @@ $parameter = TParameter::first();
                                                 aria-expanded="false" style="text-decoration: none; color: inherit;">
                                                 <!-- Avatar Gambar -->
                                                 @if (Auth::check())
-                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}"
+                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/labtek_wo_text.png') }}"
                                                         alt="Avatar"
                                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                                                 @else

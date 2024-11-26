@@ -1,6 +1,6 @@
 @if(session('welcome_message'))
     <div id="welcomeMessage" class="alert alert-dismissible fade show d-flex align-items-center" role="alert"
-         style="background: linear-gradient(135deg, #416bbf, #7A57D1); color: white; border-left: 6px solid #352D70; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); padding: 15px 20px; border-radius: 10px; animation: slide-in 0.5s ease; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 250px;">
+         style="background: #416bbf; color: white; border-left: 6px solid white; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); padding: 15px 20px; border-radius: 10px; animation: slide-in 0.5s ease; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 250px;">
          <i class="fas fa-smile-beam me-3" style="font-size: 1.5em; color: #ffffff;"></i>
          <div style="flex: 1; padding-left: 10px;">
              <strong>{{ session('welcome_message') }}</strong>

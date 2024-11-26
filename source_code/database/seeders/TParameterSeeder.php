@@ -28,7 +28,7 @@ class TParameterSeeder extends Seeder
             'bank_city' => 'Kebon Sirih',
             'bank_address' => 'Jl. Tanah Abang Timur No. 1, RT.2/RW.3, Gambir, Central Jakarta City, Jakarta 10110',
             'director' => 'Agustina Panjaitan',
-            'logo1' => 'assets/images/logo-nobg.png',
+            'logo1' => 'assets/images/logo.png',
             'logo2' => 'assets/images/AGS-logo.png',
             'logo3' => 'storage/logos/sample_logo3.png',
         ]);

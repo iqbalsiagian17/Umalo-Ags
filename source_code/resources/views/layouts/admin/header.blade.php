@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
     />
-    <link rel="icon" href="{{ asset('assets/images/logo_gram_labtek.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/labtek_wo_text.png') }}" type="image/png">
 
 
     <!-- Bootstrap CSS -->

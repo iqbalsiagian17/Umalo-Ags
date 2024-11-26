@@ -173,6 +173,7 @@ return [
     'activate' => 'Aktif',
     'add_new_address' => 'Tambahkan Alamat',
     'user_photo' => 'Foto Pengguna',
+    'confirm_new_password' => 'Konfirmasi Password Baru',
 
 
     //login

@@ -70,7 +70,7 @@
                             <div class="card text-center mb-4 shadow rounded border-0">
                                 <div class="card border-0">
                                     <div class="card-body text-center">
-                                        <img id="profilePhoto" src="{{ $user->foto_profile ? asset($user->foto_profile) : asset('assets/images/logo-nobg.png') }}" class="rounded-circle mb-3" alt="{{ __('messages.user_photo') }}" style="width: 250px; object-fit: contain;">
+                                        <img id="profilePhoto" src="{{ $user->foto_profile ? asset($user->foto_profile) : asset('assets/images/logo.png') }}" class="rounded-circle mb-3" alt="{{ __('messages.user_photo') }}" style="width: 250px; object-fit: contain;">
 
                                         <br>
 
