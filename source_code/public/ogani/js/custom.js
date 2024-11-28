@@ -37,12 +37,7 @@ function sortProducts() {
     window.location.href = url.toString();
 }
 
-document.getElementById('grid-view').addEventListener('click', function() {
-    document.getElementById('product-list').classList.remove('list-view');
-    document.getElementById('product-list').classList.add('grid-view');
-    document.getElementById('notification').style.display = 'none'; // Ensure notification is hidden in grid view
-    console.log('Grid view activated, notification hidden.');
-});
+
 
 document.getElementById('list-view').addEventListener('click', function() {
     document.getElementById('product-list').classList.remove('grid-view');
